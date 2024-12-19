@@ -1,0 +1,34 @@
+pipelines:
+- nodes:
+  - label: my_label
+    description: Full CMake
+    executionOrder: 0
+    stages:
+    - name: Generate Stage
+      description: generate files for the given variant
+      executionOrder: 1
+      steps:
+      - name: Generate Step
+        cmd: echo generating ...
+        fromPath: lucxbox/tools/yaml_executor/test/lib
+      timeLimitInMinutes: 15
+    - name: Build Stage
+      description: Build the given variant
+      executionOrder: 2
+      steps:
+      - name: Build Step
+        cmd: echo building ...
+        fromPath: lucxbox/tools/yaml_executor/test/lib
+      timeLimitInMinutes: 15
+    - name: Copy executables to artifactory
+      executionOrder: 3
+      timeLimitInMinutes: 15
+      archive:
+      - backend: artifactory
+        path: path
+        fromPath: "build/VOLVO/Radar_ASIL_AND_QM__result"
+        includes: "**/*.hex, **/*.elf"
+        afterFail: true
+        zip: true
+        zipName: "executables"
+        properties: ["commitId=^ENV:LUCX_COMMIT_HASH;"]

@@ -1,0 +1,9 @@
+    - name: SplunkExport CompilerWarnings TotalFR5CU
+      executionOrder: ^TPL:execOrder;
+      failAbortsPipeline: false
+      steps:
+      - cmd: python CompilerWarningsToSplunk_Total_FR5CU.py --UC1 ^TPL:uc1; --UC2 ^TPL:uc2;
+        fromPath: ad_radar_apl/tools/scripts/SplunkExporter
+        name: Compiler_warnings_splunk_total_generate
+      - cmd: ssh  -l cis9lr -p 51121 rb-jmaas.de.bosch.com build Splunk_Prod/AthenaRadar_Remote -v -f -p "FileLink=\\\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\Splunk\CompilerWar_Total_FR5CU.csv" -p "Variant=Total_FR5CU" -p "MicroController=" -p "OEM=" -p "type=NETWORK"  -p "source=Compiler" 
+        name: Compiler_warnings_splunk_total_export

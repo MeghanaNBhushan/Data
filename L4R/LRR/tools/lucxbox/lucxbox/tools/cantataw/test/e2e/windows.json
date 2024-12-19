@@ -1,0 +1,10 @@
+{
+    "env_script": "setenv.bat",
+    "build": "build.bat build_args",
+    "test": "build.bat test_args",
+    "report": {
+        "cov_file": "coverage_input.cov",
+        "output": "coverage_output",
+        "report_types": ["stmt", "func", "call", "decn"]
+    }
+}

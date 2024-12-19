@@ -1,0 +1,39 @@
+// array
+//
+
+#ifndef INCLUDED_PRLGCC_ARRAY
+#define INCLUDED_PRLGCC_ARRAY
+
+#include <bits/prlgcc_c++config.h>
+
+#if defined (__PRL_GLIBCXX__)
+
+#  if (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 7)
+
+#    include <4.7/array>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 8)
+
+#    include <4.8/array>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 9)
+
+#    include <4.9/array>
+
+#  elif (__PRL_GLIBCXX__ == 5)
+
+#    include <5.1/array>
+
+#  else
+
+#    include_next <array>
+
+#  endif
+
+#else
+
+#    include_next <array>
+
+#endif
+
+#endif

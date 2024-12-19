@@ -1,0 +1,5 @@
+#!/usr/bin/env groovy
+
+@Library("LUCxBau@1.2.3") _
+
+lucx.bau()

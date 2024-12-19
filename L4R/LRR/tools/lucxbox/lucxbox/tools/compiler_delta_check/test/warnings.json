@@ -1,0 +1,114 @@
+[
+   {
+      "file_path":"O:\\ip_if\\rba\\CUBAS\\BswLib\\rba_BswSrv\\api\\rba_BswSrv.h",
+      "row":25,
+      "column":null,
+      "message":"zero used for undefined preprocessing identifier \"RBA_BSWSRV_CFG_COMPILER_LIBRARY_SUPPORT\"  #if (RBA_BSWSRV_CFG_COMPILER_LIBRARY_SUPPORT == STD_ON)",
+      "components":[
+         "ip_if"
+      ],
+      "teams":[
+         "IP_IF"
+      ],
+      "severity":null,
+      "type_name":"193-D",
+      "quantity":1285,
+      "domain":"compiler"
+   },
+   {
+      "file_path":"O:\\ip_if\\rba\\CUBAS\\BswLib\\rba_BswSrv\\api\\rba_BswSrv.h",
+      "row":67,
+      "column":null,
+      "message":"zero used for undefined preprocessing identifier \"RBA_BSWSRV_CFG_COMPILER_LIBRARY_SUPPORT\"  #if (RBA_BSWSRV_CFG_COMPILER_LIBRARY_SUPPORT == STD_ON)",
+      "components":[
+         "ip_if"
+      ],
+      "teams":[
+         "IP_IF"
+      ],
+      "severity":null,
+      "type_name":"193-D",
+      "quantity":1285,
+      "domain":"compiler"
+   },
+   {
+      "file_path":"O:\\cust\\common\\vag_e3_apl\\asil\\components\\fsicom\\vars\\LRR\\src\\modules\\rbNetE2E\\rbNetE2E_x_ProtectRxP02HCP1_CANFD04.h",
+      "row":49,
+      "column":null,
+      "message":"#warning directive: The valuen of n is assumed based on the most common value. Check proper value via the K-Matrix or Ereignisspeicher-LH.  #warning The valuen of n is assumed based on the most common value. Check proper value via the K-Matrix or Ereignisspeicher-LH.",
+      "components":[
+         "cust/common/vag_e3_apl/asil/components/fsicom"
+      ],
+      "teams":[
+         "FSICOM"
+      ],
+      "severity":null,
+      "type_name":"1105-D",
+      "quantity":10,
+      "domain":"compiler"
+   },
+   {
+      "file_path":"O:\\cust\\common\\vag_e3_apl\\asil\\components\\fsicom\\vars\\LRR\\src\\modules\\rbNetE2E\\rbNetE2E_x_ProtectRxP02HCP1_CANFD04.h",
+      "row":51,
+      "column":null,
+      "message":"#warning directive: The valuen of n is assumed based on the most common value. Check proper value via the K-Matrix or Ereignisspeicher-LH.  #warning The valuen of n is assumed based on the most common value. Check proper value via the K-Matrix or Ereignisspeicher-LH.",
+      "components":[
+         "cust/common/vag_e3_apl/asil/components/fsicom"
+      ],
+      "teams":[
+         "FSICOM"
+      ],
+      "severity":null,
+      "type_name":"1105-D",
+      "quantity":10,
+      "domain":"compiler"
+   },
+   {
+      "file_path":"O:\\cust\\common\\vag_e3_apl\\asil\\components\\fsicom\\vars\\LRR\\src\\modules\\rbNetE2E\\rbNetE2E_x_ProtectRxP02HCP1_CANFD04.h",
+      "row":53,
+      "column":null,
+      "message":"#warning directive: The valuen of n is assumed based on the most common value. Check proper value via the K-Matrix or Ereignisspeicher-LH.  #warning The valuen of n is assumed based on the most common value. Check proper value via the K-Matrix or Ereignisspeicher-LH.",
+      "components":[
+         "cust/common/vag_e3_apl/asil/components/fsicom"
+      ],
+      "teams":[
+         "FSICOM"
+      ],
+      "severity":null,
+      "type_name":"1105-D",
+      "quantity":10,
+      "domain":"compiler"
+   },
+   {
+      "file_path":"C:\\JT\\ws\\commonrepo@1\\repo\\ip_if\\uC_fwBg\\core\\rbBist\\src\\rbBist_Memory\\rbBist_Memory.c",
+      "row":"elxr",
+      "column":null,
+      "message":"section librbBist.a(.bss) is not being included section .bss appears to be empty",
+      "components":[
+         "ip_if"
+      ],
+      "teams":[
+         "IP_IF"
+      ],
+      "severity":null,
+      "type_name": null,
+      "quantity":1,
+      "domain":"linker"
+   },
+   {
+      "file_path":"C:\\JT\\ws\\commonrepo@1\\repo\\ip_if\\uC_fwBg\\core\\rbHwCfgCheck\\src\\rbHwCfgCheck_Init.c",
+      "row":"elxr",
+      "column":null,
+      "message":"section librbHwCfgCheck.a(.bss) is not being included section .bss appears to be empty",
+      "components":[
+         "ip_if"
+      ],
+      "teams":[
+         "IP_IF"
+      ],
+      "severity":null,
+      "type_name":"270",
+      "quantity":1,
+      "domain":"linker"
+   }
+]

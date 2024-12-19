@@ -1,0 +1,4 @@
+// Jenkinsfile
+library "LUCxBau@19.9.0"
+
+lucx.bau()

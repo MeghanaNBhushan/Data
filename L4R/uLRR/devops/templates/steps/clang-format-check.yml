@@ -1,0 +1,22 @@
+steps:
+- bash: |
+    allfiles=$(git diff origin/develop...HEAD --name-only -- *.cpp *.c *.hpp *.h)
+    echo "##[section]Starting clang-format check..." 
+
+    if [[ -z "${allfiles}" ]];then
+        echo "##[section]No C/C++ source or header files changed, skipping clang-format check."
+        exit 0
+    fi
+    
+    clangformatout=$(git clang-format --diff -- ${allfiles} -q)
+
+    if [[ "$clangformatout" != "" ]];then
+      echo "[Error] The commited files have changes which are not formatted with clang-format."
+      echo "Problems found in the following files: "
+      echo -e "$allfiles"
+      echo "Please address the above problems."
+      exit 1
+    else
+      echo "##[section]All files are properly formatted."
+    fi
+  displayName: Check clang-format

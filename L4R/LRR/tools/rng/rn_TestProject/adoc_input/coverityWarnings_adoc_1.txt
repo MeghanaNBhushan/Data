@@ -1,0 +1,9 @@
+[width="100%", cols="3a,1a,1a,1a,1a,1a", options="header"]
+|===
+|sw_part|prog_language|High|Low|Medium|All
+|DSP|CPP|1|2|1|4
+|L4 Radar|C|0|1|5|6
+|Other|inl|1|0|2|3
+|PJ-IF|C|81|8|26|115
+|All||83|11|34|128
+|===

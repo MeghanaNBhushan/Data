@@ -1,0 +1,16 @@
+<ToolCollection>
+  <ToolCollectionName>prqa</ToolCollectionName>
+  <Responsible>CC-ADPJ-DoitSoftwareQualityTeam@bcn.bosch.com</Responsible>
+  <Version>2.4.0</Version>
+  <Date>2018-07-05</Date>
+  <ZipDirectory>TCC\ZippedTools</ZipDirectory>
+  <IndicatorDirectory>TCC</IndicatorDirectory>
+  <Tools>
+    <Tool>
+      <ToolName>prqa_framework</ToolName>
+      <SourcePath>TCC\Tools\prqa_framework\2.4.0_WIN64</SourcePath>
+      <Mirror>No</Mirror>
+      <NoExternalDistribution></NoExternalDistribution>
+    </Tool>
+  </Tools>
+</ToolCollection>

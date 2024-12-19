@@ -1,0 +1,60 @@
+steps:
+  - bash: |
+      sudo mkdir -p /mnt/sstate-cache-petalinux-2021dot2
+      sudo mkdir -p /mnt/downloads-petalinux-2021dot2
+      sudo mkdir -p /etc/smbcredentials
+      sudo bash -c 'echo "username=$(swbuildst-user)" >> /etc/smbcredentials/$(swbuildst-user).cred'
+      sudo bash -c 'echo "password=$(swbuildst-password)" >> /etc/smbcredentials/$(swbuildst-user).cred'
+      sudo chmod 600 /etc/smbcredentials/$(swbuildst-user).cred
+      sudo bash -c 'echo "//swbuildst.file.core.windows.net/downloads-petalinux-2021dot2 /mnt/downloads-petalinux-2021dot2 cifs nofail,credentials=/etc/smbcredentials/$(swbuildst-user).cred,dir_mode=0777,file_mode=0777,serverino,nosharesock,actimeo=30" >> /etc/fstab'
+      sudo bash -c 'echo "//swbuildst.file.core.windows.net/sstate-cache-petalinux-2021dot2 /mnt/sstate-cache-petalinux-2021dot2 cifs nofail,credentials=/etc/smbcredentials/$(swbuildst-user).cred,dir_mode=0777,file_mode=0777,serverino,nosharesock,actimeo=30" >> /etc/fstab'
+      sudo mount -t cifs //swbuildst.file.core.windows.net/downloads-petalinux-2021dot2 /mnt/downloads-petalinux-2021dot2 -o credentials=/etc/smbcredentials/$(swbuildst-user).cred,dir_mode=0777,file_mode=0777,serverino,nosharesock,actimeo=30
+      sudo mount -t cifs //swbuildst.file.core.windows.net/sstate-cache-petalinux-2021dot2 /mnt/sstate-cache-petalinux-2021dot2 -o credentials=/etc/smbcredentials/$(swbuildst-user).cred,dir_mode=0777,file_mode=0777,serverino,nosharesock,actimeo=30
+      mkdir $(Pipeline.Workspace)/s/software/zcu-102/downloads 
+      mkdir $(Pipeline.Workspace)/s/software/zcu-102/sstate-cache 
+      cp -dRv /mnt/downloads-petalinux-2021dot2/. $(Pipeline.Workspace)/s/software/zcu-102/downloads/ 
+      cp -dRv /mnt/sstate-cache-petalinux-2021dot2/sstate-cache/. $(Pipeline.Workspace)/s/software/zcu-102/sstate-cache/
+    displayName: peta-linux pre-build
+  
+  - bash: |
+      source /petalinux/2021.2/settings.sh
+      cd $(Pipeline.Workspace)/s/software/zcu-102
+      petalinux-build
+      petalinux-package --boot --u-boot
+      petalinux-package --wic
+      petalinux-package --boot --fsbl ./images/linux/zynqmp_fsbl.elf --pmufw ./images/linux/pmufw.elf --fpga ./images/linux/system.bit --u-boot --force
+      zip -r images.zip ./images/
+    timeoutInMinutes: 180
+    displayName: peta-linux build
+    
+  - bash: |
+      rsync -r -c -z --ignore-existing --info=skip0 --stats $(Pipeline.Workspace)/s/software/zcu-102/build/sstate-cache /mnt/sstate-cache-petalinux-2021dot2
+      rsync -r -c -z --ignore-existing --info=skip0 --stats $(Pipeline.Workspace)/s/software/zcu-102/downloads/ /mnt/downloads-petalinux-2021dot2
+    displayName: sync-sstate-cache
+ 
+  - publish: $(Pipeline.Workspace)/s/software/zcu-102/images.zip
+    artifact: sw-build-binaries-$(System.StageAttempt)-$(System.JobAttempt)
+    displayName: Publish sw build binaries
+  
+  - publish: $(Pipeline.Workspace)/s/software/zcu-102/build/build.log
+    artifact: sw-build-log-$(System.StageAttempt)-$(System.JobAttempt)
+    displayName: Publish sw build log
+
+  - task: ArtifactoryGenericUpload@1
+    inputs:
+      artifactoryService: 'sc-ado-artifactory'
+      specSource: 'taskConfiguration'
+      fileSpec: |
+        {
+          "files": [
+            {
+              "pattern": "$(Pipeline.Workspace)/s/software/zcu-102/images.zip",
+              "target": "zugspitze-series-generic-local/$(BRANCH_NAME)/$(commitID)/oldSWBuild/binaries"
+            },
+            {
+              "pattern": "$(Pipeline.Workspace)/s/software/zcu-102/build/build.log",
+              "target": "zugspitze-series-generic-local/$(BRANCH_NAME)/$(commitID)/oldSWBuild/log"
+            }
+          ]
+        }
+      failNoOp: true

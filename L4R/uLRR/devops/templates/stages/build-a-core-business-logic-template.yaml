@@ -1,0 +1,306 @@
+parameters:
+- name: build_target
+  displayName: Build target
+  type: string
+  default: armv8
+- name: build_type
+  displayName: Build type
+  type: string
+  default: debug
+- name: middleware_instance
+  displayName: Middleware instance
+  type: string
+  default: tec0204_linux
+- name: build_reason
+  displayName: Build reason
+  type: string
+- name: build_bl
+  displayName: Build business logic
+  type: boolean
+  default: true
+- name: enable_clangtidy_checks
+  displayName: 'Enable Clang Tidy Checks'
+  type: string
+  default: 'ON'
+- name: enable_helix_checks
+  displayName: 'Enable Helix QAC Checks'
+  type: string
+  default: 'OFF'
+- name: run_unit_test
+  displayName: Run unit tests
+  type: boolean
+  default: true
+- name: package_bl
+  displayName: Package business logic
+  type: boolean
+  default: true
+- name: trigger_ct
+  displayName: Trigger CT
+  type: boolean
+  default: true
+- name: vmss
+  displayName: vmss to run the pipeline
+  type: string
+- name: version
+  displayName: Release version
+  type: string
+  default: None
+
+stages:
+  - stage: Initial
+    condition: eq('${{ parameters.build_reason }}', 'pr')
+    jobs:
+      - job: ConfirmPrBuildRequest
+        timeoutInMinutes: 0
+        cancelTimeoutInMinutes: 35790
+        steps:
+          - template: /devops/templates/steps/check-changed-files.yml
+            parameters:
+              folders_list: software/aos/ software/build_utils/ software/business_logic/ software/doc/ software/ros/ devops/ tools/
+
+  - stage: Build
+    condition: |
+      or(
+        and(
+          eq('${{ parameters.build_reason }}', 'pr'),
+          eq(dependencies.Initial.outputs['ConfirmPrBuildRequest.CheckChangedFiles.pr_build_requird'],true)
+        ),
+          ne('${{ parameters.build_reason }}', 'pr')
+      )
+    pool:
+      name: ${{ parameters.vmss }}
+    jobs:
+      - job: InitStep
+        timeoutInMinutes: 0 
+        cancelTimeoutInMinutes: 35790 
+        steps:
+          - bash: |
+              set -e
+
+              echo "Target:"
+              echo " - TARGET: ${{ parameters.build_target }}"
+              echo "##vso[task.setvariable variable=TARGET]${{ parameters.build_target }}"
+
+              echo "TYPE:"
+              echo " - TYPE: ${{ parameters.build_type }}"
+              echo "##vso[task.setvariable variable=TYPE]${{ parameters.build_type }}"
+
+              echo "MIDDLEWARE INSTANCE:"
+              echo " - MIDDLEWARE_INSTANCE: ${{ parameters.middleware_instance }}"
+              echo "##vso[task.setvariable variable=MIDDLEWARE_INSTANCE]${{ parameters.middleware_instance }}"
+
+              echo "Reason:"
+              echo " - BUILD_REASON: ${{ parameters.build_reason }}"
+              echo "##vso[task.setvariable variable=BUILD_REASON]${{ parameters.build_reason }}"
+
+              echo "Build business logic:"
+              echo " - BUILD_BUSINESS_LOGIC: ${{ parameters.build_bl }}"
+              echo "##vso[task.setvariable variable=BUILD_BUSINESS_LOGIC]${{ parameters.build_bl }}"
+
+              echo "Static Code Analysis Using Clang:"
+              echo " - Clang_Tidy_Checks: ${{ parameters.enable_clangtidy_checks }}"
+              echo "##vso[task.setvariable variable=Clang_Tidy_Checks]${{ parameters.enable_clangtidy_checks }}"
+
+              echo "Static Code Analysis Using Helix:"
+              echo " - Helix_QAC_checks: ${{ parameters.enable_helix_checks }}"
+              echo "##vso[task.setvariable variable=Helix_QAC_checks]${{ parameters.enable_helix_checks }}"
+
+              echo "Run unit tests:"
+              echo " - RUN_UNIT_TEST: ${{ parameters.run_unit_test }}"
+              echo "##vso[task.setvariable variable=RUN_UNIT_TEST]${{ parameters.run_unit_test }}"
+
+              echo "Package business logic:"
+              echo " - PACKAGE_BUSINESS_LOGIC: ${{ parameters.package_bl }}"
+              echo "##vso[task.setvariable variable=PACKAGE_BUSINESS_LOGIC]${{ parameters.package_bl }}"
+
+              echo "Trigger CT:"
+              echo " - TRIGGER_CT: ${{ parameters.trigger_ct }}"
+              echo "##vso[task.setvariable variable=TRIGGER_CT]${{ parameters.trigger_ct }}"
+
+              echo "VMSS:"
+              echo " - VMSS: ${{ parameters.vmss }}"
+              echo "##vso[task.setvariable variable=VMSS]${{ parameters.vmss }}"
+
+              echo "Version:"
+              echo " - VERSION: ${{ parameters.version }}"
+              echo "##vso[task.setvariable variable=VERSION]${{ parameters.version }}"
+
+              echo "Testing storage account:"
+              if [ -d "/var/tmp/conan_cache" ]; then
+                echo " - Mounting to storage account is active!"
+              else
+                echo " - Mounting to storage account is not active!"
+              fi
+            name: InitStep
+
+      - job: BuildCustomRootFsPackg
+        timeoutInMinutes: 0 
+        cancelTimeoutInMinutes: 35790 
+        container: a-core-application-container
+        steps:
+          - checkout: self  
+            lfs: true
+            submodules: true
+
+          - bash: |
+              set -e
+              tools/buildchain/aos_components/qnx_setup.sh cloud
+
+            condition: eq('${{ parameters.middleware_instance }}', 'te0950_neutrino')
+            displayName: Prepare QNX environment
+
+          - bash: |
+              set -e
+
+              echo "Sourcing build tool"
+              source tools/build_tool/setup.bash
+
+              echo "###############################################################"
+              echo "Build business logic"
+              echo "###############################################################"
+              echo "Config ir2-build-tool"
+              echo "ir2-build-tool config bl --target-type ${TARGET} --build-type ${TYPE} --middleware-instance ${MIDDLEWARE_INSTANCE}"
+              ir2-build-tool config bl --target-type ${TARGET} --build-type ${TYPE} --middleware-instance ${MIDDLEWARE_INSTANCE}
+
+              echo "Install conan project recipe"
+              echo "ir2-build-tool install bl"
+              ir2-build-tool install bl
+
+              echo "Build business logic"
+              echo "ir2-build-tool build bl"
+              ir2-build-tool build bl
+
+              echo "###############################################################"
+            condition: eq(${{ parameters.build_bl }}, 'true')
+            displayName: Build business logic
+
+          - bash: |
+              echo "#################################################################"
+              echo "Helix Static Code Analysis Initiated..."
+              chmod +x "$(Pipeline.Workspace)/s/devops/scripts/shell/helix_analysis.sh"
+              "$(Pipeline.Workspace)/s/devops/scripts/shell/helix_analysis.sh" "${TARGET}" "build_bl"
+              echo "#################################################################"
+              helixqac_filename=$(find * -type f -name 'jr.sarif');
+              if [[ ! -z "$helixqac_filename" ]]; then
+                echo "SARIF report generated successfully: $helixqac_filename"
+                echo "Setting up pipeline variables for the report..."
+                echo "##vso[task.setvariable variable=helixqac_filename;isOutput=true]$(basename "$helixqac_filename")"
+                echo "##vso[task.setvariable variable=helixqac_artifactname;isOutput=true]CodeAnalysisLogs"
+                echo "##vso[task.setvariable variable=helixqac_filepath;isOutput=true]$(dirname "$(realpath "$helixqac_filename")")"
+                echo "##vso[task.setvariable variable=build_helix_reports_result]Succeeded"
+              else
+                echo "Error: SARIF report not found."
+                echo "##vso[task.setvariable variable=build_helix_reports_result]Failed"
+              fi
+              echo "SARIF report generation process completed."
+              echo "#################################################################"
+            condition: and(
+                            eq(${{ parameters.build_bl }}, 'true'),
+                            eq('${{ parameters.enable_helix_checks }}', 'ON')
+                          )
+            name: HelixQAC_Warnings
+            displayName: 'Perform Helix QAC Analysis'
+
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: '$(HelixQAC_Warnings.helixqac_filepath)/$(HelixQAC_Warnings.helixqac_filename)'
+              ArtifactName: '$(HelixQAC_Warnings.helixqac_artifactname)'
+              publishLocation: 'Container'
+            displayName: 'Publish SARIF Report'
+            condition: eq(variables['build_helix_reports_result'], 'Succeeded')
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"      
+              echo "Starting Clang Static Analyzer (Clang SCA) report generation"
+              echo "###############################################################"   
+              # Extract the os type from the middleware instance
+              IFS='_' read -ra file_name_array <<< "${MIDDLEWARE_INSTANCE}"
+              os_type="${file_name_array[1]}"
+
+              BUILD_LOG="build/bl_${os_type}_${TARGET}_${TYPE}/conan_run.log"
+
+              # Generate the Clang SCA report
+              echo "Running Clang HTML generation tool..."
+              python3 -m clang_html "$BUILD_LOG" -o clang.html
+
+              echo "Searching for the Clang report file..."
+              clang_reports_filename=$(find * -type f -name 'clang.html');
+
+              if [[ ! -z "$clang_reports_filename" ]]; then
+                echo "Clang report generated successfully: $clang_reports_filename"
+                echo "Setting up pipeline variables for the report..."
+
+                echo "##vso[task.setvariable variable=clang_tidy_reports_filename;isOutput=true]$(basename "$clang_reports_filename")"
+                echo "##vso[task.setvariable variable=clang_tidy_reports_artifactname;isOutput=true]Report-debian-a-core-clang-tidy-checks"
+                echo "##vso[task.setvariable variable=clang_tidy_reports_filepath;isOutput=true]$(dirname "$(realpath "$clang_reports_filename")")"
+                echo "##vso[task.setvariable variable=build_clang_tidy_reports_result]Succeeded"
+              else
+                echo "Error: Clang report not found."
+                echo "##vso[task.setvariable variable=build_clang_tidy_reports_result]Failed"
+              fi
+
+              echo "Clang SCA report generation process completed."
+              echo "###############################################################"
+            condition: and(
+                            eq(${{ parameters.build_bl }}, 'true'),
+                            eq('${{ parameters.enable_clangtidy_checks }}', 'ON')
+                          )
+            name: SCA_Warnings
+            displayName: Clang-tidy Report Generation
+
+          - publish: $(SCA_Warnings.clang_tidy_reports_filepath)/$(SCA_Warnings.clang_tidy_reports_filename)
+            artifact: $(SCA_Warnings.clang_tidy_reports_artifactname)
+            displayName: Publish Clang-Tidy HTML Report
+            condition: eq(variables['build_clang_tidy_reports_result'], 'Succeeded')
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Run unit tests"
+              echo "###############################################################"
+              echo "To be implemented..."
+
+              echo "###############################################################"
+            condition: eq(${{ parameters.run_unit_test }}, 'true')
+            displayName: Run unit tests
+
+
+          - bash: |
+              set -e
+
+              echo "Sourcing build tool"
+              source tools/build_tool/setup.bash
+
+              echo "###############################################################"
+              echo "Package business logic"
+              echo "###############################################################"
+              echo "ir2-build-tool package bl --package-type deb"
+              ir2-build-tool package bl --package-type deb
+
+              deb_package_filename=$(find build_bl_${TARGET}_${TYPE}/deb_package/ -type f -name '*.deb');
+              echo "Found file was: $deb_package_filename"
+              echo "realpath $deb_package_filename"
+
+              if [[ ! -z "$deb_package_filename" ]];then
+                echo "##vso[task.setvariable variable=deb_package_filename;isOutput=true]$(basename $deb_package_filename)"
+                echo "##vso[task.setvariable variable=deb_package_artefactname;isOutput=true]a-core-business-logic-deb-pckg"
+                echo "##vso[task.setvariable variable=package_filepath;isOutput=true]$(dirname $(realpath $deb_package_filename))"
+                echo "##vso[task.setvariable variable=build_package_result]Succeeded"
+              else
+                echo "$deb_package_filename not found."
+                echo "##vso[task.setvariable variable=build_package_result]Failed"
+              fi
+
+              echo "###############################################################"
+
+            condition: eq(${{ parameters.package_bl }}, 'true')
+            name: PackageStep
+            displayName: Package business logic
+
+          - publish: $(PackageStep.package_filepath)/$(PackageStep.deb_package_filename)
+            artifact: $(PackageStep.deb_package_artefactname)
+            displayName: Publish generated package
+            condition: eq(variables['build_package_result'], 'Succeeded')

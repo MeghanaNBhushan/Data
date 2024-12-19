@@ -1,0 +1,40 @@
+parameters:
+- name: output_path
+  displayName: Path to Testresults
+  type: string
+  default: $(Pipeline.Workspace)/reports/testresults
+- name: parser_path
+  displayName: Path to parser.py
+  type: string
+  default: $(Build.SourcesDirectory)/tools/testreport_parser/cict_parser
+
+steps:
+  - bash: |
+      mkdir -p ${{ parameters.output_path }}
+      now=$(current_date)
+      export now
+      target_path=$(Pipeline.Workspace)/testreport-artifacts
+      echo "Change directory for Running Python Script to ${{ parameters.parser_path }}"
+      cd ${{ parameters.parser_path }}
+      sed -i "s|PLACEHOLDER_FOR_OUTPUT_PATH|$target_path|g" config.yaml
+      python3 parser.py      
+      echo "Move Json-Files to new Folder testresults"  
+      sudo mv ${{ parameters.parser_path }}/current.json ${{ parameters.parser_path }}/$(current_date)_report.json ${{ parameters.output_path }}   
+      echo "Files moved to: ${{ parameters.output_path }}" 
+    displayName: Activate env & run parser.py
+
+  - publish: ${{ parameters.output_path }}
+    artifact: Report-parsed-testreports
+    displayName: 'Publish parsed Testreport'
+
+  - task: AzureCLI@1
+    displayName: Az File Copy to Storage
+    inputs:
+      azureSubscription: CICD-ADO-Zugspitze-Cloudspace-Connection
+      scriptLocation: inlineScript
+      inlineScript: |
+        az storage blob upload-batch \
+          --destination \testresults \
+          --account-name "dashboardstorage1" \
+          --source "$(Pipeline.Workspace)/reports/testresults/" \
+          --overwrite

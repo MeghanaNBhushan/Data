@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+    <head>
+        <title>{{ title }}</title>
+        <style>
+            html, body{
+                width:98%;
+                background: white;
+                font-family: "Consolas", "Bitstream Vera Sans Mono", monospace !important;
+            }
+            table.info {
+                font-family: "Consolas", "Bitstream Vera Sans Mono", monospace !important;
+                text-align: left;
+                /* table-layout: fixed; */
+                margin-left: 2%;
+                margin-right: 2%;
+                width: 98%;
+                font-weight: bold;
+                border: none;
+            }
+            table.info td {
+                border: none;
+            }
+            table.report {
+                font-family: "Times New Roman", Times, monospace;
+                text-align: right;
+                table-layout: fixed;
+                margin-left: 2%;
+                margin-right: 2%;
+                width: 98%;
+            }
+            table.report td, table.report th {
+                border: 1px solid #FFFFFF;
+                padding: 2px 2px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
+            table.report tr:nth-child(even) {
+                background: #E0E4F5;
+            }
+            table.report thead {
+                background: #06FA4;
+            }
+            table.report thead th {
+                font-weight: bold;
+                color: #000000;
+                text-align: center;
+                border-left: 2px solid #FFFFFF;
+            }
+            table.report thead th:first-child {
+                border-left: none;
+            }
+            table.report tfoot {
+                font-weight: bold;
+                color: #333333;
+                background: #E0E4F5;
+                border-top: 3px solid #444444;
+            }
+            table.report tr:hover {
+                background: #929292;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Report {{ title }}</h1>
+	    {% for table in tables %}
+            {{ table }}
+        {% endfor %}
+    </body>
+</html>

@@ -1,0 +1,60 @@
+    - name: Plant container
+      executionOrder: ^TPL:execOrder;
+      skipIfOnlyFilesChanged:
+      - ^INCLUDE:jenkins/configs/includes/skipFilesChangedListDoxygen.yaml;
+      steps:
+      - cmd: python ___update_SW_VERSION.py
+        fromPath: ad_radar_apl/tools/plant_container
+        name: update_SW_version_bat_file
+
+      - cmd: __build_Container_Radar_^TPL:uc1;.bat
+        fromPath: ad_radar_apl/tools/plant_container
+        name: Plant_container_^TPL:uc1;
+      - cmd: __build_Container_Radar_^TPL:uc2;.bat
+        fromPath: ad_radar_apl/tools/plant_container
+        name: Plant_container_^TPL:uc2;
+
+      - cmd: __build_Container_Radar_^TPL:uc1;_C1sample.bat
+        fromPath: ad_radar_apl/tools/plant_container
+        name: Plant_container_^TPL:uc1;_C1sample
+      - cmd: __build_Container_Radar_^TPL:uc2;_C1sample.bat
+        fromPath: ad_radar_apl/tools/plant_container
+        name: Plant_container_^TPL:uc2;_C1sample
+
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Plant_container
+        fromPath: ./ad_radar_apl/tools/plant_container
+        includes: "___SW_VERSION.bat"
+        afterFail: false
+        zip: false
+
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Plant_container
+        fromPath: ./generatedFiles/Radar_^TPL:uc1;
+        includes: "plant_uC1/**"
+        afterFail: false
+        zip: true
+        zipName: plant_^TPL:uc1;
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Plant_container
+        fromPath: ./generatedFiles/Radar_^TPL:uc2;
+        includes: "plant_uC2/**"
+        afterFail: false
+        zip: true
+        zipName: plant_^TPL:uc2;
+
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Plant_container
+        fromPath: ./generatedFiles/Radar_^TPL:uc1;
+        includes: "plant_C1_uC1/**"
+        afterFail: false
+        zip: true
+        zipName: plant_^TPL:uc1;_C1
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Plant_container
+        fromPath: ./generatedFiles/Radar_^TPL:uc2;
+        includes: "plant_C1_uC2/**"
+        afterFail: false
+        zip: true
+        zipName: plant_^TPL:uc2;_C1

@@ -1,0 +1,7 @@
+**.py @a
+**.cmd @b @a
+**.bat @c
+**.cmake @d
+**/cool*/** @e
+**/ws/** @f
+**/abc/** @f

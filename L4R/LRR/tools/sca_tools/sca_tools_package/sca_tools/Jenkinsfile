@@ -1,0 +1,138 @@
+#!groovy
+
+@Library('doit@0.7.3') _
+
+def toolCollectionXml = '''
+<ToolCollection>
+  <ToolCollectionName>python</ToolCollectionName>
+  <Responsible>CC-ADPJ-DoitSoftwareQualityTeam@bcn.bosch.com</Responsible>
+  <Version>999</Version>
+  <Date>2020-01-01</Date>
+  <ZipDirectory>TCC\\ZippedTools</ZipDirectory>
+  <IndicatorDirectory>TCC</IndicatorDirectory>
+  <Tools>
+    <Tool>
+      <ToolName>python3</ToolName>
+      <SourcePath>TCC\\Tools\\python3\\3.8.3_WIN64</SourcePath>
+      <Mirror>No</Mirror>
+    </Tool>
+  </Tools>
+</ToolCollection>
+'''
+def credentialsId = 'ccad_hive_sys_user_ssh'
+def pypiRepositoryUrl = 'https://rb-artifactory.bosch.com/artifactory/api/pypi/pypi-bios-local'
+
+properties([buildDiscarder(logRotator(daysToKeepStr: '30'))])
+
+node('windows') {
+    cleanWs()
+    def projectDir = "${env.WORKSPACE}\\sca_tools"
+    def reportsRelPath = 'reports'
+    def reportsUnitRelPath = "${reportsRelPath}\\unit"
+    def reportsBehaveRelPath = "sca_tools\\reports\\behave"
+    def reportsDir = "${env.WORKSPACE}\\${reportsRelPath}"
+    def reportsUnitDir = "${env.WORKSPACE}\\${reportsUnitRelPath}"
+    def reportsBehaveDir = "${env.WORKSPACE}\\${reportsBehaveRelPath}"
+    def coverageDir = "${reportsDir}\\covhtml"
+    def swqModuleName = 'swq'
+    def testModuleName = 'test'
+    def versionFromSCM = env.TAG_NAME
+    def versionFromSCA = ''
+    def pythonPath = ''
+
+    stage('Checkout') {
+        dir(projectDir) {
+            checkout scm
+        }
+    }
+
+    stage('Install Tools') {
+        def tccPath = tool('tcc')
+        def tccInstallScript = "${tccPath}\\Base\\InstallToolCollection\\InstallToolCollection.ps1"
+        def tccToolsCollectionFile = "${env.WORKSPACE}\\_TCC_tool_collection.xml"
+        def pythonPathEnvName = 'TCCPATH_python3'
+        writeFile(file: tccToolsCollectionFile, text: toolCollectionXml)
+        bat("""
+            rem Environment variables have to be set for initialization script
+            set TCC_COMMAND=%SystemRoot%\\system32\\WindowsPowerShell\\v1.0\\powershell.exe -file "${tccInstallScript}"
+            rem Install Python
+            %TCC_COMMAND% "${tccToolsCollectionFile}" -GenerateToolPathBat "${env.WORKSPACE}\\init.bat"
+            call "${env.WORKSPACE}\\init.bat"
+            echo %${pythonPathEnvName}% > ${env.WORKSPACE}\\${pythonPathEnvName}.txt
+            md ${reportsDir}
+        """)
+        pythonPath = readFile("${env.WORKSPACE}\\${pythonPathEnvName}.txt").trim()
+    }
+
+    stage('Install Dependencies'){
+        def pylintCmd = "pylint --output-format=parseable --reports=no"
+        def pycodestyleCmd = 'pycodestyle'
+        doit.withPython(
+            path: "${pythonPath}\\python.exe",
+            requirementsFiles: ["${projectDir}\\requirements-dev.txt"]
+        ) {
+            stage('Static Code Analysis') {
+                dir(projectDir) {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                        python(args: "-m ${pycodestyleCmd} ${projectDir} > ${reportsDir}\\pycodestyle.log")
+                    }
+                    catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                        python(args: "-m ${pylintCmd} --rcfile=${swqModuleName}\\.pylintrc --jobs=0 ${swqModuleName} --exit-zero > ${swqModuleName}\\pylint.log")
+                    }
+                    catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                        python(args: "-m ${pylintCmd} --rcfile=${testModuleName}\\.pylintrc --jobs=0 ${testModuleName} --exit-zero > ${testModuleName}\\pylint.log")
+                    }
+                }
+                recordIssues(
+                    enabledForFailure: true,
+                    qualityGates: [[threshold: 1, type: 'TOTAL', unstable: false]],
+                    tool: pep8(pattern: "**\\pycodestyle.log"),
+                    )
+                recordIssues(
+                    enabledForFailure: true,
+                    qualityGates: [
+                        [threshold: 1, type: 'TOTAL_HIGH', unstable: false]
+                    ],
+                    tool: pyLint(pattern: "**\\pylint.log"),
+                    )
+            }
+            stage('Test') {
+                try {
+                    dir(projectDir) {
+                        python(args: "-m coverage run --branch -m xmlrunner -o ${reportsUnitDir}")
+                        python(args: "-m coverage html -d ${coverageDir}")
+                    }
+                } finally {
+                    junit(allowEmptyResults: true, testResults: "${reportsUnitRelPath}\\TEST*.xml")
+                    publishHTML (target: [
+                      allowMissing: false,
+                      alwaysLinkToLastBuild: false,
+                      keepAll: true,
+                      reportDir: "${coverageDir}",
+                      reportFiles: 'index.html',
+                      reportName: 'Coverage Report'
+                    ])
+                }
+            }
+
+            versionFromSCA = python(args: "${projectDir}\\sca_tools.py --version", returnStdout: true).split('\n')[-1].trim()
+
+            if (versionFromSCM == versionFromSCA) {
+                stage('Build and upload SCA tools') {
+                    dir(projectDir) {
+                        python(args: "-m build ${projectDir}")
+                        withCredentials([
+                            usernamePassword(
+                                usernameVariable: 'TECHNICAL_USERNAME',
+                                passwordVariable: 'TECHNICAL_PASSWORD',
+                                credentialsId: env.AUTO_USER_USERNAME_PASSWORD_ID
+                            )
+                        ]) {
+                            python(args: "-m twine upload --repository-url ${pypiRepositoryUrl} --username ${TECHNICAL_USERNAME} --password ${TECHNICAL_PASSWORD} --verbose --disable-progress-bar dist/**")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

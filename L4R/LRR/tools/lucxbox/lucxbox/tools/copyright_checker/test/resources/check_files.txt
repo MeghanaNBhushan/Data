@@ -1,0 +1,6 @@
+resources/no_header.hpp
+resources/other_header.hpp
+resources/other_rb_header_v1.hpp
+resources/rb_header.hpp
+resources/i_do_not_exist.hpp
+resources/ignore.flux

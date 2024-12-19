@@ -1,0 +1,19 @@
+trigger: none
+
+pr: none
+
+jobs:
+- job: Flash_SWU
+  pool:
+    name: local-test-benches
+    demands:
+      - Agent.Name -equals LR-C-001ET
+  steps:
+    - publish: /tmp/uLRR_image-v1.0.2+docudocker-584-g8769815.swu
+      artifact: swu-file
+      displayName: Publish swu file
+    - download: current
+      artifact: swu-file
+    - template: /devops/templates/steps/swu-flash.yml
+      parameters:
+        pathToFlashFile: $(Pipeline.Workspace)/swu-file/uLRR_image-v1.0.2+docudocker-584-g8769815.swu

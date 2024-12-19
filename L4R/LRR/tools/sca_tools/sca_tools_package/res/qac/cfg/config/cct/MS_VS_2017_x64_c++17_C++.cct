@@ -1,0 +1,324 @@
+*{
+* "PLATFORM" : "PLATFORM_WIN64",
+* "COMPILER_HIERARCHY" : "Microsoft_Visual_Studio",
+* "COMPILER_NAME": "Visual_C++_2017",
+* "COMPILER_VERSION": "19-1",
+* "HOST": "x64",
+* "TARGET": "x64",
+* "SOURCE_LANGUAGE": "C++",
+* "COMPILER_CMD": "cl",
+* "ADDITIONAL_INCLUDES":"DATA/MS_VS_2017_x64_c++17_C++/Stub",
+* "INCLUDE_LIST": [
+*   {"INCLUDE_STRUCTURE": {
+*       "INCLUDE_TYPE": "MasterScript",
+*       "INCLUDE_VALUE": "DATA/common/msvc.py"
+*       }
+*   },
+*   {"INCLUDE_STRUCTURE": {
+*       "INCLUDE_TYPE": "HelperScript",
+*       "INCLUDE_VALUE": "DATA/core_qaf/qaf.py"
+*       }
+*   }
+* ],
+* "SYNCHRONISATION" : {
+*   "INCLUDE_FLAGS":"/I",
+*   "DEFINE_FLAGS":"/D",
+*   "SETTINGS_FILE_OPTIONS":{
+*       "FLAG":"@",
+*       "EXTENSION":".rsp",
+*       "LITERAL_QUOTES":"true"
+*       }
+*   }
+*}
+
+* __cplusplus
+*
+-sd"__cplusplus=201703L"
+
+*
+* WIN32
+*
+-SD"WIN32"
+-SD"_WIN32=1"
+-SD"__WIN32=1"
+
+*
+* WIN64
+*
+-SD"_WIN64=1"
+
+*
+* cdecl
+*
+-SD"cdecl=__cdecl"
+-SD"_cdecl=__cdecl"
+-SD"__cdecl="
+
+*
+* far
+*
+-SD"far="
+-SD"_far="
+-SD"__far="
+
+*
+* near
+*
+-SD"near="
+-SD"_near="
+-SD"__near="
+
+*
+* pascal
+*
+-SD"pascal="
+-SD"_pascal="
+-SD"__pascal="
+
+*
+* types
+*
+-SD"__int64=long long"
+-SD"__int32=int"
+-SD"__int16=short"
+-SD"__int8=char"
+-SD"__w64="
+-SD"_int64=long long"
+-SD"_int32=int"
+-SD"_int16=short"
+-SD"_int8=char"
+-SD"_w64="
+-SD"__ptr64="
+-SD"__ptr32="
+
+*
+* calls
+*
+-SD "__clrcall="
+-SD "_stdcall="
+-SD "__stdcall="
+-SD "_fastcall="
+-SD "__fastcall="
+-SD "_syscall="
+-SD "__syscall="
+-SD "_oldcall="
+-SD "__oldcall="
+-SD "__thiscall="
+-SD "_vectorcall="
+-SD "__vectorcall="
+
+*
+* unaligned
+*
+-SD"_unaligned="
+-SD"__unaligned="
+
+*
+* based
+*
+-SD"_based(type)="
+-SD"__based(type)="
+
+*
+* __uuidof
+*
+-SD"__uuidof(X)=IID_IUnknown"
+
+*
+* __alignof operator
+*
+-SD"__alignof(type)=alignof(type)"
+
+*
+* __identifier keyword
+*
+-SD"__identifier(keyword)=ident_##keyword"
+
+*
+* declspec
+*
+-SD"_declspec=_ignore_paren"
+-SD"__declspec=_ignore_paren"
+
+*
+* inline variations
+*
+-SD"_inline=inline"
+-SD"__inline=inline"
+-SD"_forceinline=inline"
+-SD"__forceinline=inline"
+
+*
+* inheritance
+*
+-SD_single_inheritance=
+-SD__single_inheritance=
+-SD_multiple_inheritance=
+-SD__multiple_inheritance=
+-SD_virtual_inheritance=
+-SD__virtual_inheritance=
+-SD__interface=class
+-SD__super=_prl_null_expression
+-SD__sealed=
+
+*
+* events
+*
+-SD__event=
+-SD__raise=
+-SD__hook=_ignore_paren
+-SD__unhook=_ignore_paren
+
+*
+* delegation
+*
+-SD"__delegate="
+-SD"__gc="
+
+*
+* exceptions
+*
+-SD"__try=try"
+-SD"__except=catch(int e) _prl_ignore_paren"
+-SD"__finally=catch(...) {}"
+-SD"__leave="
+
+*
+* conditional compilation
+*
+-SD"__if_not_exists(a)=extern _prl_stringify(C++)"
+-SD"__if_exists(a)=_prl_ignore_paren"
+
+*
+* compiler type traits
+*
+-SD"__has_assign(type)=false"
+-SD"__has_copy(type)=false"
+-SD"__has_finalizer(type)=false"
+-SD"__has_user_destructor(type)=false"
+-SD"__is_base_of(base,derived)=__qacpp_is_base_of(base, derived)||(!__qacpp_is_union(base)&&__qacpp_is_same(typename ::__qacpp_helpers::remove_cv <base>::type, typename ::__qacpp_helpers::remove_cv <derived>::type))"
+-SD"__is_delegate(type)=false"
+-SD"__is_interface_class(type)=false"
+-SD"__is_ref_array(type)=false"
+-SD"__is_ref_class(type)=false"
+-SD"__is_sealed(type)=false"
+-SD"__is_simple_value_class(type)=false"
+-SD"__is_value_class(type)=false"
+-SD __is_pod=__qacpp_is_pod
+-SD __is_convertible_to=__qacpp_is_convertible
+-SD __is_union=__qacpp_is_union
+-SD __is_class=__qacpp_is_class
+-SD __is_enum=__qacpp_is_enum
+-SD __is_empty=__qacpp_is_empty
+-SD"__is_final(type)=false"
+-SD __is_polymorphic=__qacpp_is_polymorphic
+-SD __is_abstract=__qacpp_is_abstract
+-SD __has_trivial_constructor=__qacpp_has_trivial_constructor
+-SD __has_trivial_copy=__qacpp_has_trivial_copy
+-SD __has_trivial_assign=__qacpp_has_trivial_assign
+-SD __has_nothrow_constructor=__qacpp_has_nothrow_constructor
+-SD __has_nothrow_copy=__qacpp_has_nothrow_copy
+-SD __has_nothrow_assign=__qacpp_has_nothrow_assign
+-SD __has_virtual_destructor=__qacpp_has_virtual_destructor
+-SD"__is_standard_layout(type)=__qacpp_is_standard_layout(type)"
+-SD"__is_aggregate(type)=__qacpp_is_aggregate(type)"
+-SD"__is_literal_type(type)=__qacpp_is_literal(type)"
+-SD"__is_trivial(type)=__qacpp_is_trivial(type)"
+-SD"__is_trivially_copyable(type)=__qacpp_is_trivially_copyable(type)"
+-SD"__has_trivial_move_constructor(type)=false"
+-SD"__has_trivial_move_assign(type)=false"
+-SD"__has_nothrow_move_assign(type)=false"
+-SD"__underlying_type(type)=__qacpp_underlying_type(type)"
+
+*
+* other keywords
+*
+-SD"__noop=; _prl_ignore_semi"
+-SD"__asm=asm"
+-SD"_asm=asm"
+-SD"__pragma(a)="
+-SD"__assume(a)="
+-SD"__wchar_t=wchar_t"
+-SD"__restrict="
+
+*
+* BOOST
+*
+-SD BOOST_COMPILER_CONFIG=_prl_stringify(boost/qacpp_boost_compiler.h)
+
+*
+* nullptr
+*
+-SD "_NATIVE_NULLPTR_SUPPORTED"
+-SD "__nullptr=nullptr"
+
+*
+* Implicit Macros
+*
+-SD "_INTEGRAL_MAX_BITS=64"
+-SD _MSC_EXTENSIONS=1
+-SD "_M_X64=100"
+-SD "_M_AMD64=100"
+
+-SD "__TIMESTAMP__=__DATE__ __TIME__"
+-SD "__FUNCTION__=_prl_stringify(function)"
+-SD "__FUNCTIONW__=_prl_wstringify(function)"
+-SD "__FSTREXP=__FUNCTION__"
+-SD "__FUNCDNAME__=__FUNCTION__"
+-SD "__FUNCSIG__=__FUNCTION__"
+-SD "__func__=__FUNCTION__"
+
+-SD "WINVER=0x0A00"
+-SD "_WIN32_WINNT=0x0A00"
+-SD "_DLL=1"
+-SD "_AFXDLL=1"
+-SD "_WIN32=1"
+
+*
+* helper macros
+*
+-SD"_prl_null_expression=0 _prl_ignore_paren"
+-SD"_prl_ignore_paren=_ignore_paren"
+-SD"_prl_ignore_semi=_ignore_semi"
+-SD"_prl_wstringify(a)=L ## #a"
+-SD"_prl_stringify(a)=#a"
+
+*
+-SD "__nullterminated="
+-SD "_SAL_VERSION_CHECK(x)="
+-SD "__nullnullterminated="
+
+*
+* Compiler behaviour
+*
+-sdep+
+-ptp-
+-dpft+
+-ifn+
+-atncrb+
+-duc99dilt+
+-rvrb+
+-pp32bt-
+-accd-
+-sig-
+-atanpc+
+-aicpm+
+-audi+
+-afpcd+
+-noseparateargexpandedcomma-
+-c++03nounicodechartypes-
+-c++14exceptionspecification
+-preproccppkeywords-
+
+-it "size_t=unsigned long long"
+-it "ptrdiff_t=signed long long"
+-SD"_WCHAR_T_DEFINED=1"
+-SD"_NATIVE_WCHAR_T_DEFINED=1"
+-SD"_USE_DECLSPECS_FOR_SAL=1"
+-SD"SAL_NO_ATTRIBUTE_DECLARATIONS"
+-SD"_VARIANT_BOOL=_ignore_semi"
+-SD"_PRL_STRINGIFY(x)=#x"
+-SD"_DEBUG_FUNCTIONAL_MACHINERY=1"
+
+-size codeptr=64
+-size dataptr=64

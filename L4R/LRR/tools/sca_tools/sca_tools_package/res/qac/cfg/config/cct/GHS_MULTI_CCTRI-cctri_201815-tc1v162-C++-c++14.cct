@@ -1,0 +1,250 @@
+*{
+* "PLATFORM" : "PLATFORM_LIN64",
+* "COMPILER_HIERARCHY" : "GHS_MULTI",
+* "COMPILER_NAME": "CCTRI",
+* "COMPILER_VERSION": "201815",
+* "HOST": "PLATFORM_LIN64",
+* "TARGET": "tc1v162",
+* "SOURCE_LANGUAGE": "C++",
+* "COMPILER_CMD": "/usr/ghs/cctri -MD -MF=/workspaces/pl-cb/build/golf/GolfSINGLE/dep/.d -DBASE_SKIP_C1_LOCKSTEP_CHECK -DBASE_S_LAYOUT -DDADDY_ENABLED -DDADDY_MAX_RECEIVERS=15 -DDADDY_SCOM -DDADDY_TEST_ENABLED -DDADDY_USE_CPP11_FEATURES -DDSP_PARA_A -DDSP_UC_B -DDSV -DGHS -DNDEBUG -DOSENV_RTAOS40 -DRAD_C0 -DRBADCMON_VBATT_LOW -DRBADCPHY_TEMPERATUREINFO_xR5yz -DRBADCPHY_VBATT_LOW -DRBALMHA_DEVELOPMENT_STATE -DRBBIST_DISABLE_LMU_INIT -DRBBIST_ENABLE_CPU1DMEM1_INIT -DRBBIST_ENABLE_DLMUSTDBY_INIT -DRBCS520_CLAMP15 -DRBCS520_DEVELOPMENT_STATE -DRBCS520_EN_V5COM_SW -DRBCS520_VBATT_LOW -DRBDSP_ANG_DEBUG -DRBDSP_CORESEL_1 -DRBDSP_DEPLOY_XR5YB -DRBDSP_RIF0_AVAILABLE -DRBDSP_SPU0_AVAILABLE -DRBECUEOL_ACTIVE -DRBECUEOL_STUBS -DRBHWCFGCHECK_CACHE1ENABLED -DRBIFCONTROLLER_USE_MPR -DRBIFCONTROLLER_xR5yB -DRBMCU_DEVELOPMENT_STATE -DRBMONREACT_DISABLE_CAN1CAN2 -DRBMONREACT_USE_MPR -DRBNETCOM_ENABLE -DRBNETCOM_ITF_DADDY -DRBNETSCHEDULER_ENABLE -DRBNETXCP_ENABLE -DRBNET_CAN_ENABLE -DRBPDM_ACTIVE -DRBSCHED_xR5yB -DRBSPI_Generic -DRBSTARTUP_CACHE1ENABLED -DRBSYSEVM_ACTIVE -DRBSYSEVM_STOREADDITIONALINFO -DRBSYSEVM_SUPPORTMULTITASKING_API -DRBTASKALIVECHECK_C0_BG_MAX_RUNTIME=59 -DRBTASKALIVECHECK_C1_BG_MAX_RUNTIME=59 -DRBTIMECONV_ENABLE -DRBTRAP_TC33X_DEBUG -DRB_DSP_SCHEDULING_BASE -DRB_MPR_ADC_VALUE_AVAILABLE -DRB_MPR_NVM_VALUE_AVAILABLE -DRB_SMP_AVAILABLE -DRB_SMP_MR2_PIN_AVAILABLE -DRB_VX1000_MT_BASE_FAMILY -DRECO_INTERNAL_TIME_MASTER_DIRECTION=REAR -DRECO_INTERNAL_TIME_MASTER_POSITION=RIGHT -DRECO_SINGLE_SW -DRECO_TIMESYNC_ROLE_INTERNAL_MASTER -DSTARTUP_USE_MPR -DTARGET_AURIX_PLUS -DTGU -DTRI -DVARIANT_CLASSIC_PLUS_TGU -DVARIANT_RECO -DVARIANT_RECO_GOLF -DVEHICLE_GOLF -DVFC_ENABLE_FLOAT64_TYPE -DVX1000If_IsVX1000DriverAccessEnabled=1 -DXGU -I/workspaces/pl-cb/apl/base/bindings/golf/component/ccr/runnables/net/net_can_plus_tgu/. -I/workspaces/pl-cb/apl/base/component/int/runnables/systemStatusOutput -I/workspaces/pl-cb/apl/base/component/int/runnables/systemStatusHandler -I/workspaces/pl-cb/apl/base/bindings/golf/scom -I/workspaces/pl-cb/ip_rc -I/workspaces/pl-cb/apl/base/scom/scheduling_stubs -I/workspaces/pl-cb/apl/base/scom/common -I/workspaces/pl-cb/reco_fw/scom -I/workspaces/pl-cb/apl/base/component/ccr/modules/rbMPR/cfg -I/workspaces/pl-cb/apl/base/component/ccr/modules/ifr_ali/api -I/workspaces/pl-cb/apl/base/component/ccr/modules/dia/diauser/inc/rbExampleComponent_RoutineControl -I/workspaces/pl-cb/apl/base/component/ccr/modules/dia/diauser/inc -I/workspaces/pl-cb/apl/base/component/ccr/modules/dia/diauser/gen -I/workspaces/pl-cb/apl/base/component/ccr/modules/dia/diacus/inc/rbDia_StaticAlignment -I/workspaces/pl-cb/apl/base/component/ccr/modules/dia/diacus/inc/rbDia_RoutineControl -I/workspaces/pl-cb/apl/base/component/ccr/modules/dia/diacus/inc/rbDia_LifeCycleManagementSwitchToReturn -I/workspaces/pl-cb/apl/base/component/ccr/modules/dia/diacus/inc/rbDia_CommControl -I/workspaces/pl-cb/apl/base/component/ccr/modules/dia/diacus/inc -I/workspaces/pl-cb/reco_fw/component/ccr/modules/rbTimeConv/cfg/canfd_dual -I/workspaces/pl-cb/apl/base/component/ccr/modules/rte -I/workspaces/pl-cb/apl/base/component/ccr/runnables/rbPdm_Customer/inc -I/workspaces/pl-cb/apl/base/component/ccr/runnables/rbPdm_Customer/gen/PerSppBdmRunnable -I/workspaces/pl-cb/apl/base/component/ccr/runnables/rbPdm_Customer/gen/PerPmeRunnable -I/workspaces/pl-cb/apl/base/component/ccr/runnables/rbPdm_Customer/gen/PerMalRunnable -I/workspaces/pl-cb/apl/base/component/ccr/runnables/rbPdm_Customer/gen -I/workspaces/pl-cb/apl/base/component/ccr/modules/ECUConfig/./inc -I/workspaces/pl-cb/apl/base/bindings/golf/cubas/gen/rte -I/workspaces/pl-cb/apl/base/cubas/cfg/EcuCybSec_PJIF/ecy_hsm/ecy_hsm_IFXTC35x_DASy/api -I/workspaces/pl-cb/apl/base/cubas/cfg/EcuCybSec_PJIF/ecy_hsm/ecy_hsm/Host_Storage/api -I/workspaces/pl-cb/apl/base/cubas/cfg/EcuCybSec_PJIF/ecy_hsm/ecy_hsm/Host_Proxy/api -I/workspaces/pl-cb/apl/base/cubas/cfg/EcuCybSec_PJIF/ecy_hsm/ecy_hsm/Host_Applet/api -I/workspaces/pl-cb/apl/base/cubas/cfg/EcuCybSec_PJIF/ecy_hsm/ecy_hsm/CSAI/api -I/workspaces/pl-cb/apl/base/cubas/cfg/EcuCybSec_PJIF/./ecy_hsm -I/workspaces/pl-cb/apl/base/bindings/golf/cubas/stubs -I/workspaces/pl-cb/build/golf/GolfSINGLE/include -I/workspaces/pl-cb/apl/base/cubas/cfg -I/workspaces/pl-cb/apl/base/component/xgu/runnables/tgu/objectCollector/workers -I/workspaces/pl-cb/apl/base/component/xgu/runnables/tgu/objectCollector/./src -I/workspaces/pl-cb/apl/base/component/xgu/runnables/tgu/omi/src -I/workspaces/pl-cb/apl/base/component/xgu/runnables/tgu/input/src -I/workspaces/pl-cb/apl/base/cubas/stubs -I/workspaces/pl-cb/apl/base/component/xgu/interfaces -I/workspaces/pl-cb/apl/base/component/xgu/modules/xgu/padxgu -I/workspaces/pl-cb/apl/base/configuration/cbase/params -I/workspaces/pl-cb/apl/base/configuration/cbase/parameterSetBindings/common -I/workspaces/pl-cb/apl/base/component/int/runnables/mountingPositionProvider -I/workspaces/pl-cb/apl/base/component/int/interfaces/systemStatus -I/workspaces/pl-cb/apl/base/component/rpm/modules/padrpm -I/workspaces/pl-cb/apl/base/bindings/golf_common/component/per/modules/spp_hvm -I/workspaces/pl-cb/apl/base/bindings/golf_common/component/per/runnables/spp_hvm -I/workspaces/pl-cb/apl/base/bindings/golf_common/component/sit/runnables/sppHmiInput/src -I/workspaces/pl-cb/apl/base/component/sit/runnables/sitParameterDeliverRunnable -I/workspaces/pl-cb/apl/base/component/sit/config/padsit -I/workspaces/pl-cb/apl/base/component/sit -I/workspaces/pl-cb/ip_vmc/vmc/modules/asketModel -I/workspaces/pl-cb/ip_vmc/inc -I/workspaces/pl-cb/ip_vmc/. -I/workspaces/pl-cb/apl/base/configuration/vmc -I/workspaces/pl-cb/apl/base/component/fct/modules/spp/src -I/workspaces/pl-cb/apl/base/component/fct/modules/hmi/optic -I/workspaces/pl-cb/apl/base/component/fct/modules/hmi/acoustic -I/workspaces/pl-cb/apl/base/component/fct/modules/hmi -I/workspaces/pl-cb/apl/base/component/ccr/modules/net/api -I/workspaces/pl-cb/apl/base/bindings/tgu/component/ccr/modules/net/gen/omi -I/workspaces/pl-cb/apl/base/bindings/golf_common/component/fct/runnables/spp/src -I/workspaces/pl-cb/apl/base/bindings/golf_common/component/fct/runnables/hmi/src -I/workspaces/pl-cb/apl/base/bindings/golf_common/component/fct/modules/spp -I/workspaces/pl-cb/apl/base/bindings/golf_common/component/fct/modules/hmi -I/workspaces/pl-cb/apl/base/bindings/golf/cubas/gen -I/workspaces/pl-cb/apl/base/bindings/golf/component/ccr/modules/net/gen/can_reco_hmi -I/workspaces/pl-cb/apl/base/bindings/golf/component/ccr/modules/net/gen/can_golf -I/workspaces/pl-cb/apl/base/bindings/golf/component/ccr/modules/net/cfg/can_golf_plus_tgu -I/workspaces/pl-cb/apl/base/bindings/golf/component/ccr/modules/net/api -I/workspaces/pl-cb/ip_if/radar_if/component/rtaos/CR5CB/out -I/workspaces/pl-cb/ip_if/radar_if/component/rtaos/CR5CB -I/workspaces/pl-cb/ip_if/net/rbNetScheduler/inc -I/workspaces/pl-cb/ip_if/net/rbNetCom/src -I/workspaces/pl-cb/ip_if/net/rbNetCom/inc -I/workspaces/pl-cb/ip_if/if_fw/core/cubas/stubs -I/workspaces/pl-cb/apl/base/component/fct/fsm/runnableControllers/fsm -I/workspaces/pl-cb/apl/base/component/fct/fsm/pssFunctions/rcta -I/workspaces/pl-cb/apl/base/component/fct/fsm/pssFunctions/pcr -I/workspaces/pl-cb/apl/base/component/fct/fsm/pssFunctions/lca -I/workspaces/pl-cb/apl/base/component/fct/fsm/pssFunctions/fcta -I/workspaces/pl-cb/apl/base/component/fct/fsm/pssFunctions/dow -I/workspaces/pl-cb/apl/base/component/fct/fsm/pssFunctions/bsd -I/workspaces/pl-cb/apl/base/component/fct/test/sw_test -I/workspaces/pl-cb/apl/base/component/fct/runnables/fdm -I/workspaces/pl-cb/apl/base/component/fct/fdm/runCont/evaluatedBehaviorListFilter -I/workspaces/pl-cb/apl/base/component/fct/fdm/runCont/decisionMaker -I/workspaces/pl-cb/apl/base/component/fct/fdm/runCont/activeWarnings -I/workspaces/pl-cb/apl/base/component/fct/config/padfct -I/workspaces/pl-cb/apl/base/component/fct/config/common -I/workspaces/pl-cb/apl/base/component/fct/config/behaviorList -I/workspaces/pl-cb/apl/base/component/fct/interfaces/fdm -I/workspaces/pl-cb/reco_fw/component/int/runnables/dspTimeSync -I/workspaces/pl-cb/reco_fw/component/ccr/runnables/fpuTrapEnableSwitcher -I/workspaces/pl-cb/reco_fw/component/ccr/modules/svb/test/rbDia_SecureAccess_LFM -I/workspaces/pl-cb/reco_fw/component/ccr/modules/svb -I/workspaces/pl-cb/reco_fw/component/ccr/modules/traptest -I/workspaces/pl-cb/reco_fw/component/ccr/modules/main/task_bodies -I/workspaces/pl-cb/reco_fw/component/ccr/modules/main -I/workspaces/pl-cb/reco_fw/component/ccr/modules/pda/rbPda_Signature/cfg -I/workspaces/pl-cb/reco_fw/component/ccr/runnables/failureManager/inc/common -I/workspaces/pl-cb/reco_fw/component/ccr/runnables/failureManager/inc -I/workspaces/pl-cb/reco_fw/component/ccr/runnables/failureManager/gen -I/workspaces/pl-cb/reco_fw/component/ccr/modules/rbTrustedboot/cfg -I/workspaces/pl-cb/reco_fw/component/ccr/modules/rbMemStack/src -I/workspaces/pl-cb/reco_fw/component/ccr/modules/rbMemStack/inc -I/workspaces/pl-cb/reco_fw/component/ccr/modules/rbMemStack/cfg -I/workspaces/pl-cb/reco_fw/component/ccr/modules/rbHsmPrepare/cfg -I/workspaces/pl-cb/reco_fw/component/ccr/modules/memprot -I/workspaces/pl-cb/generatedFiles/Radar_BaseC0S/include -I/workspaces/pl-cb/reco_fw/component/hil/config/src -I/workspaces/pl-cb/apl/base/bindings/golf/scom/gen -I/workspaces/pl-cb/ip_if/rc_fw/dsp/SW/src/dsp -I/workspaces/pl-cb/reco_fw/configuration/per/params/src -I/workspaces/pl-cb/reco_fw/configuration/rearcorner/parameter_sets/baseclasses/TIPL -I/workspaces/pl-cb/reco_fw/configuration/rearcorner/parameter_sets/baseclasses/FM -I/workspaces/pl-cb/reco_fw/configuration/rearcorner/parameter_sets/TIPL/tguHighwayAssist_parameter_sets -I/workspaces/pl-cb/reco_fw/configuration/rearcorner/parameter_sets/TIPL/laneChangeWarning_parameter_sets -I/workspaces/pl-cb/reco_fw/configuration/rearcorner/parameter_sets/FM/rearCrossTraffic_parameter_sets -I/workspaces/pl-cb/reco_fw/configuration/rearcorner/parameter_sets/FM/rearCrossTrafficBraking_parameter_sets -I/workspaces/pl-cb/reco_fw/configuration/rearcorner/parameter_sets/FM/preCrashRearWarning_parameter_sets -I/workspaces/pl-cb/reco_fw/configuration/rearcorner/parameter_sets/FM/fctaStartPrevention_parameter_sets -I/workspaces/pl-cb/reco_fw/configuration/rearcorner/parameter_sets/FM/fctaInfo_parameter_sets -I/workspaces/pl-cb/reco_fw/configuration/rearcorner/parameter_sets/FM/doorOpeningWarning_parameter_sets -I/workspaces/pl-cb/reco_fw/configuration/rearcorner/params -I/workspaces/pl-cb/reco_fw/component/int/runnables/mountingRecognitionResetter -I/workspaces/pl-cb/reco_fw/component/int/modules/mountingRecognition -I/workspaces/pl-cb/reco_fw/component/int/runnables/spp_scp -I/workspaces/pl-cb/reco_fw/component/int/functions -I/workspaces/pl-cb/reco_fw/component/int/runnables/mt_trigger -I/workspaces/pl-cb/reco_fw/component/int/modules/copyTaskCopyPort -I/workspaces/pl-cb/ip_rc/dsp/SW/src/dsp/interface/_variant/CR5yB -I/workspaces/pl-cb/ip_rc/dsp/SW/src/dsp/interface -I/workspaces/pl-cb/ip_rc/dsp/SW/src/dsp -I/workspaces/pl-cb/reco_fw/component/int/interfaces/scp -I/workspaces/pl-cb/reco_fw/component/int/interfaces/mountingPosition -I/workspaces/pl-cb/reco_fw/component/rpm/modules/parameter_sets/fm/immediateBrake_parameter_sets -I/workspaces/pl-cb/reco_fw/component/fct/modules/stateMachine/pss -I/workspaces/pl-cb/reco_fw/component/fct/modules/stateMachine/interfaces -I/workspaces/pl-cb/reco_fw/component/fct/modules/stateMachine/abstractStates -I/workspaces/pl-cb/reco_fw/component/fct/modules/stateMachine -I/workspaces/pl-cb/reco_fw/component/fct/modules/spp/src -I/workspaces/pl-cb/reco_fw/component/fct/modules/runCont/fsm -I/workspaces/pl-cb/reco_fw/component/fct/modules/runCont/decisionMaker -I/workspaces/pl-cb/reco_fw/component/fct/modules/hmi/optic -I/workspaces/pl-cb/reco_fw/component/fct/modules/hmi/brakeSuppresion -I/workspaces/pl-cb/reco_fw/component/fct/modules/hmi/brake -I/workspaces/pl-cb/reco_fw/component/fct/modules/hmi/acoustic -I/workspaces/pl-cb/reco_fw/component/fct/modules/hmi -I/workspaces/pl-cb/reco_fw/component/fct/modules/fip -I/workspaces/pl-cb/reco_fw/component/fct/modules/degradationManager -I/workspaces/pl-cb/reco_fw/component/fct/modules/behaviorManager -I/workspaces/pl-cb/reco_fw/component/fct/runnables/fsm -I/workspaces/pl-cb/reco_fw/component/fct/interfaces/spp/src -I/workspaces/pl-cb/reco_fw/component/fct/interfaces/hmi/src -I/workspaces/pl-cb/reco_fw/component/fct/interfaces/fsm -I/workspaces/pl-cb/reco_fw/component/fct/interfaces/fdm -I/workspaces/pl-cb/reco_fw/component/ccr/modules/task_bodies -I/workspaces/pl-cb/reco_fw/component/ccr/modules/measurement_trigger -I/workspaces/pl-cb/reco_fw/component/ccr/modules/countingTimer -I/workspaces/pl-cb/reco_fw/component/ccr/interfaces -I/workspaces/pl-cb/reco_fw/component/ccr/runnables/sppEvm -I/workspaces/pl-cb/ip_ra5/per/mal/src/runnables/variant/corner -I/workspaces/pl-cb/ip_ra5/per/mal/src/modules/parameters/src/variant/corner -I/workspaces/pl-cb/ip_ra5/per/mal/src/modules/types/algorithms/variant/corner -I/workspaces/pl-cb/ip_ra5/per/mal/src/modules/types/variant/corner -I/workspaces/pl-cb/ip_ra5/per/mal/src/interfaces/variant/corner -I/workspaces/pl-cb/ip_ra5/per/mal/src/modules/controllers/src/variant/corner -I/workspaces/pl-cb/ip_ra5/per/bdm/src/modules/controllers/src/variant/corner -I/workspaces/pl-cb/ip_ra5/per -I/workspaces/pl-cb/ip_ra5/per/bdm/src/runnables/test -I/workspaces/pl-cb/ip_ra5/per/bdm/src/runnables/src -I/workspaces/pl-cb/ip_ra5/per/bdm/src/modules/parameters/src -I/workspaces/pl-cb/ip_ra5/per/bdm/src/modules/controllers/test -I/workspaces/pl-cb/ip_ra5/per/bdm/src/modules/controllers/src -I/workspaces/pl-cb/ip_ra5/per/bdm/src/modules/types/test -I/workspaces/pl-cb/ip_ra5/per/bdm/src/modules/types/src -I/workspaces/pl-cb/ip_ra5/per/bdm/src/interfaces -I/workspaces/pl-cb/ip_ra5/per/mal/src/runnables -I/workspaces/pl-cb/ip_ra5/per/mal/src/modules/types/algorithms -I/workspaces/pl-cb/ip_ra5/per/mal/src/modules/types -I/workspaces/pl-cb/ip_ra5/per/mal/src/modules/parameters/src -I/workspaces/pl-cb/ip_ra5/per/mal/src/modules/controllers/test -I/workspaces/pl-cb/ip_ra5/per/mal/src/modules/controllers/src -I/workspaces/pl-cb/ip_ra5/per/mal/src/interfaces -I/workspaces/pl-cb/reco_fw/component/per/vbindings/radarObj/types -I/workspaces/pl-cb/reco_fw/component/per/vbindings/radarObj/parameter -I/workspaces/pl-cb/reco_fw/component/per/vbindings/radarObj/controllers/src -I/workspaces/pl-cb/reco_fw/component/per/runnables/src/PerParameterRunnable/foiParameters -I/workspaces/pl-cb/reco_fw/component/per/modules/controllers/src -I/workspaces/pl-cb/reco_fw/component/per/functions -I/workspaces/pl-cb/reco_fw/component/per/runnables/src/PerParameterRunnable -I/workspaces/pl-cb/reco_fw/component/per/runnables/src -I/workspaces/pl-cb/reco_fw/component/per/runnables/spp_bdm/src -I/workspaces/pl-cb/reco_fw/component/per/modules/gen -I/workspaces/pl-cb/reco_fw/component/per/interfaces -I/workspaces/pl-cb/reco_fw/component/per/dc_internal_modules/reco/src -I/workspaces/pl-cb/reco_fw/component/per/dc_internal_modules/parameters -I/workspaces/pl-cb/reco_fw/component/per/config/stalin -I/workspaces/pl-cb/reco_fw/component/per/config/spp_rloc -I/workspaces/pl-cb/reco_fw/component/per/config/per -I/workspaces/pl-cb/reco_fw/component/per/config/otc -I/workspaces/pl-cb/reco_fw/component/per/config/bdm -I/workspaces/pl-cb/reco_fw/component/hil/interfaces/obj_hil_bypassing/src -I/workspaces/pl-cb/ip_ra5/per/mal/src -I/workspaces/pl-cb/ip_ra5/per/bdm/src -I/workspaces/pl-cb/reco_fw/component/dsm/runnables/ssc/. -I/workspaces/pl-cb/reco_fw/component/dsm/modules/depCallback -I/workspaces/pl-cb/reco_fw/component/dsm/modules/cfg -I/workspaces/pl-cb/reco_fw/component/dsm/interfaces -I/workspaces/pl-cb/reco_fw/component/sit/modules/port_interfaces/objectSelector -I/workspaces/pl-cb/reco_fw/component/sit/modules/objectSelector -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/TIPL/tguHighwayAssistTIPL/test -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/TIPL/laneChangeWarningTIPL/test -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/TIPL/laneChangeWarningTIPL/relevantObjectClassifier -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/TIPL/laneChangeWarningTIPL/objectSelectors -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/TIPL/helper -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/FM/rearCrossTrafficFM/necessityCalculation -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/FM/rearCrossTrafficFM -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/FM/commonFM/crossTrafficFM -I/workspaces/pl-cb/reco_fw/component/sit -I/workspaces/pl-cb/reco_fw/component/sit/runnables/sitParameterDeliverRunnable -I/workspaces/pl-cb/reco_fw/component/sit/runnables/sitDcParameterInputRunnable -I/workspaces/pl-cb/reco_fw/component/sit/runnables/behaviors/TIPL -I/workspaces/pl-cb/reco_fw/component/sit/runnables/behaviors/FM/rearCrossTrafficFM -I/workspaces/pl-cb/reco_fw/component/sit/runnables/behaviors/FM/preCrashRearFM -I/workspaces/pl-cb/reco_fw/component/sit/runnables/behaviors/FM/fctaFM -I/workspaces/pl-cb/reco_fw/component/sit/runnables/behaviors/FM/doorOpeningFM -I/workspaces/pl-cb/reco_fw/component/sit/runnables/behaviors -I/workspaces/pl-cb/reco_fw/component/sit/modules/runnable_interfaces -I/workspaces/pl-cb/reco_fw/component/sit/modules/port_interfaces -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/common/warningZone -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/common/objectFilter -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/common -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/TIPL/tguHighwayAssistTIPL -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/TIPL/laneChangeWarningTIPL -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/FM/preCrashRearFM -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/FM/fctaFM -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/FM/doorOpeningFM -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/FM/commonFM/longitudinalTrafficFM -I/workspaces/pl-cb/reco_fw/component/sit/modules/behaviorStrategies/FM/commonFM/boundingBoxFM -I/workspaces/pl-cb/reco_fw/component/sit/lib/utils/fusHelper -I/workspaces/pl-cb/reco_fw/component/sit/lib/utils -I/workspaces/pl-cb/reco_fw/component/sit/lib/behaviorStrategies/TIPL/behaviors -I/workspaces/pl-cb/reco_fw/component/sit/interfaces/parameters/TIPL/tguHighwayAssistTIPL -I/workspaces/pl-cb/reco_fw/component/sit/interfaces/parameters/TIPL/laneChangeWarningTIPL -I/workspaces/pl-cb/reco_fw/component/sit/interfaces/parameters/FM/rearCrossTrafficFM -I/workspaces/pl-cb/reco_fw/component/sit/interfaces/parameters/FM/preCrashRearFM -I/workspaces/pl-cb/reco_fw/component/sit/interfaces/parameters/FM/fctaFM -I/workspaces/pl-cb/reco_fw/component/sit/interfaces/parameters/FM/doorOpeningFM -I/workspaces/pl-cb/reco_fw/component/sit/interfaces/introspections/TIPL -I/workspaces/pl-cb/reco_fw/component/sit/interfaces/introspections/FM -I/workspaces/pl-cb/reco_fw/component/sit/interfaces/evaluatedBehaviorLists/TIPL -I/workspaces/pl-cb/reco_fw/component/sit/interfaces/evaluatedBehaviorLists/FM -I/workspaces/pl-cb/reco_fw/component/sit/interfaces/evaluatedBehaviorLists -I/workspaces/pl-cb/reco_fw/component/rpm/modules/warning_behaviors -I/workspaces/pl-cb/reco_fw/component/int/runnables/genesis -I/workspaces/pl-cb/ip_dc/dc_fw/src/sit/daddy/data -I/workspaces/pl-cb/ip_dc/dc_fw/src/rpm/modules/prediction -I/workspaces/pl-cb/ip_dc/dc_fw/src/per/modules/algos/transformation/src -I/workspaces/pl-cb/ip_dc/dc_fw/inc/dc_interfaces/sit/parameterSets/bsTipl -I/workspaces/pl-cb/ip_dc/dc_fw/inc/dc_interfaces/dc_utils/daddySafe -I/workspaces/pl-cb/ip_dc/dc_fw/src/per/vbindings/recr/inc -I/workspaces/pl-cb/ip_dc/dc_fw/src -I/workspaces/pl-cb/ip_dc/dc_fw/inc -I/workspaces/pl-cb/ip_if/rbPdm/inc/CORE -I/workspaces/pl-cb/ip_ra5 -I/workspaces/pl-cb/ip_dc/dc_fw/inc/dc_interfaces/dc_math/norms -I/workspaces/pl-cb/ip_dc/dc_fw/inc/dc_interfaces/per/daddy -I/workspaces/pl-cb/reco_fw/component/ccr/modules/syslog_prj -I/workspaces/pl-cb/reco_fw/component/ccr/modules/trapdebug -I/workspaces/pl-cb/reco_fw/component/ccr/modules/pda -I/workspaces/pl-cb/reco_fw/component/ccr/modules/cybsec -I/workspaces/pl-cb/reco_fw/component -I/workspaces/pl-cb/reco_fw/component/per/modules/parameters/src -I/workspaces/pl-cb/reco_fw/component/xgu/modules/common -I/workspaces/pl-cb/apl/base/configuration/dacore/RECR_aurix -I/workspaces/pl-cb/apl/base/configuration/dacore -I/workspaces/pl-cb/apl/base/configuration -I/workspaces/pl-cb/apl/base/component -I/workspaces/pl-cb/apl/base/bindings/golf/component -I/workspaces/pl-cb/apl/base/bindings -I/workspaces/pl-cb/ip_if/mom/daddy/test/testframework/gtest_mom -I/workspaces/pl-cb/ip_if/mom/daddy/test/testframework/utils -I/workspaces/pl-cb/ip_if/mom/daddy/open_variation_point/aurix_plus/adapter -I/workspaces/pl-cb/ip_if/mom/daddy/open_variation_point/aurix_plus -I/workspaces/pl-cb/ip_if/mom/daddy/config/proxy_aurix_plus -I/workspaces/pl-cb/ip_if/mom/daddy/../vfc/include/vfc/core -I/workspaces/pl-cb/ip_if/mom/daddy/../vfc/include -I/workspaces/pl-cb/ip_if/mom/daddy/inc -I/workspaces/pl-cb/build/golf/GolfSINGLE/vinfo -I/workspaces/pl-cb/ip_if/uC_fwLr/ifr/cubas -I/workspaces/pl-cb/ip_if/uC_fwLr/ifr/cubas/src -cpu=tc1v162 -half_precision_type -g -dual_debug -X5853 -Omax -Xtricore_opts_20181 -ansi_alias -delete -data_delete -Onoalign_functions -no_align_standalone_objects --no_vla -discard_zero_initializers --no_commons --gnu_asm -tricore_avoid_mem_trap -version_info --warnings -errmax=5 -passsource --c++14 --no_rtti --restrict --new_outside_of_constructor -globalcheck=normal -globalcheck_qualifiers --diag_warning=undefined_preproc_id --diag_warning=missing_type_specifier --no_wrap_diagnostics -nostartfiles -Mu -Mx -Ml -Mn -keepmap --preprocess_linker_directive_full -Wl,-no_append -Ogeneral -frigor=accurate -no_float_associativity -fnofunctions -no_fused_madd -precise_signed_zero -fNaN_cmp_unordered",
+* "ADDITIONAL_INCLUDES": "DATA/GHS_MULTI_CCTRI-cctri_201815-tc1v162-C++-c++14/Stub",
+* "INCLUDE_LIST": [
+*   {"INCLUDE_STRUCTURE": {
+*        "INCLUDE_TYPE": "MasterScript",
+*        "INCLUDE_VALUE": "DATA/GHS_MULTI_CCTRI-cctri_201815-tc1v162-C++-c++14/Script/GHS_MULTI_CCTRI-cctri_201815-tc1v162-C++-c++14.py"
+*       }
+*   },
+*   {"INCLUDE_STRUCTURE": {
+*        "INCLUDE_TYPE": "HelperScript",
+*        "INCLUDE_VALUE": ""
+*       }
+*   }
+* ],
+* "SYNCHRONISATION" : {
+*   "INCLUDE_FLAGS":"-I",
+*   "DEFINE_FLAGS":"-D",
+*   "SETTINGS_FILE_OPTIONS":{
+*       "FLAG":"@",
+*       "EXTENSION":"",
+*       "LITERAL_QUOTES":""
+*       }
+*   }
+*}
+
+-s float=32
+-a float=4
+-s double=64
+-a double=4
+-ar+
+-sl-
+* -sd "complex="
+-sd "__ghs_c_int__=int"
+-sd "__INTADDR__=1 prl_ignore_paren"
+-sd "__alignof__=alignof"
+-sd "__attribute__=_ignore_paren"
+-sd "__const__=const"
+-sd "__inline=inline"
+-sd "__inline__=inline"
+-sd "__interrupt="
+-sd "__asmleaf=asm"
+-sd "__va_align=1 prl_ignore_paren"
+-sd "__va_float=1 prl_ignore_paren"
+-sd "__va_long=1 prl_ignore_paren"
+-sd "__va_pointer=1 prl_ignore_paren"
+-sd "__va_regtyp=1 prl_ignore_paren"
+-sd "__va_vector=1 prl_ignore_paren"
+-sd "_prl_null_expression=0 prl_ignore_paren"
+-sd "__INFINITY__=0x7F800000"
+-sd "__NAN__=0x7FC00000"
+-sd "__generic=0 prl_ignore_paren"
+-sd prl_ignore_paren=_ignore_paren
+* GNU extended asm syntax support
+-sd "__asm__=asm"
+-sd "__asm=asm"
+-sd "__volatile__=volatile"
+-sd "__volatile=volatile"
+
+-mrtnd 200
+-accd-
+-aicpm+
+-atanpc-
+-atncrb-
+-audi-
+-dpft-
+-duc99dilt+
+-ptp-
+-sd "__noinline="
+
+-sd "__BASE__=__FILE__"
+-sd "__FULL_DIR__=__FILE__"
+-sd "__FUNCTION__=__FILE__"
+-sd "__PRETTY_FUNCTION__=__FILE__"
+-sd "__func__=__FILE__"
+-sd "__TIMESTAMP__=__DATE__ __TIME__"
+
+* define own versions of is_destructible, is_constructible in type_traits stub
+-sd PRL_GHS_1
+
+* Generated by CCT_Generator 20210504-1601
+* C++ language version specific options
+* preprocessor symbol definitions
+-sd "_PRL_STRINGIFY(x)=#x"
+-sd "__FUNCPTR_BIT=32"
+-sd "__Field_Is_Unsigned__=1"
+-sd "VX1000If_IsVX1000DriverAccessEnabled=1"
+-sd "__Int_Is_32=1"
+-sd "DADDY_MAX_RECEIVERS=15"
+-sd "__ghs=1"
+-sd "__LANGUAGE_CXX=1"
+-sd "__GHS_VERSION_NUMBER=201815"
+-sd "__TIME_T_BIT=32"
+-sd "__cpp_init_captures=201304"
+-sd "__tricore_rosda=1"
+-sd "__ATTRIBUTES=1"
+-sd "__cpp_user_defined_literals=200809"
+-sd "__Tricore_EABI_3_0__=1"
+-sd "__GHS_Inline_String_Functions=1"
+-sd "__FLT_SUBNORMAL_IS_ZERO__=1"
+-sd "__cpp_constexpr=201304"
+-sd "__ghs_max_pack_value=4"
+-sd "__cpp_generic_lambdas=201304"
+-sd "__VARIADIC_TEMPLATES=1"
+-sd "__STANDARD_CXX_HEADERS=1"
+-sd "__EDG_TYPE_TRAITS_ENABLED=1"
+-sd "__SoftwareDouble__=1"
+-sd "__LDBL_BIT=64"
+-sd "__Enum_Field_Is_Signed__=1"
+-sd "__GHS_REVISION_DATE=_PRL_STRINGIFY(Jan 14 2020)"
+-sd "__cpp_attributes=200809"
+-sd "__PROTOTYPES__=1"
+-sd "__cpp_delegating_constructors=200604"
+-sd "__CHAR16_T_AND_CHAR32_T=1"
+-sd "__GHS_UNICODE__=1"
+-sd "__cpp_range_based_for=200907"
+-sd "__Long_Is_32=1"
+-sd "__EDG_RUNTIME_USES_NAMESPACES=1"
+-sd "__LONG_BIT=32"
+-sd "__ghs_sda=1"
+-sd "__GHS_FEATURE_DISABLED=2"
+-sd "__cpp_variable_templates=201304"
+-sd "__ghs__=1"
+-sd "__Char_Is_Signed__=1"
+-sd "__FP16_BIT=16"
+-sd "__LANGUAGE_CXX__=1"
+-sd "__cpp_decltype_auto=201304"
+-sd "__cpp_rvalue_references=200610"
+-sd "_WCHAR_T=1"
+-sd "__STDC_HOSTED__=1"
+-sd "__EDG_VERSION__=413"
+-sd "__LittleEndian=1"
+-sd "__STANDARD_CXX=1"
+-sd "__SIGNED_CHARS__=1"
+-sd "__ghs_zda=1"
+-sd "__WChar_Is_Long__=1"
+-sd "__GHS_JMP_BUF_ALIGNMENT=4"
+-sd "__cpp_return_type_deduction=201304"
+-sd "__GHS_Optimize_General__=1"
+-sd "__cpp_binary_literals=201304"
+-sd "__ghs_alignment=4"
+-sd "__WCHAR_BIT=32"
+-sd "__LITTLE_ENDIAN__=1"
+-sd "__cpp_nsdmi=200809"
+-sd "RECO_INTERNAL_TIME_MASTER_DIRECTION=REAR"
+-sd "RBTASKALIVECHECK_C1_BG_MAX_RUNTIME=59"
+-sd "__cpp_lambdas=200907"
+-sd "__LDBL_SIZE=8"
+-sd "__cpp_inheriting_constructors=200802"
+-sd "__cpp_alias_templates=200704"
+-sd "__SoftwareDouble=1"
+-sd "__GNU_ASM_SUPPORT__=1"
+-sd "__STDC__=0"
+-sd "__MAX_BIT=64"
+-sd "RECO_INTERNAL_TIME_MASTER_POSITION=RIGHT"
+-sd "__SHRT_BIT=16"
+-sd "__GHS_NOCOMMONS=1"
+-sd "__cpp_unicode_literals=200710"
+-sd "__LL_BIT=64"
+-sd "__GHS_JMP_BUF_SIZE=72"
+-sd "__IeeeFloat__=1"
+-sd "__LL_Is_64=1"
+-sd "RBTASKALIVECHECK_C0_BG_MAX_RUNTIME=59"
+-sd "__AUTO_TYPE=1"
+-sd "__cpp_sized_deallocation=201309"
+-sd "__Ptr_Is_Unsigned__=1"
+-sd "__cpp_static_assert=200410"
+-sd "__EDG__=1"
+-sd "__GHS_FEATURE_STRIPPED=1"
+-sd "__Reg_Is_32=1"
+-sd "__IeeeFloat=1"
+-sd "__Tricore__=1"
+-sd "__FREG_BIT=32"
+-sd "__c_plusplus=1"
+-sd "__EDG_CONSTEXPR_ENABLED__=1"
+-sd "__Ptr_Is_32=1"
+-sd "__cpp_unicode_characters=200704"
+-sd "__cpp_aggregate_nsdmi=201304"
+-sd "__ghs_asm=2"
+-sd "__ELF__=1"
+-sd "__WChar_Is_Signed__=1"
+-sd "__GHS_REVISION_VALUE=1579029450"
+-sd "__LittleEndian__=1"
+-sd "__LLONG_BIT=64"
+-sd "_BOOL=1"
+-sd "__INT_BIT=32"
+-sd "__tricore_rozda=1"
+-sd "__GHS_FEATURE_ENABLED=3"
+-sd "__PTR_BIT=32"
+-sd "__GHS_OPTIMIZE__=1"
+-sd "__EDG_PTRDIFF_TYPE__=int"
+-sd "__NAMESPACES=1"
+-sd "__ARRAY_OPERATORS=1"
+-sd "__Tricore_TC1V162=1"
+-sd "__cplusplus=201402L"
+-sd "__ELF=1"
+-sd "__cpp_decltype=200707"
+-sd "__REG_BIT=32"
+-sd "__GHS_Inline_Memory_Functions=1"
+-sd "__Tricore=1"
+-sd "__cpp_ref_qualifiers=200710"
+-sd "__CHAR_BIT=8"
+-sd "__GHS_NOCOMMONS__=1"
+-sd "__cpp_variadic_templates=200704"
+-sd "__RANGE_BASED_FOR=1"
+-sd "__EDG_SIZE_TYPE__=unsigned int"
+-sd "__cpp_raw_strings=200710"
+-sd "__cpp_initializer_lists=200806"
+-sd "__STDCPP_THREADS__=1"
+-sd "__Tricore_TC1V162__=1"
+-sd "__fp16=float"
+* intrinsic types
+-it "size_t=unsigned int"
+-it "ptrdiff_t=int"
+* basic type size and alignment
+-s "char=8"
+-a "char=1"
+-s "short=16"
+-a "short=2"
+-s "int=32"
+-a "int=4"
+-s "long=32"
+-a "long=4"
+-s "longlong=64"
+-a "longlong=8"
+-s "ldouble=64"
+-a "ldouble=8"
+-s "codeptr=32"
+-a "codeptr=4"
+-s "dataptr=32"
+-a "dataptr=4"
+* common parser options
+* qacpp parser options
+-c++03nudl-
+-c++14es+
+-sdep-
+-c++03a-
+-c++14tg-
+-c++03nuct-
+-c++03np-
+-sig-
+-ifn-
+-bits-

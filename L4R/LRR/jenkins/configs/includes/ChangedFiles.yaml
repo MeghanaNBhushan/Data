@@ -1,0 +1,14 @@
+    - name: Changed Files in PR 
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: type ^CHANGED_FILES_FILE; > changed_file_list.txt
+        pipe: false
+        name: find_changed_files
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;
+        fromPath: ./
+        includes: "changed_file_list.txt" 
+        afterFail: true
+        zip: false
+        

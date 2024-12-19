@@ -1,0 +1,5 @@
+steps:
+- bash: |
+        x=$(git rev-parse HEAD^2)
+        echo "##vso[task.setvariable variable=long;isoutput=true]$x"
+  name: commitID

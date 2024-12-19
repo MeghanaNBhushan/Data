@@ -1,0 +1,71 @@
+parameters:
+- name: build_type
+  displayName: Build type
+  values:
+  - debug
+  - release
+- name: a_core_sw_variant
+  displayName: A-Core SW Variant
+  type: string
+- name: a_core_version_major
+  displayName: A-Core Major Version
+  type: string
+- name: a_core_version_minor
+  displayName: A-Core Minor Version
+  type: string
+- name: a_core_version_patch
+  displayName: A-Core Patch Version
+  type: string
+- name: container_version
+  displayName: Container version (eq. to "0.0.1")
+  type: string
+
+trigger: none
+
+pr: none
+
+variables:
+  version: ${{parameters.a_core_sw_variant}}_V${{parameters.a_core_version_major}}.${{parameters.a_core_version_minor}}.${{parameters.a_core_version_patch}}
+
+resources:
+  containers:
+  - container: a-core-application-container
+    image: artifactory.boschdevcloud.com/zugspitze-series-docker-local/a-core-application:latest
+    endpoint: sc-ado-docker-registry-artifactory
+    options: --user 0:0 --privileged
+    volumes: # Volumes to mount on the container.
+    - /var/tmp/conan_cache:/var/tmp/conan_cache
+    env: # Variables to map into the container's environment.
+      TARGET: armv8
+      TYPE: ${{parameters.build_type}}
+      MIDDLEWARE_INSTANCE: tec0204_linux
+      AOS_VERSION: default
+      ENABLE_CLANG_TIDY_CHECKS: 'ON'
+      A_CORE_SW_VARIANT: ${{parameters.a_core_sw_variant}}
+      A_CORE_VERSION_MAJOR: ${{parameters.a_core_version_major}}
+      A_CORE_VERSION_MINOR: ${{parameters.a_core_version_minor}}
+      A_CORE_VERSION_PATCH: ${{parameters.a_core_version_patch}}
+      A_CORE_COMMIT_HASH: $(Build.SourceVersion)
+
+  - container: testreport-parser-container
+    image: artifactory.boschdevcloud.com/zugspitze-series-docker-local/testreport-parser:1.0.3
+    endpoint: sc-ado-docker-registry-artifactory
+    options: --user 0:0 --privileged
+    volumes: # Volumes to mount on the container.
+    - /var/tmp/conan_cache:/var/tmp/conan_cache 
+
+stages:
+  - template: /devops/templates/stages/build-a-core-application-template.yaml
+    parameters:
+      build_reason: release
+      build_type: ${{parameters.build_type}}
+      version: $(version)
+      vmss: cx-lnx-l-vmss
+      container_version: ${{parameters.container_version}}
+  - template: /devops/templates/stages/build-pc-application-template.yaml
+    parameters:
+      build_target: x86-64
+      build_type: ${{parameters.build_type}}
+      build_reason: release
+      version: $(version)
+      vmss: cx-lnx-l-vmss

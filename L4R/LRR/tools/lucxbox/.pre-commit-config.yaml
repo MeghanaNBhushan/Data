@@ -1,0 +1,21 @@
+# Template config to enable hooks for this repo in the context of another repo
+default_stages: [commit]
+
+repos:
+- repo: ssh://git@sourcecode.socialcoding.bosch.com:7999/lucx/git_hooks_pre_commit.git
+  rev: 1.0.1
+  hooks:
+  - id: jira_linker
+    stages: [commit-msg]
+#  - id: file_size_limiter
+
+- repo: https://github.com/pre-commit/pre-commit-hooks.git
+  rev: v2.5.0
+  hooks:
+  - id: check-added-large-files
+    args: [--maxkb=500]
+  - id: check-case-conflict
+  - id: check-merge-conflict
+  - id: end-of-file-fixer
+  - id: trailing-whitespace
+    args:  [--markdown-linebreak-ext=md]

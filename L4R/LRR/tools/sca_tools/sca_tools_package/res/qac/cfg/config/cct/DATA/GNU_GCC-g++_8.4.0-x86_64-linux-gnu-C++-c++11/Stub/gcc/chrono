@@ -1,0 +1,27 @@
+// chrono
+//
+
+#ifndef INCLUDED_PRLGCC_CHRONO
+#define INCLUDED_PRLGCC_CHRONO
+
+#include <bits/prlgcc_c++config.h>
+
+#if defined (__PRL_GLIBCXX__)
+
+#  if (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 9)
+
+#    include <4.9/chrono>
+
+#  else
+
+#    include_next <chrono>
+
+#  endif
+
+#else
+
+#  include_next <chrono>
+
+#endif
+
+#endif

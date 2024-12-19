@@ -1,0 +1,16 @@
+trigger: none
+
+pr:
+  autoCancel: true
+  branches:
+    include:
+      - develop
+  drafts: false
+
+stages:
+  - template: /devops/templates/stages/build-r-core-application-template.yaml
+    parameters:
+      build_reason: pr
+      win_vmss: cx-win-l-vmss
+      linux_vmss: cx-lnx-l-vmss
+

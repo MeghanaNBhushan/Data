@@ -1,0 +1,101 @@
+steps:
+  - task: ArtifactoryGenericDownload@3
+    inputs:
+      connection: 'sc-ado-artifactory'
+      specSource: 'taskConfiguration'
+      fileSpec: |
+        {
+          "files": [
+            {
+              "pattern": "zugspitze-series-generic-local/$(Arti_Name)/Testreports_Dummys/ulrr_gtest_output.xml",
+              "target": "$(Build.SourcesDirectory)/artifactorydownload/"
+            },
+            {
+              "pattern": "zugspitze-series-generic-local/$(Arti_Name)/Testreports_Dummys/CLARA_test_summary.zip",
+              "target": "$(Build.SourcesDirectory)/artifactorydownload/"
+            }
+          ]
+        }
+      failNoOp: true
+    displayName: Downloading reports from Artifactory
+
+  - bash: |
+      set -e
+
+      python --version
+      #sudo apt-get install pip
+      python3.10.6 -m pip install --upgrade pip
+      cd $(Build.SourcesDirectory)/tools/testreport_parser/cict_parser
+      ls
+      pip install -r requirements.txt
+      #pip install asyncio
+      #pip install -U pydantic
+      #pip install pyodbc
+      #pip install schema
+      #pip install python-utils 
+    displayName: Update Python & Libs
+
+  - script: |
+        echo "$(currentDate)"
+        now=$(currentDate)
+        export now
+        #dir4json=$(DirForJson)
+        #export dir4json
+        echo "config.yaml is created manually"
+        echo "Change directory for Running Python Script"
+        cd $(Build.SourcesDirectory)/tools/testreport_parser/cict_parser
+        python3 parser.py
+
+        echo "List files in ../testreport_parser"
+        cd $(Build.SourcesDirectory)/tools/testreport_parser/cict_parser
+        ls
+        echo "Move Json-Files to new Folder testresults"
+        mkdir $(Build.SourcesDirectory)/testresults
+        mv $(Build.SourcesDirectory)/tools/testreport_parser/cict_parser/current.json $(Build.SourcesDirectory)/tools/testreport_parser/cict_parser/$(currentDate)_report.json $(Build.SourcesDirectory)/testresults/
+    displayName: Run Python Script parser.py
+  
+  # publish generated JSON-Files 
+      # 1: as artifacts in Pipeline
+           
+  - publish: $(Build.SourcesDirectory)/testresults/current.json
+    artifact: Testreport-current
+    displayName: 'Publish parsed current Testreport'
+
+  - publish: $(Build.SourcesDirectory)/testresults/$(currentDate)_report.json
+    artifact: Testreport-currentDate
+    displayName: '2nd Publish parsed Testreport with currentDate'
+
+      # 2: as Artifactory Upload
+  - task: ArtifactoryGenericUpload@1
+    inputs:
+      artifactoryService: 'sc-ado-artifactory'
+      specSource: 'taskConfiguration'
+      fileSpec: |
+        {
+          "files": [
+            {
+              "pattern": "$(Build.SourcesDirectory)/testresults/current.json",
+              "target": "zugspitze-series-generic-local/$(Arti_Name)/current.json"
+            },
+            {
+              "pattern": "$(Build.SourcesDirectory)/testresults/$(currentDate)_report.json",
+              "target": "zugspitze-series-generic-local/$(Arti_Name)/$(currentDate)_report.json"
+            }
+          ]
+        }
+      failNoOp: true
+    displayName: Upload build files to Artifactory
+
+      # 3: as Copy to Blob Storage    
+  
+  - task: AzureCLI@1
+    displayName: Az File Copy to Storage
+    inputs:
+      azureSubscription: CICD-ADO-Zugspitze-Connection
+      scriptLocation: inlineScript
+      inlineScript: |
+        az storage blob upload-batch \
+          --destination \testresults \
+          --account-name "dashboardstorage1" \
+          --source "$(Build.SourcesDirectory)/testresults/" \
+          --overwrite

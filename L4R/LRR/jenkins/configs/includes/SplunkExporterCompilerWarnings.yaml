@@ -1,0 +1,21 @@
+    - name: SplunkExport CompilerWarnings
+      executionOrder: ^TPL:execOrder;
+      failAbortsPipeline: false
+      steps:
+      - cmd: python ad_radar_apl/tools/lucxbox/lucxbox/tools/compiler_warnings/compiler_warnings.py --compiler greenhills --compiler-log generatedFiles/Radar_^TPL:uc1;/log/makelog.txt --components-file COMPONENTS --to-csv generatedFiles/Radar_^TPL:uc1;/log/CompilerWar_^TPL:uc1;.csv
+        fromPath: ./
+        name: Compiler_warnings_csv_generate_^TPL:uc1;
+      - cmd: python CompilerWarningsToSplunk.py --HW_Variant ^TPL:uc1;
+        fromPath: ./ad_radar_apl/tools/scripts/SplunkExporter/
+        name: Compiler_warnings_splunk_generate_^TPL:uc1;
+      - cmd: ssh  -l cis9lr -p 51121 rb-jmaas.de.bosch.com build Splunk_Prod/AthenaRadar_Remote -v -f -p "FileLink=\\\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\Splunk\CompilerWar_^TPL:uc1;.csv" -p "Variant=^TPL:uc1;" -p "MicroController=" -p "OEM=" -p "type=NETWORK"  -p "source=Compiler"  
+        name: Compiler_warnings_splunk_export_^TPL:uc1;
+
+      - cmd: python ad_radar_apl/tools/lucxbox/lucxbox/tools/compiler_warnings/compiler_warnings.py --compiler greenhills --compiler-log generatedFiles/Radar_^TPL:uc2;/log/makelog.txt --components-file COMPONENTS --to-csv generatedFiles/Radar_^TPL:uc2;/log/CompilerWar_^TPL:uc2;.csv
+        fromPath: ./
+        name: Compiler_warnings_csv_generate_^TPL:uc2;
+      - cmd: python CompilerWarningsToSplunk.py --HW_Variant ^TPL:uc2;
+        fromPath: ./ad_radar_apl/tools/scripts/SplunkExporter/
+        name: Compiler_warnings_splunk_generate_^TPL:uc2;
+      - cmd: ssh  -l cis9lr -p 51121 rb-jmaas.de.bosch.com build Splunk_Prod/AthenaRadar_Remote -v -f -p "FileLink=\\\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\Splunk\CompilerWar_^TPL:uc2;.csv" -p "Variant=^TPL:uc2;" -p "MicroController=" -p "OEM=" -p "type=NETWORK"  -p "source=Compiler"  
+        name: Compiler_warnings_splunk_export_^TPL:uc2;

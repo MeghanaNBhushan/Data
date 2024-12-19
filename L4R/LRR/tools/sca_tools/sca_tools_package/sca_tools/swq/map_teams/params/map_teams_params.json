@@ -1,0 +1,41 @@
+{
+    "argparser": {
+        "root": {
+            "description": "Extend input CSV report with teams and components information using codeowners file."
+        }
+    },
+    "parameters": {
+        "CODEOWNERS_FILE": {
+            "description": "Absolute path or relative to PROJECT_ROOT to the codeowners file",
+            "cli_option_short": "cf",
+            "mandatory": true
+        },
+        "FIELD_DELIMITER": {
+            "description": "Character used to separate fields. Defauilt is \",\"",
+            "cli_option_short": "fd"
+        },
+        "GITIGNORE_MAPPING": {
+            "description": "Same as \"-olt / --only_last_team\" argument and is overridden if \"-olt / --only_last_team\" is specified. Keeping for compatibility reasons for lucxbox users",
+            "cli_option_short": "gm",
+            "deprecated": true,
+            "deprecation_message": "\"GITIGNORE_MAPPING\" / -gm / --gitignore_mapping is deprecated. Please use \"ONLY_LAST_TEAM\" / -olt / --only_last_team instead"
+        },
+        "INPUT_WARNINGS_REPORT": {
+            "description": "Absolute path or relative to PROJECT_ROOT to the input report file with warnings in CSV format. Any report we want to fit Team and Component information and map it by mapping column",
+            "cli_option_short": "iwr",
+            "mandatory": true
+        },
+        "MAPPING_COLUMN": {
+            "description": "Column name for mapping. Usually this is \"File\", \"FilePath\", etc. Default is \"Filename\"",
+            "cli_option_short": "mc"
+        },
+        "ONLY_LAST_TEAM": {
+            "description": "Include only the last matched team in the teams report",
+            "cli_option_short": "olt"
+        },
+        "TEAMS_REPORT": {
+            "description": "Absolute path or relative to PROJECT_ROOT to the output CSV report file",
+            "cli_option_short": "tr"
+        }
+    }
+}

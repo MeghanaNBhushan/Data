@@ -1,0 +1,10 @@
+trigger: none
+
+pr: none
+
+pool: seattle-d2sv3-vmss
+
+jobs:
+  - job: rCoreBuild
+    steps:
+    - template: /devops/templates/steps/r-core-build.yml

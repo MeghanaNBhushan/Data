@@ -1,0 +1,6 @@
+    - name: Customer folder Generation
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: python Cus_gen_release_zip.py -var ^TPL:variant; -ver ^TPL:version;
+        fromPath: ad_radar_apl/tools/scripts/ReleaseFolderGen
+        name: Customer_folder_generation

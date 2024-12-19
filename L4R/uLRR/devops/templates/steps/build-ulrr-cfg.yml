@@ -1,0 +1,72 @@
+parameters:
+- name: build_target
+  type: string
+  default: tec0204
+- name: update_cache
+  type: boolean
+  default: true
+- name: vitis_version
+  type: string
+  default: 2021.2
+
+steps:
+  - template: /devops/templates/steps/prepare_generic_infrastructure.yml
+    parameters:
+      build_target: ${{ parameters.build_target }}
+
+  - bash: |
+      set -e
+
+      echo "Target:"
+      echo " - TARGET: ${{ parameters.build_target }}"
+      echo "##vso[task.setvariable variable=TARGET]${{ parameters.build_target }}"
+
+      echo "Deploy artifact:"
+      echo " - UPDATE_CACHE: ${{ parameters.update_cache }}"
+      echo "##vso[task.setvariable variable=UPDATE_CACHE]${{ parameters.update_cache }}"
+
+      echo "Vitis version:"
+      echo " - VITIS_VERSION: ${{ parameters.vitis_version }}"
+      echo "##vso[task.setvariable variable=VITIS_VERSION]${{ parameters.vitis_version }}"
+    displayName: 1.1 - Prepare infrastructure
+
+  - bash: |
+      set -e
+
+      echo "Starting build of ulrr cfg. ..."
+
+      $(Build.SourcesDirectory)/software/os/debian/ulrr_cfg/build_ulrr_cfg.sh -t ${TARGET} -v "0.0.0" -o ${OUT_DIR} || exit 1
+
+      echo "Finished build of ulrr cfg."
+    displayName: 2.1 - Build ulrr cfg.
+
+  - bash: |
+      set -e
+
+      echo "Checking if ulrr cfg. is available..."
+
+      cd ${OUT_DIR}
+
+      ulrr_cfg_filename=$(find * -type f -name 'ulrr_cfg-*arm64.deb');
+      echo "Found file was: $ulrr_cfg_filename"
+
+      if [ ! -z "$ulrr_cfg_filename" ]; then
+        echo "##vso[task.setvariable variable=ulrr_cfg_filename;isOutput=true]$ulrr_cfg_filename"
+        echo "##vso[task.setvariable variable=ulrr_cfg_artifactname;isOutput=true]$(Agent.JobName)-$(TARGET)-sw-debian-build-ulrr-cfg-$(System.StageAttempt)-$(System.JobAttempt)"
+        echo "##vso[task.setvariable variable=build_ulrr_cfg_result]Succeeded"
+
+        if [[ "${UPDATE_CACHE}" == "True" ]]; then
+          sudo mkdir -p ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/ulrr_cfg/
+          sudo rsync -ah --progress ${OUT_DIR}/$ulrr_cfg_filename ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/ulrr_cfg/
+        fi
+      else
+        echo "ulrr cfg. not found."
+        echo "##vso[task.setvariable variable=build_ulrr_cfg_result]Failed"
+      fi
+    name: UlrrCfgStep
+    displayName: 2.2 - Checking if ulrr cfg. is available...
+
+  - publish: $(Build.SourcesDirectory)/build/out/$(UlrrCfgStep.ulrr_cfg_filename)
+    artifact: $(UlrrCfgStep.ulrr_cfg_artifactname)
+    displayName: 3.1 - Publish ulrr cfg.
+    condition: eq(variables['build_ulrr_cfg_result'], 'Succeeded')

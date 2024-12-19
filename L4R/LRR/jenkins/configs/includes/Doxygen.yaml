@@ -1,0 +1,18 @@
+    - name: Doxygen Generation
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: Doxygen_gen.bat
+        fromPath: ad_radar_apl/component/doc/doxygen
+        name: Doxygen_gen
+      archive:
+      - backend: share
+        fromPath: ./ad_radar_apl/component/doc/doxygen/output/AD_Radar_PF/html 
+        includes: "*.chm*"
+        afterFail: false
+        zip: true
+        zipName: Doxygen.zip
+      publish:
+        - reportName: LRR_Doxygen Documentation
+          reportDir: ./ad_radar_apl/component/doc/doxygen/output/AD_Radar_PF/html
+          reportFiles: index.html
+          reportTitles: LRR doxygen

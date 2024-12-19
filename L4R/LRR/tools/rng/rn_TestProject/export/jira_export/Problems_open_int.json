@@ -1,0 +1,388 @@
+﻿[
+    {
+        "IssueID":  "ATR-15661",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-15661",
+        "IssueStatus":  "Open",
+        "FixVersion":  [
+
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V9.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "556",
+        "Summary":  "Location Data Block Counter and Attributes block counter are not in sync",
+        "StakeholderSummary":  "None",
+        "Severity":  null,
+        "SafetyRelevance":  null
+    },
+    {
+        "IssueID":  "ATR-15655",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-15655",
+        "IssueStatus":  "Open",
+        "FixVersion":  [
+
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V9.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "920",
+        "Summary":  "CI/CT: CheckMem missing",
+        "StakeholderSummary":  "None",
+        "Severity":  null,
+        "SafetyRelevance":  null
+    },
+    {
+        "IssueID":  "ATR-15654",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-15654",
+        "IssueStatus":  "Open",
+        "FixVersion":  [
+
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V9.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "920",
+        "Summary":  "CI/CT: UC1 Coverage per Component file missing in release and nightly builds",
+        "StakeholderSummary":  "None",
+        "Severity":  null,
+        "SafetyRelevance":  null
+    },
+    {
+        "IssueID":  "ATR-15653",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-15653",
+        "IssueStatus":  "Open",
+        "FixVersion":  [
+
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V9.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "555",
+        "Summary":  "Over voltage dtc is not observed",
+        "StakeholderSummary":  "None",
+        "Severity":  null,
+        "SafetyRelevance":  null
+    },
+    {
+        "IssueID":  "ATR-15628",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-15628",
+        "IssueStatus":  "Open",
+        "FixVersion":  [
+
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V9.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "556",
+        "Summary":  "Sensor Feedback TX PDU TimeOffset Signal value is updating even though MCS Sync Type is equal to Zero",
+        "StakeholderSummary":  "None",
+        "Severity":  "Medium",
+        "SafetyRelevance":  null
+    },
+    {
+        "IssueID":  "ATR-15624",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-15624",
+        "IssueStatus":  "Open",
+        "FixVersion":  [
+
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V9.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "555",
+        "Summary":  "After setting under voltage 6.2 Volts the diop is getting disconnected",
+        "StakeholderSummary":  "None",
+        "Severity":  null,
+        "SafetyRelevance":  null
+    },
+    {
+        "IssueID":  "ATR-15618",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-15618",
+        "IssueStatus":  "In Analysis",
+        "FixVersion":  [
+
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V9.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "555",
+        "Summary":  "DOIP is automatically getting disconnected after 5-7 minutes",
+        "StakeholderSummary":  "None",
+        "Severity":  null,
+        "SafetyRelevance":  "No"
+    },
+    {
+        "IssueID":  "ATR-15612",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-15612",
+        "IssueStatus":  "Open",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V9.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "556",
+        "Summary":  "The CycleTime of SensorStateInfo PDU violates toleranzes",
+        "StakeholderSummary":  "None",
+        "Severity":  null,
+        "SafetyRelevance":  null
+    },
+    {
+        "IssueID":  "ATR-15606",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-15606",
+        "IssueStatus":  "Analyzed",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V9.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "555",
+        "Summary":  "Unexpected DTC for VBat OV Violation",
+        "StakeholderSummary":  "None",
+        "Severity":  "Medium",
+        "SafetyRelevance":  "No"
+    },
+    {
+        "IssueID":  "ATR-15602",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-15602",
+        "IssueStatus":  "More Info",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V9.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  null,
+        "Summary":  "Issue with V9.0.0 Start up on the bench and in vehicle ",
+        "StakeholderSummary":  "None",
+        "Severity":  null,
+        "SafetyRelevance":  null
+    },
+    {
+        "IssueID":  "ATR-15596",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-15596",
+        "IssueStatus":  "In Analysis",
+        "FixVersion":  [
+
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V9.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "555",
+        "Summary":  "After Hard reset DOIP taking 5000ms to re-connect",
+        "StakeholderSummary":  "None",
+        "Severity":  "Medium",
+        "SafetyRelevance":  null
+    },
+    {
+        "IssueID":  "ATR-15322",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-15322",
+        "IssueStatus":  "In Verification",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V8.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "556",
+        "Summary":  "Sensor Feedback TX PDU TimeOffset Signal value is half of MCS RX Signal value",
+        "StakeholderSummary":  "Description \r\n\r\nAfter DID value/MCS RX Signal is written to configure a specifc Timeoffset to the Sensor (say Timeoffset = 22000000) , the value in SensorTimeOffset in SensorFeedback PDU must also be the same value (22000000) as configured via DID/RX PDU. But the observation is the TX signal value is half of the configured value (11000000)\r\n\r\nImpact \r\n\r\nThere will be a mismatch in the transmitted signal value and  the value configured via DID/PDU for the timeoffset ",
+        "Severity":  "Minor",
+        "SafetyRelevance":  "No"
+    },
+    {
+        "IssueID":  "ATR-15186",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-15186",
+        "IssueStatus":  "Analyzed",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V8.0.0",
+                                 "LRR_LGU_PF_V9.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "556",
+        "Summary":  "Range check fails for MAC address DID data",
+        "StakeholderSummary":  "Description :\r\n Range check for MAC address DID 0x601 is not matching with the requirement.\r\n\r\n\r\n Impact:\r\n\r\nNo Impact as the MAC address 0x000000000000 and 0xFFFFFFFFFFFF is not used by CUBAS",
+        "Severity":  "Minor",
+        "SafetyRelevance":  "No"
+    },
+    {
+        "IssueID":  "ATR-14961",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-14961",
+        "IssueStatus":  "Analyzed",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V8.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "556",
+        "Summary":  "Incorrect local port used for Sensor Broadcast message",
+        "StakeholderSummary":  "Description :\r\n Local port ID to be used by Sensor Broadcast PDU by the sensor is not macthing with the requirement.\r\n\r\nRoot Cause:\r\n\r\nThe Local (Sensor) port number metioned in the requirement is wrongs and needs to be rectified for Sensor Broadcast PDU\r\n\r\nImpact:\r\n\r\nNo imapact in the software",
+        "Severity":  "Minor",
+        "SafetyRelevance":  "No"
+    },
+    {
+        "IssueID":  "ATR-14945",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-14945",
+        "IssueStatus":  "In Implementation",
+        "FixVersion":  [
+
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V8.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "556",
+        "Summary":  "XCP is not working in SW V8.0.0",
+        "StakeholderSummary":  "Description:\r\n\r\nXCP was not working in LRR SW V8.0.0\r\n\r\nImpact: \r\n\r\nXPC related test could not be done by System test team\r\n\r\nLimitation:\r\n\r\nFoxtrot-13 PJ-IF delivery had XCP disabled, but shall be enabled in Foxtrot-15\r\n\r\nLRR SW V9.0.0 has Foxtrot-15 integrated.",
+        "Severity":  "Minor",
+        "SafetyRelevance":  "No"
+    },
+    {
+        "IssueID":  "ATR-14925",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-14925",
+        "IssueStatus":  "In Verification",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V8.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "556",
+        "Summary":  "Sensor Broadcast UDP header not modified/Ego Vehicle Multicast Reception not possible with changed destination port number",
+        "StakeholderSummary":  "Multicast reception is not possible when destination port number is changes .\r\nUDP header is not updated with changed destination port number for Broadcast transmission ",
+        "Severity":  "Minor",
+        "SafetyRelevance":  "No"
+    },
+    {
+        "IssueID":  "ATR-14892",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-14892",
+        "IssueStatus":  "Analyzed",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V8.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "556",
+        "Summary":  "Location Attributes Cycle time is going beyond the range",
+        "StakeholderSummary":  "Description:\r\n\r\nLocation Attributes cycle time is exceeding the limit specified in requirements.\r\n\r\nImpact:\r\n\r\nNo Impact, test method needs to be changed as per the new requirement for V8.0.0",
+        "Severity":  "Minor",
+        "SafetyRelevance":  "No"
+    },
+    {
+        "IssueID":  "ATR-14836",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-14836",
+        "IssueStatus":  "Analyzed",
+        "FixVersion":  [
+
+                       ],
+        "AffectedVersions":  [
+                                 "xRR_LGU_PF_V6.0.0",
+                                 "xRR_LGU_PF_V7.0.0",
+                                 "LRR_LGU_PF_V8.0.0"
+                             ],
+        "Scope":  [
+                      "SRR",
+                      "LRR"
+                  ],
+        "Team":  "556",
+        "Summary":  "Manipulated Ethernet/COM Buffer",
+        "StakeholderSummary":  "Description:\r\n\r\nThe data bytes are manipulated in Rx pdus of Ethernet message. Which leads to improper/incorrect data usage by the sensor.\r\n\r\nImpact:\r\n\r\nLast two bytes of Rx pdu gets manipulated as a result the data is interpreted wrongly by the sensor and this wrong data is used by the sensor.\r\n\r\nThe stakeholders who are affected are Radar, DASy, NRCS and Video.",
+        "Severity":  "Minor",
+        "SafetyRelevance":  "Yes"
+    },
+    {
+        "IssueID":  "ATR-14105",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-14105",
+        "IssueStatus":  "Analyzed",
+        "FixVersion":  [
+
+                       ],
+        "AffectedVersions":  [
+                                 "xRR_LGU_PF_V7.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "556",
+        "Summary":  "Cycle time of Sensorstateinfo and Sensorfeedback not correct in C1 sample",
+        "StakeholderSummary":  "Description: \r\nThe cycle time of LGP PDU\u0027s is not matching with the requirements in RBS\r\n\r\n Impact:\r\nCAN wakeup message is continuously triggered every 60ms, but there is no CAN entity/ECU to acknowledge the Wake up message -\u003e which causes CAN Rx Error frames in trace\r\nLimitation: This is a CANoe constraint and ECU needs to acknowledge the CAN wakeup message.\r\n\r\n ",
+        "Severity":  "Minor",
+        "SafetyRelevance":  "No"
+    },
+    {
+        "IssueID":  "ATR-13990",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-13990",
+        "IssueStatus":  "Verified",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+                                 "xRR_LGU_PF_V7.0.0",
+                                 "LRR_LGU_PF_V8.0.0",
+                                 "LRR_LGU_PF_V9.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "555",
+        "Summary":  "Interrupting Power while flashing FBL with Vflash and if Retry Flashing, flashing Fails",
+        "StakeholderSummary":  "{color:#0747a6}Description:{color}\r\n When the user performs power interruption during re-flashing via vflash tool the flashing fails in the next re-flashing cycle.\r\n\r\nDuring the test log , the DSP DEM event \"RB_SLV_SPU_SBST\" is triggered which has led to the reflashing failure.\r\n\r\n{color:#0747a6}Root Cause :{color}\r\n\r\nCurrently we have a planned discussion with DSP team and also on the PJ IF Microcontroller team on the nature of this DEM event and the scenario when this is occurred the feedback is as below \"Software cannot cause SBST failure, because SBST detects permanent random hardware failures in fetch and pipeline\". So the DEM event under consideration on the occurrence of the hardware failure.\r\n\r\n{color:#0747a6}Fix Given:{color}\r\n\r\nCurrently this does not have any software fix for the behavior and discussion with DSP and PJ IF is ongoing on this.\r\n\r\nHowever since V9.0.0 has some other bug fix related to FBL (related to the multiple response for ECU Reset) and also since we have PJ IF Foxtrot-15 and DSP update, we shall perform re-test for this problem ticket.\r\n\r\nAlso one of the other solution is to check for the VX Box Firmware version which is used in the test environment.\r\n\r\n{color:#0747a6}Impact:{color}\r\n No impact. Currently no BLU specific re-flashing requirement / use case for system/ iA team/customer\r\n\r\nThis ticket is considered for testing for internal analysis of the BLU reflashing behavior.",
+        "Severity":  "Minor",
+        "SafetyRelevance":  "No"
+    }
+]

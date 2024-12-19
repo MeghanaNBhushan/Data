@@ -1,0 +1,27 @@
+// initializer_list
+//
+
+#ifndef INCLUDED_PRLGCC_INITIALIZER_LIST
+#define INCLUDED_PRLGCC_INITIALIZER_LIST
+
+#include <bits/prlgcc_c++config.h>
+
+#if defined (__PRL_GLIBCXX__)
+
+#  if (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 6)
+
+#    include <4.6/initializer_list>
+
+#  else
+
+#    include_next <initializer_list>
+
+#  endif
+
+#else
+
+#  include_next <initializer_list>
+
+#endif
+
+#endif

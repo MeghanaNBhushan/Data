@@ -1,0 +1,40 @@
+parameters:
+- name: pool
+  type: string
+
+- name: agent
+  type: string
+
+jobs:
+- job: StatepublisherDebInstall 
+  timeoutInMinutes: 0 
+  cancelTimeoutInMinutes: 35790 
+  pool: 
+    name: ${{ parameters.pool }}
+    demands:
+      - Agent.name -equals ${{ parameters.agent }}
+  steps:
+    - task: ArtifactoryGenericDownload@3
+      inputs:
+        connection: 'sc-ado-artifactory'
+        specSource: 'taskConfiguration'
+        fileSpec: |
+          {
+            "files": [
+              {
+                "pattern": "zugspitze-series-generic-local/$(BRANCH_NAME)/$(COMMIT_ID)/binaries/statepublisher-0.0.1-1.x86_64.deb",
+                "target": "$(Build.SourcesDirectory)/artifactorydownload/"
+              }
+            ]
+          }
+        failNoOp: true
+      displayName: Download deb file
+    
+    - bash: |
+        set -e
+        
+        #sudo -S dpkg -i $(Build.SourcesDirectory)/artifactorydownload/$(BRANCH_NAME)/$(COMMIT_ID)/binaries/statepublisher-0.0.1-1.x86_64.deb 
+        dpkg -x $(Build.SourcesDirectory)/artifactorydownload/$(BRANCH_NAME)/$(COMMIT_ID)/binaries/statepublisher-0.0.1-1.x86_64.deb ./
+      displayName: install statepublisher debian package
+      
+

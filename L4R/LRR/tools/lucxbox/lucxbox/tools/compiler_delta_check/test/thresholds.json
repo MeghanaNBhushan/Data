@@ -1,0 +1,12 @@
+{
+  "compiler": [
+    {
+      "threshold": 10,
+      "component_name": "AUTOSAR"
+    },
+    {
+      "threshold": -1,
+      "component_name": "IP_IF"
+    }
+  ]
+}

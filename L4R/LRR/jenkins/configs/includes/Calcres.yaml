@@ -1,0 +1,33 @@
+    - executionOrder: ^TPL:execOrder;
+      skipIfOnlyFilesChanged:
+      - ^INCLUDE:jenkins/configs/includes/skipFilesChangedListAutomatedTest.yaml;
+      - ^INCLUDE:jenkins/configs/includes/skipFilesChangedListDoxygen.yaml;
+      name: Calcres 
+      failAbortsPipeline: true
+      steps:
+      - name: calcres Radar_^TPL:uc1;
+        cmd : C:/TCC/Tools/calcres_uc/9.0_WIN64/bin/calcres_uc.exe --mapfile=Radar_^TPL:uc1;.map --cfgfile=../../ad_radar_apl/tools/calcres/Radar_^TPL:uc1;.xml --outfile=Calcres_Report_^TPL:uc1;
+        fromPath: ./generatedFiles/Radar_^TPL:uc1;/
+      - name: calcres check Radar_^TPL:uc1;
+        cmd : python CalcresCheck.py -v ^TPL:uc1;
+        fromPath: ./jenkins/scripts/
+
+      - name: calcres Radar_^TPL:uc2;
+        cmd : C:/TCC/Tools/calcres_uc/9.0_WIN64/bin/calcres_uc.exe --mapfile=Radar_^TPL:uc2;.map --cfgfile=../../ad_radar_apl/tools/calcres/Radar_^TPL:uc2;.xml --outfile=Calcres_Report_^TPL:uc2;
+        fromPath: ./generatedFiles/Radar_^TPL:uc2;/
+      - name: calcres check Radar_^TPL:uc2;
+        cmd : python CalcresCheck.py -v ^TPL:uc2;
+        fromPath: ./jenkins/scripts/
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Calcres
+        fromPath: ./generatedFiles/Radar_^TPL:uc1;/
+        includes: "Calcres_Report*"
+        afterFail: false
+        zip: false
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Calcres
+        fromPath: ./generatedFiles/Radar_^TPL:uc2;/
+        includes: "Calcres_Report*"
+        afterFail: false
+        zip: false

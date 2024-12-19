@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rcf name="ccda_cpp_his_info_rcf" version="1.0">
+  <rulegroup name="HIS Metrics Early Warnings">
+    <rule active="yes" help="" id="ccda_cpp_his_info_rules">
+      <text>HIS Metrics</text>
+      <enforcement>
+        <rule active="yes" help="" id="STCYC">
+          <text>Do not write functions with an excessive MCCABE Cyclomatic Complexity.</text>
+          <enforcement>
+            <message component="qacpp" id="6140" mapped="yes"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="STPTH">
+          <text>Avoid functions with a high static program path count.</text>
+          <enforcement>
+            <message component="qacpp" id="6141" mapped="yes"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="STPAR">
+          <text>Avoid functions with many arguments.</text>
+          <enforcement>
+            <message component="qacpp" id="6142" mapped="yes"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="STMIF">
+          <text>Avoid functions with an excessive nesting depth.</text>
+          <enforcement>
+            <message component="qacpp" id="6143" mapped="yes"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="STST3">
+          <text>Avoid functions with an excessive length.</text>
+          <enforcement>
+            <message component="qacpp" id="6144" mapped="yes"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="STGTO">
+          <text>The goto statement should never be used.</text>
+          <enforcement>
+            <message component="qacpp" id="6145" mapped="yes"></message>
+          </enforcement>
+        </rule>
+      </enforcement>
+    </rule>
+  </rulegroup>
+</rcf>

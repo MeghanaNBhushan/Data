@@ -1,0 +1,270 @@
+{
+  "Domains": [
+    {
+      "name": "Infrastructure",
+      "ram": 1167246,
+      "rom": 1239112,	  
+      "libs": [
+        "libdaddy.a",
+        "RTAOS.a",
+        "libRA_spi.a",
+        "librbAdc.a",
+        "librbAdcMon.a",
+        "librbAdcPhy.a",
+        "librbAlarmHandler.a",
+        "librbBist.a",
+        "librbCS520.a",
+        "librbDia.a",
+        "librbEcuEOL.a",
+        "librbEru.a",
+        "librbExtClk.a",
+        "librbHsct.a",
+        "librbHsmPrepare.a",
+        "librbHsmPrepare_Cfg.a",
+        "librbHsmService.a",
+        "librbHssl.a",
+        "librbHwCfgCheck.a",
+        "librbHwCrc.a",
+        "librbInterruptHandler.a",
+        "librbLifeCycle.a",
+        "librbLinkerPL.a",
+        "librbMcu.a",
+        "librbMemProt.a",
+        "librbMemstack.a",
+        "librbMonReact.a",
+        "librbMpuSRIBusConfig.a",
+        "librbMpuSRIBusConfig_Radar.a",
+        "librbNetCom.a",
+        "librbNetScheduler.a",
+        "librbNetXcp.a",
+        "librbOsSetup.a",
+        "librbPda.a",
+        "librbPFlashIntegrity.a",
+        "librbsbst.a",
+        "librbSftMon.a",
+        "librbSftMonRadar.a",
+        "librbStartReason.a",
+        "librbStartup.a",
+        "librbSysEvM.a",
+        "librbSysEvmAdapt.a",
+        "librbSysEvMRadar.a",
+        "librbSysLog.a",
+        "librbSysLogPL.a",
+        "librbSysMode.a",
+        "librbTaskAliveCheck.a",
+        "librbTime.a",
+        "librbTimeConv.a",
+        "librbTrapHandler.a",
+        "librbTrustedBoot.a",
+        "libvx1100.a",
+        "librba_cubas.a",
+        "libdsp.a",
+        "librbIfController.a",
+        "libRA5_apl_main.a",
+        "libRA5_apl_cubas.a",
+        "librbPdm.a",
+        "libRA5_apl_traptest.a",
+		"libcubas.a",
+		"libRA5_apl_EcuCybSec.a"
+      ],
+      "objs": [
+        "CPU_SBST.o",
+        "spu_sbst.o"
+      ],
+      "scom": [
+        "*g_dsp_dspMain_uC2*",
+        "*g_dsp_dspWorker1_uC2*",
+        "*g_dsp_dspWorker2_uC2*",
+        "*g_dsp_dspWorker3_uC2*"
+      ]
+    },
+    {
+      "name": "diag",		
+      "ram": 1600,
+      "rom": 10000,	  
+      "libs": [
+        "libdiag_x.a"
+      ],
+      "scom": [
+        "*diag_x_diaRunnable*"
+      ]
+    },
+    {
+      "name": "rbSysEvM",		
+      "ram": 900,
+      "rom": 5732,	  
+      "libs": [
+        "librbSysEvM_x.a"
+      ],
+      "scom": [
+        "*rbSysEvM_x_SysEvMRunnable*"
+      ]
+    },
+    {
+      "name": "sdm",		
+      "ram": 400,
+      "rom": 3656,	  
+      "libs": [
+        "libsdm_x.a"
+      ],
+      "scom": [
+        "*CSdmRunnable*"
+      ]
+    },
+    {
+      "name": "nvm",
+	  "ram": 300,
+      "rom": 800,
+      "libs": [
+        "libnvm_x.a"
+      ]
+    },
+    {
+      "name": "Hotfix",
+      "ram": 48548,
+      "rom": 8722,	  
+      "libs": [
+        "libHotfix_x.a"
+      ]
+    },
+    {
+      "name": "net_x",
+      "ram": 1000,
+      "rom": 3000,	  
+      "libs": [
+        "libnet_x.a"
+      ],
+      "scom": [
+        "*net_x*"
+      ]
+    },
+    {
+      "name": "EgoVehDataIF",
+      "ram": 800,
+      "rom": 2650,	  
+      "objs": [
+        "libEgoVehDataIF_x.a(EgoVehDataIF_runnable.o)",
+        "libEgoVehDataIF_x.a(EgoVehDataIF_functional.o)"
+      ],
+      "scom": [
+        "*EgoVehDataIF_x*"
+      ]
+    },
+    {
+      "name": "inputhandler",
+      "ram": 400,
+      "rom": 1755,		
+      "libs": [
+        "libinputhandler_x.a"
+      ],
+      "scom": [
+        "*CInputHandlerRunnable*"
+      ]
+    },
+    {
+      "name": "LocDataIF",
+      "ram": 700,
+      "rom": 10000,	  
+      "objs": [
+        "liblocdataif_x.a(LocDataIF.o)"
+      ],
+      "scom": [
+        "*CLocDataIfRunnable*"
+      ]
+    },
+    {
+      "name": "measurement_program",
+      "ram": 600,
+      "rom": 1500,	  
+      "objs": [
+        "libDMP_x.a(measurement_program.o)",
+        "libDMP_x.a(measProgram_functional.o)"
+      ],
+      "scom": [
+        "*DMP_x_DMP_Runnable*"
+      ]
+    },
+    {
+      "name": "memprot",
+      "ram": 200,
+      "rom": 2420,	  
+      "objs": [
+        "libRA5_apl_memprot.a(MemProt_Config.o)"
+      ]
+    },
+    {
+      "name": "MntPosMgmt",
+      "ram": 500,
+      "rom": 1190,		
+      "libs": [
+        "libMntPosMgmt_x.a"
+      ],
+      "scom": [
+        "*MntPosMgmt_x*"
+      ]
+    },
+    {
+      "name": "rbPdm",
+      "ram": 600,
+      "rom": 4162,		
+      "libs": [
+        "librbPdm_x.a"
+      ]
+    },
+    {
+      "name": "outputhandler",
+      "ram": 500,
+      "rom": 3000,		
+      "libs": [
+        "liboutputhandler_x.a"
+      ],
+      "scom": [
+        "*outputhandler_x*"
+      ]
+    },
+    {
+      "name": "Task_Appl",
+      "ram": 200,
+      "rom": 6000,	  
+      "objs": [
+        "libRA5_apl_main.a(Task_Appl.o)",
+        "libRA5_apl_main.a(Task_ApplCpp.o)"
+      ]
+    },
+    {
+      "name": "COMPILER",		
+      "ram": 2000,
+      "rom": 10000,	  
+      "libs": [
+        "libsys.a",
+        "libarch.a",
+        "libansi.a",
+        "libcpp11thnoe.a",
+        "libsedgnoe.a",
+        "libind_sd.a",
+        "libmath_sd.a",
+        "libstartup.a",
+        "libfmalloc.a"
+      ]
+    }	
+  ],
+  "Global": {
+    "LINKER": {
+      "name": "_LinkerSymbols_",
+      "ram": 100,
+      "rom": 1024
+    },
+    "NODOMAIN": {
+      "name": "_NO_DOMAIN_",
+      "ram": 0,
+      "rom": 0
+    },
+    "ram": 1849904,
+    "rom": 5685248,
+    "scom_config": {
+      "objectfile": [
+        "libRA5_apl_main.a(scom.o)"
+      ]
+    }
+  }
+}

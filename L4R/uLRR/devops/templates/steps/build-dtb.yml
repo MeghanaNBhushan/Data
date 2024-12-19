@@ -1,0 +1,138 @@
+parameters:
+- name: build_target
+  type: string
+  default: tec0204
+- name: cleanup
+  type: boolean
+  default: true
+- name: update_cache
+  type: boolean
+  default: true
+- name: vitis_version
+  type: string
+  default: 2021.2
+
+steps:
+  - template: /devops/templates/steps/mount-storage-account.yml
+    parameters:
+      sa_user_name: $(swbuildir2st-user)
+      sa_user_password: $(swbuildir2st-key)
+      sa_uri: //swbuildir2st.file.core.windows.net/debian-build
+      mountdir: /mnt/debian-build
+
+  - template: /devops/templates/steps/docker-login.yml
+    parameters:
+      user: $(ir2acr-pull-user)
+      token: $(ir2acr-pull-password)
+      host: ir2acr.azurecr.io
+
+
+
+  - template: /devops/templates/steps/prepare_generic_infrastructure.yml
+    parameters:
+      build_target: ${{ parameters.build_target }}
+
+  - bash: |
+      set -e
+
+      echo "Target:"
+      echo " - TARGET: ${{ parameters.build_target }}"
+      echo "##vso[task.setvariable variable=TARGET]${{ parameters.build_target }}"
+
+      echo "Vitis version:"
+      echo " - VITIS_VERSION: ${{ parameters.vitis_version }}"
+      echo "##vso[task.setvariable variable=VITIS_VERSION]${{ parameters.vitis_version }}"
+
+      echo "Deploy artifact:"
+      echo " - UPDATE_CACHE: ${{ parameters.update_cache }}"
+      echo "##vso[task.setvariable variable=UPDATE_CACHE]${{ parameters.update_cache }}"
+
+      echo "###############################################################"
+      echo "Load target settings: "
+      echo "..............................................................."
+      echo source $(Build.SourcesDirectory)/devops/scripts/targets/${{ parameters.build_target }}.sh ${DOCKCON_ARTIFACTS_DIR}
+      source $(Build.SourcesDirectory)/devops/scripts/targets/${{ parameters.build_target }}.sh ${DOCKCON_ARTIFACTS_DIR}
+
+      echo "###############################################################"
+      echo "Getting the artifacts: "
+      echo "..............................................................."
+      sudo rsync -ah --progress ${MOUNT_DIR}/${TARGET_SETTINGS["PATH_DTG_ST"]} ${ARTIFACTS_DIR}/
+
+      echo "###############################################################"
+      echo "Additional ENV path configured: "
+      echo "..............................................................."
+
+      echo "Artifacts: "
+      echo " - PATH_XSA_FILE: ${TARGET_SETTINGS["PATH_XSA_FILE"]}"
+      echo " - PATH_DTG: ${TARGET_SETTINGS["PATH_DTG"]}"
+
+      echo "##vso[task.setvariable variable=PATH_XSA_FILE]${TARGET_SETTINGS["PATH_XSA_FILE"]}"
+      echo "##vso[task.setvariable variable=PATH_DTG]${TARGET_SETTINGS["PATH_DTG"]}"
+
+
+    displayName: 1.1 - Prepare infrastructure (target specific)
+    condition: or(
+                eq('${{ parameters.build_target }}', 'zcu102'),
+                eq('${{ parameters.build_target }}', 'tec0204')
+                )
+
+  - bash: |
+      set -e
+
+      docker run -td --rm -v $(Build.SourcesDirectory):/ws --name a-core-debian-base-image-container ir2acr.azurecr.io/a-core-debian-base-image:latest /bin/bash
+    displayName: 2.1 - Launching docker container
+
+  - bash: |
+      set -e
+
+      echo "Starting generation of DTB..."
+
+      docker exec -t -e TARGET="${TARGET}" -e PATH_XSA_FILE="${PATH_XSA_FILE}" -e PATH_DTG="${PATH_DTG}" -e DOCKCON_OUT_DIR="${DOCKCON_OUT_DIR}" a-core-debian-base-image-container bash -c "\
+        source /opt/Xilinx/Vitis/2021.2/settings64.sh; \
+        echo /ws/software/os/debian/dtb/build_dtb.sh -t ${TARGET} -x ${PATH_XSA_FILE} -z ${PATH_DTG} -o ${DOCKCON_OUT_DIR}; \
+        /ws/software/os/debian/dtb/build_dtb.sh -t ${TARGET} -x ${PATH_XSA_FILE} -z ${PATH_DTG} -o ${DOCKCON_OUT_DIR}" || exit 1
+
+      echo "Finished generation of DTB."
+    displayName: 2.2 - Build DTB
+    condition: ne(variables['PATH_XSA_FILE'], '')
+
+  - bash: |
+      echo "Checking if dtb is available..."
+
+      if [ -f "${OUT_DIR}/${TARGET}/system.dtb" ]; then
+        echo "${OUT_DIR}/${TARGET}/system.dtb was found."
+        echo "##vso[task.setvariable variable=dtb_filename;isOutput=true]system.dtb"
+        echo "##vso[task.setvariable variable=dtb_artifactname;isOutput=true]$(Agent.JobName)-$(TARGET)-sw-debian-build-dtb-$(System.StageAttempt)-$(System.JobAttempt)"
+        echo "##vso[task.setvariable variable=create_dtb_result]Succeeded"
+        
+        if [[ "${UPDATE_CACHE}" == "True" ]]; then
+          sudo mkdir -p ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/dtb/
+          sudo rsync -ah --progress ${OUT_DIR}/${TARGET}/system.dtb ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/dtb/
+        fi
+      else
+        echo "${OUT_DIR}/system.dtb not found."
+        echo "##vso[task.setvariable variable=create_dtb_result]Failed"
+      fi
+    name: DTBStep
+    displayName: 2.3 - Checking if dtb is available...
+
+  - publish: $(Build.SourcesDirectory)/build/out/$(TARGET)/$(DTBStep.dtb_filename)
+    artifact: $(DTBStep.dtb_artifactname)
+    displayName: 2.4 - Publish generated DTB
+    condition: eq(variables['create_dtb_result'], 'Succeeded')
+
+  - bash: |
+      set -e
+
+      echo "Stopping launched container..."
+      docker stop a-core-debian-base-image-container
+      echo "Stopped launched container..."
+      echo "Clean Enabled: ${{ parameters.cleanup }}"
+      if [[ "${{ parameters.cleanup }}" == "True" ]]; then
+        echo "Cleaning-up..."      
+        sudo rm -rf $(Build.SourcesDirectory)/software/os/debian
+        sudo rm -rf $(OUT_DIR)
+      else
+        echo "Cleanup is disabled. Skipping..."
+      fi      
+    displayName: 3.1 - Cleaning-up

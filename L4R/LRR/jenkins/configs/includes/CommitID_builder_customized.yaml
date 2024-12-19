@@ -1,0 +1,16 @@
+    - name: CommitID_builder ^TPL:var;
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: python CommitID_builder.py -var ^TPL:var; -hw ^TPL:hw; -qac ^TPL:qac; -dox ^TPL:dox; -flux ^TPL:flux; -cta ^TPL:cta; -swb ^TPL:swb; -swc ^TPL:swc; -bct ^TPL:bct; -cal ^TPL:cal; 
+        fromPath: ./jenkins/scripts
+        name: CommitID_builder_^TPL:var;
+      
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\CommitID_Builder
+        fromPath: ./generatedFiles/Radar_^TPL:var;/
+        includes: "generatedFiles/**"
+        afterFail: false
+        zip: true
+        zipName: CommitID_Builder_^TPL:var;
+

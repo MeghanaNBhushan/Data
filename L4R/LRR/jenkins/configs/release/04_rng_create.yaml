@@ -1,0 +1,18 @@
+^INCLUDE:jenkins/configs/includes/properties.yaml<abortIfNotLatest=abortIfNotLatest: "soft">; # aborts the PR's current build if there is a newer one running
+
+releasename: ^PARAM:RELEASE_NAME;
+variant: ^PARAM:VARIANT_NAME;
+
+<%
+int order = 0
+%>
+
+pipelines:
+- nodes: 
+  - label: L4_Prem_C1
+    executionOrder: 0
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM.yaml<execOrder=${order=0}>;
+    - ^INCLUDE:jenkins/configs/includes/rng_unstash.yaml<execOrder=${++order}, releasename=^YAML:releasename; , variant=^YAML:variant;>;
+    - ^INCLUDE:jenkins/configs/includes/04_rng_create.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/rng_stash.yaml<execOrder=${++order}, releasename=^YAML:releasename; , variant=^YAML:variant; >;

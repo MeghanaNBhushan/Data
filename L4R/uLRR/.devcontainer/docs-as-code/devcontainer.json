@@ -1,0 +1,58 @@
+{
+  "name": "AD Radar Sensor docs-as-code devcontainer",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "initializeCommand": "docker login artifactory.boschdevcloud.com",
+  "containerUser": "dockeruser",
+  "mounts": [
+    "source=${localWorkspaceFolder}/documentation,target=/documentation,type=bind",
+    "source=${localWorkspaceFolder}/software,target=/software,type=bind",
+    // Add the git folder to the workspace because, subprocess.run() in order to execute git commands in 
+    // conf.py requires the git folder location, if the subprocess.run() is not executed in the project root.
+    "source=${localWorkspaceFolder}/.git,target=/.git,type=bind"
+  ],
+  "customizations": {
+    // Set *default* container specific settings.json values on container create.
+    "vscode": {
+    // Add the IDs of extensions you want installed when the container is created.
+    "extensions": [
+      "ms-python.python",
+      "trond-snekvik.simple-rst",
+      "streetsidesoftware.code-spell-checker",
+      "george-alisson.html-preview-vscode",
+      "yzhang.markdown-all-in-one",
+      "lextudio.restructuredtext",
+      "hediet.vscode-drawio",
+      "arturock.gitstash",
+      "mhutchie.git-graph",
+      "sanaajani.taskrunnercode",
+      "eamodio.gitlens",
+      "jeff-hykin.code-eol",
+      "huizhou.githd", 
+      "jsynowiec.vscode-insertdatestring",
+      "swyddfa.esbonio"
+    ],
+    "settings": {
+      "terminal.integrated.profiles.linux": { "bash": { "path": "/bin/bash" } },
+      "http.proxyStrictSSL": false,
+      "python.defaultInterpreterPath": "/usr/local/bin/python3",
+      // settings for synowiec.vscode-insertdatestring
+      "insertDateString.format": "YYYY-MM-DDThh:mm:ssZZZ",
+      "insertDateString.formatDate": "YYYY-MM-DDThh:mm:ssZZZ",
+      "insertDateString.formatTime": "YYYY-MM-DDThh:mm:ssZZZ",
+      "needls.docsRoot": "${workspaceFolder}/documentation",
+      "needls.buildPath": "${workspaceFolder}/documentation/_build",
+      "needls.confPath": "${workspaceFolder}/documentation/conf.py",
+      "needls.pythonPath": "/usr/local/bin/python",
+      "esbonio.server.enabled": true,
+      "esbonio.sphinx.buildDir": "${workspaceFolder}/documentation/_build/",
+      "esbonio.sphinx.confDir": "${workspaceFolder}/documentation",
+      "esbonio.sphinx.forceFullBuild": false,
+      "esbonio.sphinx.numJobs": 0
+      //"restructuredtext.experimental": true,
+      //"restructuredtext.linter.run": "onSave"
+    }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+^INCLUDE:jenkins/configs/includes/properties.yaml<abortIfNotLatest=abortIfNotLatest: "soft">; # aborts the PR's current build if there is a newer one running
+
+uc1: FR5CU_DNNN1_NNN_N_XX_2_uC1
+uc2: FR5CU_DENN1_CEN_N_XX_2_uC2
+
+cov_uC1: 1
+cov_uC2: 2
+
+user_id: cis9lr 
+
+<%
+int order = 0
+%>
+
+pipelines:
+- nodes:
+  - label: ATR
+  - ^INCLUDE:jenkins/configs/includes/CheckoutSCM.yaml<execOrder=${order=0}>;
+  - ^INCLUDE:jenkins/configs/includes/scom.yaml<execOrder=${++order}, uc2=^YAML:uc2;>;
+  - ^INCLUDE:jenkins/configs/includes/GenerateHeader.yaml<execOrder=${++order}, user_id=^YAML:user_id;>;
+  - ^INCLUDE:jenkins/configs/includes/GeneratePDM.yaml<execOrder=${++order}, build_variant=^YAML:uc2;>;
+  - ^INCLUDE:jenkins/configs/includes/QAC.yaml<execOrder=${++order}, uc1=^YAML:uc1;, uc2=^YAML:uc2;>;
+  - ^INCLUDE:jenkins/configs/includes/Coverity.yaml<execOrder=${++order}, cov_uC1=^YAML:cov_uC1;, cov_uC2=^YAML:cov_uC2;>;
+
+  

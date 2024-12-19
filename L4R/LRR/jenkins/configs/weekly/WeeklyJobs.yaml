@@ -1,0 +1,16 @@
+^INCLUDE:jenkins/configs/includes/properties.yaml<abortIfNotLatest=abortIfNotLatest: "soft">; # aborts the PR's current build if there is a newer one running
+
+<%
+int order = 0
+%>
+<%
+int nodeOrder = 0
+%>
+
+pipelines:
+- nodes: 
+  - label: ATR_Desktop_PC
+    executionOrder: ${++nodeOrder}
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/BranchClean.yaml<execOrder=${++order}>;

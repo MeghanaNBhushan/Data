@@ -1,0 +1,24 @@
+    - name: QAC Delta analysis
+      executionOrder: ^TPL:execOrder;
+      skipIfOnlyFilesChanged:
+      - ^INCLUDE:jenkins/configs/includes/skipFilesChangedListAutomatedTest.yaml;
+      - ^INCLUDE:jenkins/configs/includes/skipFilesChangedListDoxygen.yaml;
+      steps:
+      - cmd: qac.bat ^TPL:uc1; 6 qac_pr.json changed_file_list.txt TRUE
+        fromPath: ad_radar_apl/tools/sca_tools/qac
+        name: QAC_PR_Analyse_uC1
+      - cmd: qac.bat ^TPL:uc2; 6 qac_pr.json changed_file_list.txt TRUE
+        fromPath: ad_radar_apl/tools/sca_tools/qac
+        name: QAC_PR_Analyse_uC2
+
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Quality_reports\QAC_reports\^TPL:uc1;
+        fromPath: generatedFiles\qac_report\^TPL:uc1;\sca_tools\export
+        includes: "qacli*.csv" 
+        afterFail: true
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Quality_reports\QAC_reports\^TPL:uc2;
+        fromPath: generatedFiles\qac_report\^TPL:uc2;\sca_tools\export
+        includes: "qacli*.csv" 
+        afterFail: true

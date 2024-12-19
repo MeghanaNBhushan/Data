@@ -1,0 +1,1 @@
+Not a yaml but a simple text file to be ignored

@@ -1,0 +1,35 @@
+pipelines:
+  - nodes:
+      - label: labelX
+        executionOrder: 0
+        stages:
+          - name: Stage 1
+            executionOrder: 1
+            steps:
+              - name: Successful step
+                cmd: echo Successful step
+              - name: Failing step
+                cmd: echo Failed step && exit 1
+              - name: Not executed step
+                cmd: echo Not executed step
+            post:
+              - cmd: echo Post stage
+            postSuccess:
+              - cmd: echo Post stage success
+            postFail:
+              - cmd: echo Post stage fail
+        post:
+          - name: Post stage 1
+            executionOrder: 0
+            steps:
+              - cmd: echo Post node
+        postSuccess:
+          - name: Post success stage 1
+            executionOrder: 0
+            steps:
+              - cmd: echo Post node success
+        postFail:
+          - name: Post fail stage 1
+            executionOrder: 0
+            steps:
+              - cmd: echo Post node fail

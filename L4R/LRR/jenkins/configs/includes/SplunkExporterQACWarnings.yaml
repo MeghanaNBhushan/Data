@@ -1,0 +1,10 @@
+    - name: SplunkExport QACWarnings
+      executionOrder: ^TPL:execOrder;
+      failAbortsPipeline: false
+      steps:
+      - cmd: ssh  -l cis9lr -p 51121 rb-jmaas.de.bosch.com build Splunk_Prod/AthenaRadar_Remote -v -f -p "FileLink=\\\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\Splunk\QAC_output\^TPL:uc1;\qacli-view.csv" -p "Variant=^TPL:uc1;" -p "MicroController=" -p "OEM=" -p "type=NETWORK"  -p "source=QAC"
+        name: QAC_warnings_splunk_export_^TPL:uc1;
+      - cmd: ssh  -l cis9lr -p 51121 rb-jmaas.de.bosch.com build Splunk_Prod/AthenaRadar_Remote -v -f -p "FileLink=\\\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\Splunk\QAC_output\^TPL:uc2;\qacli-view.csv" -p "Variant=^TPL:uc2;" -p "MicroController=" -p "OEM=" -p "type=NETWORK"  -p "source=QAC"
+        name: QAC_warnings_splunk_export_^TPL:uc2;
+      - cmd: ssh  -l cis9lr -p 51121 rb-jmaas.de.bosch.com build Splunk_Prod/AthenaRadar_Remote -v -f -p "FileLink=\\\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\Splunk\QAC_output\Total_FR5CU\qacli-view.csv" -p "Variant=Total_FR5CU" -p "MicroController=" -p "OEM=" -p "type=NETWORK"  -p "source=QAC"
+        name: QAC_warnings_splunk_export_Total_FR5CU

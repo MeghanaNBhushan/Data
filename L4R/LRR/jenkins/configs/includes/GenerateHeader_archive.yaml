@@ -1,0 +1,11 @@
+    - name: Generate Header archive
+      executionOrder: ^TPL:execOrder;
+      skipIfOnlyFilesChanged:
+      - ^INCLUDE:jenkins/configs/includes/skipFilesChangedListDoxygen.yaml;
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\SW_build
+        fromPath: ./ad_radar_apl/cfg
+        includes: "rbBuild_Version_Cfg.h"
+        afterFail: false
+        zip: false

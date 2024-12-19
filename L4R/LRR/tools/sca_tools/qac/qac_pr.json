@@ -1,0 +1,62 @@
+{
+    // [JSON, SYNC_BUILD_LOG_FILE, MONITOR]
+    "SYNC_TYPE": "JSON",
+    // these folders will be added in PRQA as sync filters
+    "QAC_SYNC_PATH_BLACKLIST": ["ad_radar_apl/cubas/gen/", "ip_if/tools/vx1100/", "ip_if/rba/CUBAS/"],
+    // warnings from these folders will be applied with the -quiet option
+    "QAC_ANALYSIS_PATH_BLACKLIST": ["generatedFiles/", "build/", "ad_radar_apl/cubas/gen/", "ad_radar_apl/ToBeCleanUp/scom_gen/", "ad_radar_apl/cubas/stubs/", "ad_radar_apl/cubas/stubs_premium_uC1_XX/", "ip_if/", "rc_fw/"],
+    "QAC_BIN_PATH": "C:/TCC/Tools/helix_qac/2021.2_WIN64/common/bin",
+    "QAC_CONFIG_PATH": "ad_radar_apl/tools/sca_tools/sca_tools_package/res/qac/cfg",
+    "CODEOWNERS_FILE": "COMPONENTS",
+    //"FIELD_DELIMITER": ",",
+    //"MAPPING_COLUMN": "Filename",
+    "SKIP_EXIT_ON_ANALYSIS_RETURN_CODES": [2, 3, 9],
+    //"WITH_SUBDIAGNOSTICS": false,
+    "HELP_PAGES_ROOT_DIR": "ad_radar_apl/tools/sca_tools/sca_tools_package/res/qac/custom_help",
+    "HELPER_SUPPRESS_FILE_LIST_S": [
+        // file can't analyze 
+        "ad_radar_apl/ToBeCleanUp/Measurement_EventId.h"],
+									
+	"ACF_FILE": [
+		"helix2021.2_C_DA_AD_FILES_20.0_0373.acf",
+		"helix2021.2_CPP_2.4.acf",
+		"enable_early_code_his_metrics.acf"
+	  ],
+	"VCF_FILE": "prqa_ccda_config_git_1.0.xml",
+	"RCF_FILE": [
+		"helix2019.2_C_DA_AD_FILES_20.0_0373.rcf",
+        "helix2021.2_CPP_2.4.rcf",
+		"enable_early_code_his_metrics.rcf"
+	  ],
+	"USER_MESSAGES": [
+		"user_library/user_messages/helix2021.2_CPP_2.4_component_path.xml",
+		"enable_early_code_his_metrics.xml"
+	  ],
+	  "ANALYZE_PARAMS": "--file-based-analysis --force-complete --inter-tu-dataflow --show-timings --retry 2 -g",
+	  "QAC_MODULES": ["qacpp-5.0.0", "qac-10.0.0"],
+	  "COMPILER_LIST": ["config/cct/GHS_IFX_201815_TC1V162_C.cct", "config/cct/GHS_IFX_201815_TC1V162_C++.cct"],
+
+
+    // "target" name, here the QACPP configuration for a specific build target
+
+	"FR5CU_DNNN1_NNN_N_XX_2_uC1": {
+        // build command that generates a log file, ideally a script, if this field is left empty, no build will be performed
+        // either compile_commands.json or the default output of a build log
+        "SYNC_BUILD_LOG_FILE": "generatedFiles/Radar_FR5CU_DNNN1_NNN_N_XX_2_uC1/compile_commands.json",
+		"SYNC_BUILD_COMMAND": "cmake_gen.bat -hw FR5CU_DNNN1_NNN_N_XX_2_uC1 -p Radar -cfg ad_radar_apl/tools/cmake/cfg -c -tcc -f",
+        // if specified a filter will be used on the output of the compile_commands.json
+        //"SYNC_TYPE_JSON_PATH_PATTERN_WHITELIST": "\\.cpp$",
+		"LOCAL_BASELINE_PATH": "ad_radar_apl/tools/sca_tools/qac/baseline/FR5CU_DNNN1_NNN_N_XX_2_uC1"
+        //DONT touch this unless you know what you are doing, relative to project root, if specified, a baseline file will be used (files.sup), helper arg has priority and will override this: helper_set_baseline
+    },
+	"FR5CU_DENN1_CEN_N_XX_2_uC2": {
+        // build command that generates a log file, ideally a script, if this field is left empty, no build will be performed
+        // either compile_commands.json or the default output of a build log
+        "SYNC_BUILD_LOG_FILE": "generatedFiles/Radar_FR5CU_DENN1_CEN_N_XX_2_uC2/compile_commands.json",
+		"SYNC_BUILD_COMMAND": "cmake_gen.bat -hw FR5CU_DENN1_CEN_N_XX_2_uC2 -p Radar -cfg ad_radar_apl/tools/cmake/cfg -c -tcc -f",
+        // if specified a filter will be used on the output of the compile_commands.json
+        //"SYNC_TYPE_JSON_PATH_PATTERN_WHITELIST": "\\.cpp$",
+		"LOCAL_BASELINE_PATH": "ad_radar_apl/tools/sca_tools/qac/baseline/FR5CU_DENN1_CEN_N_XX_2_uC2"
+        //DONT touch this unless you know what you are doing, relative to project root, if specified, a baseline file will be used (files.sup), helper arg has priority and will override this: helper_set_baseline
+    }
+}

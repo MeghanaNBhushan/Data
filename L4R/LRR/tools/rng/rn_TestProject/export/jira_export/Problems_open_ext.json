@@ -1,0 +1,85 @@
+﻿[
+    {
+        "IssueID":  "ATR-15184",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-15184",
+        "IssueStatus":  "Analyzed",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V8.0.0"
+                       ],
+        "AffectedVersions":  [
+                                 "xRR_LGU_PF_V6.0.1"
+                             ],
+        "Scope":  [
+                      "Customer_relevant",
+                      "SRR",
+                      "LRR"
+                  ],
+        "Team":  "556",
+        "Summary":  "Bosch Radar mounting position mismatch between CANoe and LGP",
+        "StakeholderSummary":  "*Description:* Mounting position data mismatch between \"DID response data\" and \"Mounting position in Location data PDU\"\r\n\r\n*Impact:* No impact to the sensor as the Mounting position data used by the sensor is correct, only the disaplyed value via communication is incorrect.\r\n\r\n*Solution:* The issue does not exists in SW V8.0.0 or higher release as \"Mounting position\" data is sent in Float32 format",
+        "Severity":  "Minor",
+        "SafetyRelevance":  "No"
+    },
+    {
+        "IssueID":  "ATR-15153",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-15153",
+        "IssueStatus":  "Analyzed",
+        "FixVersion":  [
+
+                       ],
+        "AffectedVersions":  [
+                                 "xRR_LGU_PF_V6.0.1"
+                             ],
+        "Scope":  [
+                      "Customer_relevant",
+                      "SRR",
+                      "LRR"
+                  ],
+        "Team":  "556",
+        "Summary":  "Bosch Radar sensor state info timestamp mismatch",
+        "StakeholderSummary":  "Issue: Time stamp information displayed in \"Sensor State Information\" is incorrect sometimes wrt current sensor / system timestamp\r\n\r\nImpact: No impact to the sensor as the current sensor / system timestamp data used by the sensor is correct, only the displayed value via communication is incorrect.\r\n\r\n ",
+        "Severity":  "Minor",
+        "SafetyRelevance":  "Yes"
+    },
+    {
+        "IssueID":  "ATR-14851",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-14851",
+        "IssueStatus":  "In Verification",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V8.0.0"
+                             ],
+        "Scope":  [
+                      "Customer_relevant",
+                      "LRR"
+                  ],
+        "Team":  "556",
+        "Summary":  "[COMA] Internal commit Id Signal in SensorState TX PDU is in little endian format ",
+        "StakeholderSummary":  "Description:\r\n\r\nCommit ID signal in \"sensor state PDU\" is sent in little Endian format.\r\n\r\nBu the expected requirement is to send/display the data in Big Endian format.\r\n\r\nImpact:\r\n\r\nCommit ID is sent wrong over the BUS, the user may be mislead with the data sent.",
+        "Severity":  "Minor",
+        "SafetyRelevance":  "No"
+    },
+    {
+        "IssueID":  "ATR-13722",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-13722",
+        "IssueStatus":  "In Verification",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+                                 "xRR_LGU_PF_V6.0.0"
+                             ],
+        "Scope":  [
+                      "Customer_relevant",
+                      "SRR",
+                      "LRR"
+                  ],
+        "Team":  "556",
+        "Summary":  "MCS: Wrong modulation time offset between sensors in synchronized mode",
+        "StakeholderSummary":  "Description:\r\nThe _SensorTimeOffset_ applies the double value compared to the defined value\r\n E.g. _SensorTimeOffset_ of \"33 ms\" will be applied as 2 x 33 ms = 66 ms.\r\n\r\nImpact:\r\nThe sensors are not syncronized correctly. Therefore, interferences will not be avoided in worst case.\r\n\r\nShort term fix: use half of the intended SensorTimeOffset e.g. for 33ms set SensorTimeOffset = 16.5ms\r\n * {color:#ff0000}+*Caution:*+{color} this work-around has to be removed/set back, once the fixed SW is used",
+        "Severity":  "Minor",
+        "SafetyRelevance":  "No"
+    }
+]

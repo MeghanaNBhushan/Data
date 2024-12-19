@@ -1,0 +1,21 @@
+[submodule "athena_fw"]
+	url = ssh://git@sourcecode01.de.bosch.com:7999/aras/athena_fw.git
+	path = athena_fw
+[submodule "rc_fw"]
+	path = rc_fw
+	url = ssh://git@sourcecode01.de.bosch.com:7999/pjrc/rc_fw.git
+[submodule "ip_if"]
+	path = ip_if
+	url = ssh://git@sourcecode01.de.bosch.com:7999/pjif/ip_if.git
+[submodule "athena_mt"]
+	path = athena_mt
+	url = ssh://git@sourcecode01.de.bosch.com:7999/aras/athena_mt.git
+[submodule "plant_container_tools"]
+	path = plant_container_tools
+	url = ssh://git@sourcecode01.de.bosch.com:7999/radtoolcust/tools_fw.git
+[submodule "ad_radar_apl/tools/lucxbox"]
+	path = ad_radar_apl/tools/lucxbox
+	url = ssh://git@sourcecode01.de.bosch.com:7999/lucx/lucxbox.git
+[submodule "ad_radar_apl/tools/sca_tools/sca_tools_package"]
+	path = ad_radar_apl/tools/sca_tools/sca_tools_package
+	url = ssh://git@sourcecode01.de.bosch.com:7999/doit/sca_tools_package.git

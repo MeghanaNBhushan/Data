@@ -1,0 +1,13 @@
+^INCLUDE:jenkins/configs/includes/properties.yaml<abortIfNotLatest=abortIfNotLatest: "soft">; # aborts the PR's current build if there is a newer one running
+
+<%
+int order = 0
+%>
+
+pipelines:
+- nodes: 
+  - label: ATR
+    executionOrder: ${nodeOrder=0}
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM.yaml<execOrder=${order=0}>;
+    - ^INCLUDE:jenkins/configs/includes/CustomerFolderGen.yaml<execOrder=${++order}, variant=^ENV:variant;, version=^ENV:version;>;

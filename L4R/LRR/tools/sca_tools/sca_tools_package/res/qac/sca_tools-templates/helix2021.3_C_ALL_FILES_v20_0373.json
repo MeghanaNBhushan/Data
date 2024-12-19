@@ -1,0 +1,8 @@
+{
+    "QAC_MODULES": ["qacpp-5.1.0", "qac-10.1.0"],
+    "ACF_FILE": ["helix2021.3_C_ALL_FILES_20.0_0373.acf"],
+    "RCF_FILE": ["helix2019.2_C_ALL_FILES_20.0_0373.rcf"],
+    "VCF_FILE": "prqa_ccda_config_git_1.0.xml",
+    "USER_MESSAGES": ["helix2019.2_C_ALL_FILES_20.0_0373_component_path.xml"],
+    "SYNC_TYPE_JSON_PATH_PATTERN_WHITELIST": "\\.c$"
+}

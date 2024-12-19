@@ -1,0 +1,104 @@
+properties:
+  buildDiscarder:
+    days: 7
+    num: 10
+
+pipelines:
+  - nodes:
+    - label: windows
+      executionOrder: 0
+      name: windows
+      stages:
+      - name: git
+        executionOrder: 0
+        steps:
+        - call: Repository.prepareGitRepo
+        - call: PullRequest.addReviewersWithCodeOwnersFile
+      - name: venv
+        executionOrder: 1
+        steps:
+        - cmd: python -m venv venv
+        - cmd: .\venv\scripts\activate && pip install -r requirements.txt --index-url https://^USERNAME:^PASSWORD@rb-artifactory.bosch.com/artifactory/api/pypi/python-virtual/simple
+      - name: clean
+        executionOrder: 2
+        steps:
+        - cmd: .\venv\scripts\activate && python lucxbox_steps.py --clean --debug
+      - name: style
+        executionOrder: 3
+        publish:
+        - afterFail: true
+          reportName: pylint win
+          reportDir: reports
+          reportFiles: pylint_report.txt
+          reportTitles: Style Checker
+        steps:
+        - cmd: .\venv\scripts\activate && python lucxbox_steps.py --lint --debug
+      - name: readme
+        executionOrder: 4
+        steps:
+        - cmd: .\venv\scripts\activate && python lucxbox_steps.py --readme --debug
+      - name: test
+        executionOrder: 5
+        timeLimitInMinutes: 15
+        steps:
+        - cmd: .\venv\scripts\activate && python lucxbox_steps.py --test --debug
+        publish:
+        - afterFail: true
+          reportName: coverage win
+          reportDir: htmlcov
+          reportFiles: index.html
+          reportTitles: Style Checker
+      - name: executables
+        executionOrder: 6
+        timeLimitInMinutes: 15
+        steps:
+        - cmd: .\venv\scripts\activate && python lucxbox_steps.py --build
+        archive:
+        - fromPath: dist
+          includes: "*.exe, *.tar.gz, *.whl"
+          afterFail: false
+          zip: true
+          zipName: lucxbox-^ENV:LUCX_BRANCH;
+
+    - label: linux
+      executionOrder: 0
+      name: linux
+      stages:
+      - name: git
+        executionOrder: 0
+        steps:
+        - call: Repository.prepareGitRepo
+      - name: venv
+        executionOrder: 1
+        steps:
+          - cmd: python -m virtualenv venv
+          - cmd: . venv/bin/activate && pip install -r requirements.txt --index-url https://^USERNAME:^PASSWORD@rb-artifactory.bosch.com/artifactory/api/pypi/python-virtual/simple
+      - name: clean
+        executionOrder: 2
+        steps:
+        - cmd: . venv/bin/activate && python lucxbox_steps.py --clean --debug
+      - name: style
+        executionOrder: 3
+        publish:
+        - afterFail: true
+          reportName: pylint linux
+          reportDir: reports
+          reportFiles: pylint_report.txt
+          reportTitles: Style Checker
+        steps:
+        - cmd: . venv/bin/activate && python lucxbox_steps.py --lint --debug
+      - name: readme
+        executionOrder: 4
+        steps:
+        - cmd: . venv/bin/activate && python lucxbox_steps.py --readme --debug
+      - name: test
+        executionOrder: 5
+        timeLimitInMinutes: 15
+        steps:
+        - cmd: . venv/bin/activate && python lucxbox_steps.py --test --debug
+        publish:
+        - afterFail: true
+          reportName: coverage linux
+          reportDir: htmlcov
+          reportFiles: index.html
+          reportTitles: Style Checker

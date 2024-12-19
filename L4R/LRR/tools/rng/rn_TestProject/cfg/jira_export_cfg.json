@@ -1,0 +1,28 @@
+{
+    "JiraJQLcfg": [
+        {
+            "outputFile": "Features_ext.json",
+            "jqlJiraFilter": "project = ATR AND issuetype = 'Project Feature' AND Scope = customer_relevant AND Scope = LRR AND (Labels is empty OR labels not in (ReleaseNoteIgnore)) AND FixVersion =#FIXVERSION#"
+        },
+        {
+            "outputFile": "Features_int.json",
+            "jqlJiraFilter": "project = ATR AND issuetype = 'Project Feature' AND Scope != customer_relevant AND Scope = LRR AND (Labels is empty OR labels not in (ReleaseNoteIgnore)) AND FixVersion =#FIXVERSION#"
+        },
+        {
+            "outputFile": "Problems_fixed_ext.json",
+            "jqlJiraFilter": "project = ATR AND issuetype = Problem AND resolution = Resolved AND Scope = customer_relevant AND Scope = LRR AND (Labels is empty OR labels not in (ReleaseNoteIgnore)) AND FixVersion =#FIXVERSION#"
+        },
+        {
+            "outputFile": "Problems_fixed_int.json",
+            "jqlJiraFilter": "project = ATR AND issuetype = Problem AND resolution = Resolved AND Scope != customer_relevant AND Scope = LRR  AND (Labels is empty OR labels not in (ReleaseNoteIgnore)) AND FixVersion =#FIXVERSION#"
+        },
+        {
+            "outputFile": "Problems_open_ext.json",
+            "jqlJiraFilter": "project = ATR AND issuetype = Problem AND resolution = Unresolved AND Scope = customer_relevant AND Scope = LRR AND (Labels is empty OR labels not in (ReleaseNoteIgnore)) AND Scope = LRR AND (fixVersion = EMPTY OR FixVersion !=#FIXVERSION# OR FixVersion =#FIXVERSION#)"
+        },
+        {
+            "outputFile": "Problems_open_int.json",
+            "jqlJiraFilter": "project = ATR AND issuetype = Problem AND resolution = Unresolved AND Scope != customer_relevant AND Scope = LRR  AND (Labels is empty OR labels not in (ReleaseNoteIgnore)) AND Scope = LRR AND (fixVersion = EMPTY OR FixVersion !=#FIXVERSION# OR FixVersion =#FIXVERSION#)"
+        }
+    ]
+}

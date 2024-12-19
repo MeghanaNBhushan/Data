@@ -1,0 +1,21 @@
+parameters:
+- name: sa_user_name
+  type: string
+- name: sa_user_password
+  type: string
+- name: sa_uri
+  type: string
+- name: mountdir
+  type: string
+
+
+steps:
+- bash: |
+    sudo mkdir -p ${{ parameters.mountdir }}
+    sudo mkdir -p /etc/smbcredentials
+    sudo bash -c 'echo "username=${{ parameters.sa_user_name }}" >> /etc/smbcredentials/${{ parameters.sa_user_name }}.cred'
+    sudo bash -c 'echo "password=${{ parameters.sa_user_password }}" >> /etc/smbcredentials/${{ parameters.sa_user_name }}.cred'
+    sudo chmod 600 /etc/smbcredentials/${{ parameters.sa_user_name }}.cred
+    sudo bash -c 'echo "${{ parameters.sa_uri }} ${{ parameters.mountdir }} cifs nofail,credentials=/etc/smbcredentials/${{ parameters.sa_user_name }}.cred,dir_mode=0777,file_mode=0777,serverino,nosharesock,actimeo=30" >> /etc/fstab'
+    sudo mount -t cifs ${{ parameters.sa_uri }} ${{ parameters.mountdir }} -o credentials=/etc/smbcredentials/${{ parameters.sa_user_name }}.cred,dir_mode=0777,file_mode=0777,serverino,nosharesock,actimeo=30
+  displayName: Mount storage account ${{ parameters.mountdir }}

@@ -1,0 +1,208 @@
+{
+    "argparser": {
+        "root": {
+            "description": "Interacts with Coverity.",
+            "subparser_description": "Interacts with Coverity as provided by the tool vendor"
+        },
+        "create": {
+            "description": "Interacts with Coverity as provided by the tool vendor"
+        },
+        "check_buildlog": {
+            "description": "Shows project build log"
+        },
+        "analyze": {
+            "description": "Performs code analysis on a specified project using cov-analyze command"
+        },
+        "run_desktop": {
+            "description": "Performs code analysis of all captured sources of a specified project using cov-run-desktop command"
+        },
+        "export": {
+            "description": "Generates analysis result report"
+        },
+        "export_analysis": {
+            "description": "Generates project state based on analysis results"
+        },
+        "preview_report": {
+            "description": "Instead of sending files, cross-references, and other assets to the Coverity Connect server, this option sends only the defect occurrences. The server returns a commit preview report, which is written in JSON format"
+        },
+        "upload": {
+            "description": "Uploads analysis report and source data to the Coverity Connect database in a specified stream"
+        },
+        "webapi_export": {
+            "description": "Exports specified view report from Coverity Connect"
+        },
+        "filter_report": {
+            "description": "Parse the export of Coverity preview_report command from helper and checks if triage classification contains right person/team in the preview report and then fail or pass the build on jenkins"
+        }
+    },
+    "parameters": {
+        "DATASTORE_PATH": {
+            "mandatory": true
+        },
+        "PROJECT_ROOT": {
+            "mandatory": true
+        },
+        "BUILD_COMMAND": {
+            "description": "Build command that runs full build, ideally a script. If USE_COMPILE_COMMANDS_JSON is specified the parameter is not used",
+            "cli_option_short": "bc"
+        },
+        "CODEOWNERS_FILE": {
+            "description": "Absolute path or relative to PROJECT_ROOT to the codeowners file",
+            "cli_option_short": "cf"
+        },
+        "COMPILE_COMMANDS_JSON": {
+            "description": "Path to compile_commands.json file. Effective only when USE_COMPILE_COMMANDS_JSON is set",
+            "cli_option_short": "ccj"
+        },
+        "COMPILE_COMMANDS_BUILD_COMMAND": {
+            "description": "The command that generates compile_commands.json. Effective only when USE_COMPILE_COMMANDS_JSON is set. Path to the generated compile_commands.json has to be provided in COMPILE_COMMANDS_JSON",
+            "cli_option_short": "ccbc"
+        },
+        "COMPILER_LIST": {
+            "cli": false
+        },
+        "COV_ANALYZE_OPTION_LIST": {
+            "cli": false
+        },
+        "COV_BUILD_OPTION_LIST": {
+            "cli": false
+        },
+        "COV_EXPORT_WHITELIST": {
+            "cli": false,
+            "env": false
+        },
+        "COV_EXPORT_BLACKLIST": {
+            "cli": false,
+            "env": false
+        },
+        "COVERITY_AUTH_KEY_FILEPATH": {
+            "description": "Absolute path or relative to PROJECT_ROOT to an authentication key file, used for connecting to the Coverity Connect server",
+            "cli_option": "auth_key_filepath",
+            "cli_option_short": "akf"
+        },
+        "COVERITY_BIN_PATH": {
+            "description": "Absolute path to the directory where Coverity binaries are",
+            "cli_option_short": "cbp",
+            "mandatory": ["create", "analyze", "run_desktop", "export", "export_analysis", "preview_report", "upload"]
+        },
+        "COVERITY_COMMIT_URL" :{
+            "cli": false
+        },
+        "COVERITY_COMMIT_DATAPORT": {
+            "cli": false,
+            "deprecated": true,
+            "deprecation_message": "\"COVERITY_COMMIT_DATAPORT\" is deprecated. Please use \"COVERITY_COMMIT_URL\" instead"
+        },
+        "COVERITY_COMMIT_HOST": {
+            "cli": false,
+            "deprecated": true,
+            "deprecation_message": "\"COVERITY_COMMIT_HOST\" is deprecated. Please use \"COVERITY_COMMIT_URL\" instead"
+        },
+        "COVERITY_COMMIT_STREAM": {
+            "cli": false,
+            "mandatory": ["preview_report", "upload"]
+        },
+        "COVERITY_PASSWORD": {
+            "json": false,
+            "cli": false,
+            "mandatory": ["webapi_export"]
+        },
+        "COVERITY_PROJECT_PATH": {
+            "description": "Specifies the project path relative to PROJECT_ROOT",
+            "cli_option_short": "cpp",
+            "mandatory": ["create", "check_buildlog", "analyze", "export", "export_analysis", "preview_report", "upload", "webapi_export"]
+        },
+        "COVERITY_USERNAME": {
+            "json": false,
+            "cli": false,
+            "mandatory": ["webapi_export"]
+        },
+        "COVERITY_WITH_NATIVE_HTML_REPORT": {
+            "description": "If enabled will generate native Coverity html report",
+            "cli_option": "with_native_html_report",
+            "cli_option_short": "wnhr"
+        },
+        "EXPORT_FORMATS": {
+            "description": "Set export formats",
+            "cli_option_short": "ef"
+        },
+        "FILE_MATCHING_PATTERNS": {
+            "description": "Filter patterns of files to include in filtered compile_commands.json file, separated with space. E.g.: \".*modules/core/src.*\"",
+            "cli_option_short": "fmp",
+            "env": false
+        },
+        "FILTER_REPORT_OUTPUT_FILE": {
+            "description": "Write results to specified output file. Absolute or relative to PROJECT_ROOT paths can be used",
+            "cli_option_short": "frof"
+        },
+        "GITIGNORE_MAPPING": {
+            "description": "Same as \"-olt / --only_last_team\" argument and is overridden if \"-olt / --only_last_team\" is specified. Keeping for compatibility reasons for lucxbox users",
+            "cli_option_short": "gm",
+            "deprecated": true,
+            "deprecation_message": "\"GITIGNORE_MAPPING\" / -gm / --gitignore_mapping is deprecated. Please use \"ONLY_LAST_TEAM\" / -olt / --only_last_team instead"
+        },
+        "INCLUDE_TRIAGE_HISTORY": {
+            "description": "Include triage history into the report from Coverity View",
+            "cli_option_short": "ith"
+        },
+        "INPUT_FILE_MATCHING_PATTERNS": {
+            "description": "Absolute path or relative to PROJECT_ROOT to a file which contains filter patterns of files to include in filtered compile_commands.json file",
+            "cli_option_short": "ifmp"
+        },
+        "MAXIMUM_PARALLEL_WORKERS": {
+            "description": "Maximum number of parallel jobs to be executed in parallel workers",
+            "cli_option_short": "mpw"
+        },
+        "ONLY_LAST_TEAM": {
+            "description": "Include only the last matched team in the teams report",
+            "cli_option_short": "olt"
+        },
+        "PREVIEW_REPORT_CSV": {
+            "description": "Path to preview report csv file",
+            "cli_option_short": "prcsv"
+        },
+        "SKIP_EXIT_ON_ERROR": {
+            "description": "Ignore errors and continue execution",
+            "cli_option_short": "see"
+        },
+        "TRANSLATION_UNITS_BLACKLIST": {
+            "cli": false
+        },
+        "TRIAGE_STORE": {
+            "cli": false
+        },
+        "USE_COMPILE_COMMANDS_JSON": {
+            "description": "Use compile_commands.json compilation instead of BUILD_COMMAND",
+            "cli_option_short": "uccj"
+        },
+        "WEBAPI_URL": {
+            "cli": false,
+            "mandatory": ["webapi_export"]
+        },
+        "WEBAPI_PROJECT_NAME": {
+            "cli": false,
+            "mandatory": ["webapi_export"]
+        },
+        "WEBAPI_VIEW_NAME": {
+            "cli": false,
+            "mandatory": ["webapi_export"]
+        },
+        "COVERITY_AUTH_KEY_FILE":{
+            "cli": false
+        },
+        "WITH_CID": {
+            "description": "Generates cov-commit-defects preview report and adds \"cid\" information in project state",
+            "cli_option_short": "wc"
+        },
+        "COVERITY_CONFIG_FILEPATH": {
+            "description": "Path to covertiy configuration file",
+            "cli_option": "coverity_config_filepath",
+            "cli_option_short": "ccf"
+        },
+        "COVERITY_RUN_DESKTOP_EXTRA_OPTIONS": {
+            "description": "List of extra options to be passed to cov-run-desktop command",
+            "cli": false,
+            "env": false
+        }
+    }
+}

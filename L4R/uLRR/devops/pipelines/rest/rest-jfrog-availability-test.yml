@@ -1,0 +1,12 @@
+trigger: none
+
+pr: none
+
+pool: munich-d16asv5-vmss
+
+jobs:
+  - job: jfrogTest
+    variables:
+      - group: artifactory-credentials
+    steps:
+    - template: /devops/templates/steps/jfrog-availability-check.yml

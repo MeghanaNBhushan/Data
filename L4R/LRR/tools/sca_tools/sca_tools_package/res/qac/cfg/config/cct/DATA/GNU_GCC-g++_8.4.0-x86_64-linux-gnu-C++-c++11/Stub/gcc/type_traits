@@ -1,0 +1,43 @@
+// type_traits
+//
+
+#ifndef INCLUDED_PRLGCC_TYPE_TRAITS
+#define INCLUDED_PRLGCC_TYPE_TRAITS
+
+#include <bits/prlgcc_c++config.h>
+
+#if defined (__PRL_GLIBCXX__)
+
+#  if (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 4)
+
+#    include <4.4/type_traits>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 5)
+
+#    include <4.5/type_traits>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 6)
+
+#    include <4.6/type_traits>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 7)
+
+#    include <4.7/type_traits>
+
+#  elif (__PRL_GLIBCXX__ == 5)
+
+#    include <5.1/type_traits>
+
+#  else
+
+#    include_next <type_traits>
+
+#  endif
+
+#else
+
+#  include_next <type_traits>
+
+#endif
+
+#endif

@@ -1,0 +1,34 @@
+    - name: Build SW and CompWarnings ^TPL:build_variant;
+      executionOrder: ^TPL:execOrder;
+      skipIfOnlyFilesChanged:
+      - ^INCLUDE:jenkins/configs/includes/skipFilesChangedListDoxygen.yaml;
+      steps:
+      - cmd: cmake_gen.bat -hw ^TPL:build_variant; -p Radar -cfg ^TPL:cfg_path; -m -c -tcc -f 
+        fromPath: ./
+        name: SW_Build_^TPL:build_variant;
+      - cmd: python ad_radar_apl/tools/lucxbox/lucxbox/tools/compiler_warnings/compiler_warnings.py --compiler greenhills --compiler-log generatedFiles/Radar_^TPL:build_variant;/log/makelog.txt --components-file COMPONENTS --to-csv generatedFiles/Radar_^TPL:build_variant;/log/CompilerWar_^TPL:build_variant;.csv --threshold ^TPL:threshold; 
+        fromPath: ./
+        name: Compiler_warnings_^TPL:build_variant;
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\SW_build
+        fromPath: ./generatedFiles/Radar_^TPL:build_variant;/
+        includes: "*.hex, *.elf, *.map, log/**, buildversion/**, *.json, *.txt"
+        afterFail: false
+        zip: true
+        zipName: SWBuild_Radar_^TPL:build_variant;
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\SW_build
+        fromPath: ad_radar_apl\ToBeCleanUp\
+        includes: "scom_gen/^TPL:build_variant;/**"
+        afterFail: false
+        zip: true
+        zipName: scom_gen_^TPL:build_variant;
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Quality_reports\Compiler_Warnings
+        fromPath: ./generatedFiles/Radar_^TPL:build_variant;/log
+        includes: "*.csv"
+        afterFail: true
+        zip: true
+        zipName: CompWarnings_^TPL:build_variant;
+

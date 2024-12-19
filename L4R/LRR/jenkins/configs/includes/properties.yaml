@@ -1,0 +1,28 @@
+properties:
+  sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;
+  ^TPL:abortIfNotLatest;
+
+  buildDiscarder:
+    days: 5
+    num: 5
+  workspaceName: aras
+
+notify:
+  from: system-user-CC.Radar-Customer@bcn.bosch.com
+pre:
+  - executionOrder: 0
+    label: ATR
+    stages:
+    - executionOrder: 0
+      name: check WIP
+      steps:
+      - call: PullRequest.checkWIP
+
+postFail:
+- label: ATR
+  executionOrder: 0
+  stages:
+  - executionOrder: 0
+    name: post fail
+    steps:
+    - call: PullRequest.cleanPreviousRunComments

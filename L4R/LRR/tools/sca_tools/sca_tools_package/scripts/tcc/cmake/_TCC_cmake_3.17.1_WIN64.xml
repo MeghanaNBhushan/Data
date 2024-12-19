@@ -1,0 +1,15 @@
+<ToolCollection>
+  <ToolCollectionName>cmake</ToolCollectionName>
+  <ToolResponsible>Patrick.Nagel@de.bosch.com</ToolResponsible>
+  <Version>3.17.1</Version>
+  <Date>2020-05-04</Date>
+  <ZipDirectory>TCC\ZippedTools</ZipDirectory>
+  <IndicatorDirectory>TCC</IndicatorDirectory>
+  <Tools>
+    <Tool>
+      <ToolName>cmake</ToolName>
+      <SourcePath>TCC/Tools/cmake/3.17.1_WIN64</SourcePath>
+      <Mirror>No</Mirror>
+    </Tool>
+  </Tools>
+</ToolCollection>

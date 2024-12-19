@@ -1,0 +1,7 @@
+// ======= Results for C:\Tools\compiler\ARM_6_06_01\include\libcxx\atomic
+C:\Tools\compiler\ARM_6_06_01\include\libcxx\atomic; 553; 9;  #error: <atomic> is not implemented
+D:\path\to\file.hpp; 26; 0;  Included from here.; 1599
+D:\path\to\file.hpp; 27; 7;  Included from here.; 1599
+D:\path\to\file.hpp; 28; 2;  Included from here.; 1599
+
+C:\Tools\compiler\ARM_6_06_01\include\libcxx\atomic - was analyzed resulting in 1 harderror(s)

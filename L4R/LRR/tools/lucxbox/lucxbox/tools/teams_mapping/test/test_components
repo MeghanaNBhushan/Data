@@ -1,0 +1,7 @@
+**.py @a
+**.cmd @b
+**.bat @c
+**.cmake @d
+**/cool*/** @e
+**.c @QACPP
+**.h @QACPP

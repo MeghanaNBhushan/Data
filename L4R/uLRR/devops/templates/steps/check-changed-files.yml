@@ -1,0 +1,40 @@
+parameters:
+  - name: folders_list
+    type: string
+
+
+steps:
+  - task: PythonScript@0
+    displayName: Check changed files
+    name: CheckChangedFiles
+    inputs:
+      scriptSource: 'inline'
+      pythonInterpreter: /usr/bin/python3.8
+      failOnStderr: false
+      script: |
+        import subprocess
+
+        print("##[section]Check difference between origin/develop and origin/$(System.PullRequest.SourceBranch)", "\n")
+        
+        folders_in_scope = "${{parameters.folders_list}}".split(" ")
+        print("##[section]Folders in scope:", *folders_in_scope, "\n", sep="\n",)
+        
+        changed_files = subprocess.run(["git", "diff", f"origin/$(System.PullRequest.SourceBranch)", "origin/develop", "--name-only"], capture_output = True, text = True).stdout.split("\n")
+        print("##[section]List of changed files in branch origin/$(System.PullRequest.SourceBranch):", *changed_files, "\n", sep="\n",)
+
+
+        print("##[section]Check for changed files in given folders:")
+
+        changes = False
+        for folder in folders_in_scope:
+            if any(folder in changed_file for changed_file in changed_files):
+                print(f"Changed files found in folder: {folder}")
+                changes = True
+                print("##vso[task.setvariable variable=pr_build_requird;isOutput=true]true")
+            else:
+                print(f"No changed files found in folder: {folder}")
+        
+        if not changes:
+          print("##vso[task.setvariable variable=pr_build_requird;isOutput=true]false")
+        
+        print(f"The variable pr_build_requird is set to: {changes}")

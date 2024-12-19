@@ -1,0 +1,42 @@
+steps:
+  - script: |
+         set RPU_TOOLCHAIN_BASE=C:/Xilinx/Vitis/2021.2
+         mkdir $(Build.SourcesDirectory)\software\rpu\build
+         cd $(Build.SourcesDirectory)\software\rpu\build
+         cmake -G "Unix Makefiles" ..
+         make
+    displayName: Build R Core executable
+  - publish: $(Build.SourcesDirectory)\software\rpu\build\uLRR_R5.elf
+    artifact: rCoreExecutable
+  - task: ArtifactoryGenericUpload@1
+    inputs:
+      artifactoryService: 'sc-ado-artifactory'
+      specSource: 'taskConfiguration'
+      fileSpec: |
+        {
+          "files": [
+            {
+              "pattern": "$(Build.SourcesDirectory)\software\rpu\build\uLRR_R5.elf",
+              "target": "zugspitze-series-generic-local/$(BRANCH_NAME)/$(COMMIT_ID)/"
+            }
+          ]
+        }
+      failNoOp: true
+    displayName: Upload base image and build log to Artifactory
+
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+    - task: ArtifactoryGenericUpload@1
+      inputs:
+        artifactoryService: 'sc-ado-artifactory'
+        specSource: 'taskConfiguration'
+        fileSpec: |
+          {
+            "files": [
+              {
+                "pattern": "$(Build.SourcesDirectory)\software\rpu\build\uLRR_R5.elf",
+                "target": "zugspitze-series-generic-local/master/latest/"
+              }
+            ]
+          }
+        failNoOp: true
+      displayName: Master latest upload base image and build log to Artifactory

@@ -1,0 +1,14 @@
+    - name: rng export
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: 01_rng_export.bat
+        fromPath: ./ad_radar_apl/tools/rng
+        name: rng_export
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\RNG_export
+        fromPath: ./ad_radar_apl/tools/rng/
+        includes: "rn_TestProject/**"
+        afterFail: false
+        zip: false
+      

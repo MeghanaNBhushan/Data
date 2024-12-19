@@ -1,0 +1,811 @@
+parameters:
+- name: stage_name
+  displayName: Stage Name
+  type: string
+  default: Teste_Stage_name
+- name: container
+  displayName: Container
+  type: string
+  default: a-core-application-container-armv8-debug
+- name: build_target
+  displayName: Build target
+  type: string
+  default: armv8
+- name: build_type
+  displayName: Build type
+  type: string
+  default: debug
+- name: board_type
+  displayName: Board type
+  type: string
+  default: tec0204
+- name: middleware_instance
+  displayName: Middleware instance
+  type: string
+  default: tec0204_linux
+- name: build_reason
+  displayName: Build reason
+  type: string
+  default: software/aos
+- name: build_aos_runnable
+  displayName: Build AOS runnable
+  type: boolean
+  default: true
+- name: source_code_analysis
+  displayName: Source Code Analysis
+  type: boolean
+  default: true
+- name: run_unit_test_aos_runnable
+  displayName: Run unit tests
+  type: boolean
+  default: true
+- name: package_aos_runnable
+  displayName: Package AOS runnable
+  type: boolean
+  default: true
+- name: package_type
+  displayName: Package type of AOS runnable
+  type: string
+  default: deb
+- name: deploy_aos_runnable_in_base_image
+  displayName: Deploy AOS runnable into baseimage
+  type: boolean
+  default: true
+- name: base_image_specific_run_id
+  displayName: 'Base image specific run ID'
+  type: number
+  default: 0
+- name: deploy_fpga_bit_file_in_base_image
+  displayName: Deploy FPGA bit file into baseimage
+  type: boolean
+  default: true
+- name: deploy_mmic_libraries_in_base_image
+  displayName: Deploy MMIC libraries into baseimage
+  type: boolean
+  default: true
+- name: generate_swu_file
+  displayName: Generate SWU file
+  type: boolean
+  default: true
+- name: trigger_ct
+  displayName: Trigger CT
+  type: boolean
+  default: true
+- name: vmss
+  displayName: vmss to run the pipeline
+  type: string
+- name: version
+  displayName: Release version
+  type: string
+  default: None
+- name: suppress_compiler_warnings
+  displayName: Suppress compiler warnings
+  type: boolean
+  default: false
+
+stages:
+  - stage: ${{ parameters.stage_name }}
+    pool:
+      name: ${{ parameters.vmss }}
+    variables:
+      - group: cs-swbuildir2st-credentials
+    jobs:
+      - job: InitStep
+        timeoutInMinutes: 0
+        cancelTimeoutInMinutes: 35790
+        steps:
+          - bash: |
+              set -e
+
+              echo "Container:"
+              echo " - Container: ${{ parameters.container }}"
+
+              echo "Target:"
+              echo " - TARGET: ${{ parameters.build_target }}"
+              echo "##vso[task.setvariable variable=TARGET]${{ parameters.build_target }}"
+
+              echo "TYPE:"
+              echo " - TYPE: ${{ parameters.build_type }}"
+              echo "##vso[task.setvariable variable=TYPE]${{ parameters.build_type }}"
+
+              echo "MIDDLEWARE INSTANCE:"
+              echo " - MIDDLEWARE_INSTANCE: ${{ parameters.middleware_instance }}"
+              echo "##vso[task.setvariable variable=MIDDLEWARE_INSTANCE]${{ parameters.middleware_instance }}"
+
+              echo "Build AOS runnable:"
+              echo " - BUILD_AOS_RUNNABLE: ${{ parameters.build_aos_runnable }}"
+              echo "##vso[task.setvariable variable=BUILD_AOS_RUNNABLE]${{ parameters.build_aos_runnable }}"
+
+              echo "Source Code Analysis:"
+              echo " - Source_Code_Analysis: ${{ parameters.source_code_analysis }}"
+              echo "##vso[task.setvariable variable=Source_Code_Analysis]${{ parameters.source_code_analysis }}"
+
+              echo "Run unit tests:"
+              echo " - RUN_UNIT_TEST_AOS_RUNNABLE: ${{ parameters.run_unit_test_aos_runnable }}"
+              echo "##vso[task.setvariable variable=RUN_UNIT_TEST_AOS_RUNNABLE]${{ parameters.run_unit_test_aos_runnable }}"
+
+              echo "Package AOS runnable:"
+              echo " - PACKAGE_AOS_RUNNABLE: ${{ parameters.package_aos_runnable }}"
+              echo "##vso[task.setvariable variable=PACKAGE_AOS_RUNNABLE]${{ parameters.package_aos_runnable }}"
+
+              echo "Deploy AOS runnable into baseimage:"
+              echo " - DEPLOY_AOS_RUNNABLE_IN_BASE_IMAGE: ${{ parameters.deploy_aos_runnable_in_base_image }}"
+              echo "##vso[task.setvariable variable=DEPLOY_AOS_RUNNABLE_IN_BASE_IMAGE]${{ parameters.deploy_aos_runnable_in_base_image }}"
+
+              echo "Deploy MMIC libraries into baseimage:"
+              echo " - DEPLOY_MMIC_LIBRARIES_IN_BASE_IMAGE: ${{ parameters.deploy_mmic_libraries_in_base_image }}"
+              echo "##vso[task.setvariable variable=DEPLOY_MMIC_LIBRARIES_IN_BASE_IMAGE]${{ parameters.deploy_mmic_libraries_in_base_image }}"
+
+              echo "Deploy FPGA bit file into baseimage:"
+              echo " - DEPLOY_FPGA_BIT_FILE_IN_BASE_IMAGE: ${{ parameters.deploy_fpga_bit_file_in_base_image }}"
+              echo "##vso[task.setvariable variable=DEPLOY_FPGA_BIT_FILE_IN_BASE_IMAGE]${{ parameters.deploy_fpga_bit_file_in_base_image }}"
+
+              echo "Baseimage to be used:"
+              echo " - BASE_IMAGE_SPECIFIC_RUN_ID: ${{ parameters.base_image_specific_run_id }}"
+              if [[ "${{ parameters.base_image_specific_run_id }}" != 0 ]]; then
+                echo "It was requested to use a specific base image (not the released one...)"
+                echo "##vso[task.setvariable variable=BASE_IMAGE_SPECIFIC_RUN_ID]${{ parameters.base_image_specific_run_id }}"
+              else
+                echo "Released base image will be used (if required one...)"
+              fi
+
+              echo "Generate SWU file:"
+              echo " - GENERATE_SWU_FILE: ${{ parameters.generate_swu_file }}"
+              echo "##vso[task.setvariable variable=GENERATE_SWU_FILE]${{ parameters.generate_swu_file }}"
+
+              echo "Trigger CT:"
+              echo " - TRIGGER_CT: ${{ parameters.trigger_ct }}"
+              echo "##vso[task.setvariable variable=TRIGGER_CT]${{ parameters.trigger_ct }}"
+
+              echo "Suppress compiler warnings:"
+              echo " - SUPPRESS_COMPILER_WARNINGS: ${{ parameters.suppress_compiler_warnings }}"
+              echo "##vso[task.setvariable variable=SUPPRESS_COMPILER_WARNINGS]${{ parameters.suppress_compiler_warnings }}"
+
+              echo "Testing storage account:"
+              if [ -d "/var/tmp/conan_cache" ]; then
+                echo " - Mounting to storage account is active!"
+              else
+                echo " - Mounting to storage account is not active!"
+              fi
+            name: InitStep
+
+      - job: BuildCustomRootFsPackg
+        timeoutInMinutes: 0
+        cancelTimeoutInMinutes: 35790
+        container: ${{ parameters.container }}
+        steps:
+          - checkout: self
+            lfs: true
+            submodules: true
+          - template: /devops/templates/steps/mount-storage-account.yml
+            parameters:
+              sa_user_name: $(swbuildir2st-user)
+              sa_user_password: $(swbuildir2st-key)
+              sa_uri: //swbuildir2st.file.core.windows.net/a-core-build
+              mountdir: /mnt/a-core-build
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Build AOS runnable"
+              echo "###############################################################"
+              echo "Install conan project recipe"
+              echo "tools/buildchain/aos_components/build_script.sh -i -x ${TYPE} -t ${TARGET}"
+              tools/buildchain/aos_components/build_script.sh -i -x ${TYPE} -t ${TARGET}
+
+              echo "###############################################################"
+              echo "Build AOS runnable"
+              if [[ "${{ parameters.suppress_compiler_warnings }}" == "True" ]]; then
+                echo "Warning will be suppressed during built time..."
+                BUILD_OPTIONS+="-w "
+              fi
+              BUILD_OPTIONS+="-b -x ${TYPE} -t ${TARGET} -e ${MIDDLEWARE_INSTANCE}"
+              echo "tools/buildchain/aos_components/build_script.sh $BUILD_OPTIONS"
+              tools/buildchain/aos_components/build_script.sh $BUILD_OPTIONS
+
+              echo "###############################################################"
+            condition: eq(${{ parameters.build_aos_runnable }}, 'true')
+            displayName: Build AOS runnable
+
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Check build complete"
+              echo "###############################################################"
+
+              if [[ "${TARGET}" == "x86-64" ]]; then
+                BUILD_LOG="software/aos/build_x86_64/build_x86_64_exe/build.log"
+                CLEAN_BUILD_LOG="software/aos/build_x86_64/build_x86_64_exe/clean_build.log"
+              elif [[ "${TARGET}" == "armv8" ]]; then
+                BUILD_LOG="software/aos/build_armv8/build_armv8_exe/build.log"
+                CLEAN_BUILD_LOG="software/aos/build_armv8/build_armv8_exe/clean_build.log"
+              fi
+
+              # Remove colour enconding
+              sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g" $BUILD_LOG > $CLEAN_BUILD_LOG
+
+              # Analyse the compiler output
+              echo "python3 devops/scripts/python/libraries/build_log_parser/build_log_parser.py --build_log $CLEAN_BUILD_LOG --check_build_completed"
+              python3 devops/scripts/python/libraries/build_log_parser/build_log_parser.py --build_log $CLEAN_BUILD_LOG --check_build_completed
+              python_exit_status=$?
+
+              # Check if the exit status is 0
+              if [ $python_exit_status -eq 0 ]; then
+                  echo "Python script executed successfully (exit status is 0)"
+                  echo "##vso[task.setvariable variable=build_completed]True"
+              else
+                  echo "Python script failed with exit status $python_exit_status"
+                  echo "##vso[task.setvariable variable=build_completed]False"
+                  exit 1
+              fi
+
+              echo "###############################################################"
+            condition: eq(${{ parameters.build_aos_runnable }}, 'true')
+            displayName: Check build complete
+
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Analyse compiler warnings"
+              echo "###############################################################"
+
+              if [[ "${TARGET}" == "x86-64" ]]; then
+                BUILD_LOG="software/aos/build_x86_64/build_x86_64_exe/build.log"
+                CLEAN_BUILD_LOG="software/aos/build_x86_64/build_x86_64_exe/clean_build.log"
+              elif [[ "${TARGET}" == "armv8" ]]; then
+                BUILD_LOG="software/aos/build_armv8/build_armv8_exe/build.log"
+                CLEAN_BUILD_LOG="software/aos/build_armv8/build_armv8_exe/clean_build.log"
+              fi
+
+              # Remove colour enconding
+              sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g" $BUILD_LOG > $CLEAN_BUILD_LOG
+
+              # Analyse the compiler output
+              echo "python3 devops/scripts/python/libraries/build_log_parser/build_log_parser.py --build_log $CLEAN_BUILD_LOG --warnings_by_file"
+              python3 devops/scripts/python/libraries/build_log_parser/build_log_parser.py --build_log $CLEAN_BUILD_LOG --warnings_by_file
+
+              echo "###############################################################"
+            condition: and(
+                        eq(${{ parameters.build_aos_runnable }}, 'true'),
+                        eq(variables['build_completed'], 'True')
+                      )
+            displayName: Compiler warnings - warnings by file
+
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Analyse compiler warnings"
+              echo "###############################################################"
+
+              if [[ "${TARGET}" == "x86-64" ]]; then
+                BUILD_LOG="software/aos/build_x86_64/build_x86_64_exe/build.log"
+                CLEAN_BUILD_LOG="software/aos/build_x86_64/build_x86_64_exe/clean_build.log"
+              elif [[ "${TARGET}" == "armv8" ]]; then
+                BUILD_LOG="software/aos/build_armv8/build_armv8_exe/build.log"
+                CLEAN_BUILD_LOG="software/aos/build_armv8/build_armv8_exe/clean_build.log"
+              fi
+
+              # Remove colour enconding
+              sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g" $BUILD_LOG > $CLEAN_BUILD_LOG
+
+              # Analyse the compiler output
+              echo "python3 devops/scripts/python/libraries/build_log_parser/build_log_parser.py --build_log $CLEAN_BUILD_LOG --files_ranking"
+              python3 devops/scripts/python/libraries/build_log_parser/build_log_parser.py --build_log $CLEAN_BUILD_LOG --files_ranking
+
+              echo "###############################################################"
+            condition: and(
+                        eq(${{ parameters.build_aos_runnable }}, 'true'),
+                        eq(variables['build_completed'], 'True')
+                      )
+            displayName: Compiler warnings - files ranking
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Analyse compiler warnings"
+              echo "###############################################################"
+
+              if [[ "${TARGET}" == "x86-64" ]]; then
+                BUILD_LOG="software/aos/build_x86_64/build_x86_64_exe/build.log"
+                CLEAN_BUILD_LOG="software/aos/build_x86_64/build_x86_64_exe/clean_build.log"
+              elif [[ "${TARGET}" == "armv8" ]]; then
+                BUILD_LOG="software/aos/build_armv8/build_armv8_exe/build.log"
+                CLEAN_BUILD_LOG="software/aos/build_armv8/build_armv8_exe/clean_build.log"
+              fi
+
+              # Remove colour enconding
+              sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g" $BUILD_LOG > $CLEAN_BUILD_LOG
+
+              # Analyse the compiler output
+              echo "python3 devops/scripts/python/libraries/build_log_parser/build_log_parser.py --build_log $CLEAN_BUILD_LOG --warnings_ranking"
+              python3 devops/scripts/python/libraries/build_log_parser/build_log_parser.py --build_log $CLEAN_BUILD_LOG --warnings_ranking
+
+              echo "###############################################################"
+            condition: and(
+                        eq(${{ parameters.build_aos_runnable }}, 'true'),
+                        eq(variables['build_completed'], 'True')
+                      )
+            displayName: Compiler warnings - warnings ranking
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Run unit tests - x86-64"
+              echo "###############################################################"
+              echo "Create folder to store the unit-tests reports"
+              mkdir test_reports
+
+              echo "Run unit tests"
+              echo "tools/buildchain/aos_components/build_script.sh -u $PWD/test_reports/ -t ${TARGET}"
+              tools/buildchain/aos_components/build_script.sh -u $PWD/test_reports/ -t ${TARGET}
+              zip -r unit_test_reports_x86-64.zip test_reports/
+
+              unit_test_reports_filename=$(find * -type f -name 'unit_test_reports_x86-64.zip');
+              echo "Found file was: $unit_test_reports_filename"
+              echo "realpath $unit_test_reports_filename"
+
+              if [[ ! -z "$unit_test_reports_filename" ]];then
+                echo "##vso[task.setvariable variable=unit_test_reports_x86_64_filename;isOutput=true]$(basename $unit_test_reports_filename)"
+                echo "##vso[task.setvariable variable=unit_test_reports_x86_64_artifactname;isOutput=true]Report-debian-a-core-unit-tests-x86-64"
+                echo "##vso[task.setvariable variable=unit_test_reports_x86_64_filepath;isOutput=true]$(dirname $(realpath $unit_test_reports_filename))"
+                echo "##vso[task.setvariable variable=build_unit_test_reports_result]Succeeded"
+              else
+                echo "$unit_test_reports_filename not found."
+                echo "##vso[task.setvariable variable=build_unit_test_reports_result]Failed"
+              fi
+
+              echo "###############################################################"
+            condition: |
+              and(
+                eq(${{ parameters.run_unit_test_aos_runnable }}, 'true'),
+                eq('${{ parameters.build_target }}', 'x86-64'),
+                eq(variables['build_completed'], 'True')
+                )
+            name: UnitTestsStep_x86_64
+            displayName: Run unit tests - x86-64
+
+
+          - publish: $(UnitTestsStep_x86_64.unit_test_reports_x86_64_filepath)/$(UnitTestsStep_x86_64.unit_test_reports_x86_64_filename)
+            artifact: $(UnitTestsStep_x86_64.unit_test_reports_x86_64_artifactname)
+            displayName: Publish created test reports (unit-test)
+            condition: eq(variables['build_unit_test_reports_result'], 'Succeeded')
+
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Package AOS runnable"
+              echo "###############################################################"
+              echo "tools/buildchain/aos_components/build_script.sh -a -t ${TARGET}"
+              tools/buildchain/aos_components/build_script.sh -a -t ${TARGET}
+
+              aos_package_filename=$(find * -type f -name '*.deb');
+              echo "Found file was: $aos_package_filename"
+              echo "realpath $aos_package_filename"
+
+              if [[ ! -z "$aos_package_filename" ]];then
+                echo "##vso[task.setvariable variable=aos_package_filename;isOutput=true]$(basename $aos_package_filename)"
+                echo "##vso[task.setvariable variable=aos_package_artefactname;isOutput=true]${{ parameters.build_type }}-${{ parameters.build_target }}-Debug-debian-a-core-deb-pckg"
+                echo "##vso[task.setvariable variable=aos_package_filepath;isOutput=true]$(dirname $(realpath $aos_package_filename))"
+                echo "##vso[task.setvariable variable=build_aos_package_result]Succeeded"
+              else
+                echo "$aos_package_filename not found."
+                echo "##vso[task.setvariable variable=build_aos_package_result]Failed"
+              fi
+
+              echo "###############################################################"
+
+            condition: and(
+                        eq(${{ parameters.package_aos_runnable }}, 'true'),
+                        eq(variables['build_completed'], 'True')
+                      )
+            name: PackageStep
+            displayName: Package AOS runnable
+
+          - publish: $(PackageStep.aos_package_filepath)/$(PackageStep.aos_package_filename)
+            artifact: $(PackageStep.aos_package_artefactname)
+            displayName: Publish generated debian package
+            condition: eq(variables['build_aos_package_result'], 'Succeeded')
+
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              buildType: 'specific'
+              project: 'c163178d-c20e-4334-84b3-21e0bf36aec0'
+              definition: '69'
+              buildVersionToDownload: 'specific'
+              pipelineId: ${{ parameters.base_image_specific_run_id }}
+              artifactName: 'BuildFinalRootFS-tec0204-sw-debian-build-final-rootfs-1-1'
+              targetPath: '$(Pipeline.Workspace)'
+            condition: |
+              and(
+                ne('${{ parameters.base_image_specific_run_id }}', 0),
+                eq(variables['build_completed'], 'True')
+              )
+
+          - task: ArtifactoryGenericDownload@3
+            inputs:
+              connection: 'sc-ado-artifactory'
+              specSource: 'taskConfiguration'
+              fileSpec: |
+                {
+                  "files": [
+                    {
+                      "pattern": "zugspitze-series-generic-local/releases/debian-base-image/latest/rootfs_tec0204_bullseye_final_arm64_latest.ext4.gz",
+                      "target": "$(Build.SourcesDirectory)/artifactorydownload/"
+                    }
+                  ]
+                }
+              failNoOp: true
+            condition: |
+              and(
+                or(
+                  eq(${{ parameters.deploy_aos_runnable_in_base_image }}, 'true'),
+                  eq(${{ parameters.deploy_mmic_libraries_in_base_image }}, 'true'),
+                  eq(${{ parameters.deploy_fpga_bit_file_in_base_image }}, 'true')
+                  ),
+                eq('${{ parameters.build_target }}', 'armv8'),
+                eq('${{ parameters.base_image_specific_run_id }}', 0),
+                eq(variables['build_completed'], 'True')
+                )
+            displayName: Download rootfs file
+
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Prepare rootfs for fusion"
+              echo "###############################################################"
+              if [[ "${{ parameters.base_image_specific_run_id }}" != 0 ]]; then
+                rootfs_location=$(Pipeline.Workspace)
+              else
+                rootfs_location=$(Build.SourcesDirectory)/artifactorydownload/releases/debian-base-image/latest/
+              fi
+              echo "rootfs is located in: $rootfs_location"
+
+              echo "Uncompress rootfs"
+              echo "gunzip -k "$rootfs_location/rootfs_tec0204_bullseye_final_arm64_latest.ext4.gz" -c > rootfs_tec0204_bullseye_final_arm64_latest.ext4"
+              if gunzip -k "$rootfs_location/rootfs_tec0204_bullseye_final_arm64_latest.ext4.gz" -c > rootfs_tec0204_bullseye_final_arm64_latest.ext4; then
+                echo "Decompress successful"
+              else
+                echo "Decompress failed"
+                exit 1
+              fi
+
+              echo "###############################################################"
+              echo "Prepare qemu for fusion"
+              echo "###############################################################"
+              echo "Enable qemu-aarch64"
+              update-binfmts --display | grep aarch64
+              sudo update-binfmts --enable qemu-aarch64
+              update-binfmts --display | grep aarch64
+              echo "###############################################################"
+
+            condition: |
+              and(
+                or(
+                  eq(${{ parameters.deploy_aos_runnable_in_base_image }}, 'true'),
+                  eq(${{ parameters.deploy_mmic_libraries_in_base_image }}, 'true'),
+                  eq(${{ parameters.deploy_fpga_bit_file_in_base_image }}, 'true')
+                  ),
+                eq('${{ parameters.build_target }}', 'armv8'),
+                eq(variables['build_completed'], 'True')
+                )
+            displayName: Prepare qemu and rootfs for fusion
+
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Deploy AOS runnable into baseimage"
+              echo "###############################################################"
+
+              echo "Run qemu fusion"
+              echo "tools/buildchain/aos_components/build_script.sh -d $(PackageStep.aos_package_filepath)/$(PackageStep.aos_package_filename) -o $PWD/rootfs_tec0204_bullseye_final_arm64_latest.ext4"
+              tools/buildchain/aos_components/build_script.sh -d $(PackageStep.aos_package_filepath)/$(PackageStep.aos_package_filename) -o $PWD/rootfs_tec0204_bullseye_final_arm64_latest.ext4
+              if [ $? -eq 0 ]; then # checking exit code of the qemu-fusion.py
+                echo "##vso[task.setvariable variable=deploy_aos_runnable_into_rootfs]Succeeded"
+              else
+                echo "##vso[task.setvariable variable=deploy_aos_runnable_into_rootfs]Failed"
+              fi
+
+            condition: |
+              and(
+                eq(${{ parameters.deploy_aos_runnable_in_base_image }}, 'true'),
+                eq('${{ parameters.build_target }}', 'armv8'),
+                eq(variables['build_completed'], 'True')
+                )
+            displayName: Deploy AOS runnable into baseimage
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Deploy MMIC libraries into baseimage"
+              echo "###############################################################"
+
+              echo "Run qemu fusion"
+              sudo cp -a /mnt/a-core-build/mmic/dist-packages.tar /mnt/a-core-build/mmic/aarch64-linux-gnu.tar .
+              sudo tar -xvf dist-packages.tar && sudo tar -xvf aarch64-linux-gnu.tar
+              echo "tools/buildchain/aos_components/build_script.sh -m -o $PWD/rootfs_tec0204_bullseye_final_arm64_latest.ext4"
+              tools/buildchain/aos_components/build_script.sh -m -o $PWD/rootfs_tec0204_bullseye_final_arm64_latest.ext4
+              rm dist-packages.tar aarch64-linux-gnu.tar
+              if [ $? -eq 0 ]; then # checking exit code of the qemu-fusion.py
+                echo "##vso[task.setvariable variable=deploy_mmic_libraries_into_rootfs]Succeeded"
+              else
+                echo "##vso[task.setvariable variable=deploy_mmic_libraries_into_rootfs]Failed"
+              fi
+            condition: |
+              and(
+                eq(${{ parameters.deploy_mmic_libraries_in_base_image }}, 'true'),
+                eq('${{ parameters.build_target }}', 'armv8'),
+                eq(variables['build_completed'], 'True')
+                )
+            displayName: Deploy MMIC libraries into baseimage
+
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Deploy FPGA bit file into baseimage"
+              echo "###############################################################"
+
+              echo "Run qemu fusion"
+              echo "tools/buildchain/aos_components/build_script.sh -f -o $PWD/rootfs_tec0204_bullseye_final_arm64_latest.ext4"
+              tools/buildchain/aos_components/build_script.sh -f -o $PWD/rootfs_tec0204_bullseye_final_arm64_latest.ext4
+              if [ $? -eq 0 ]; then # checking exit code of the qemu-fusion.py
+                echo "##vso[task.setvariable variable=deploy_fpga_bit_file_into_rootfs]Succeeded"
+              else
+                echo "##vso[task.setvariable variable=deploy_fpga_bit_file_into_rootfs]Failed"
+              fi
+
+            condition: |
+              and(
+                eq(${{ parameters.deploy_fpga_bit_file_in_base_image }}, 'true'),
+                eq('${{ parameters.build_target }}', 'armv8'),
+                eq(variables['build_completed'], 'True')
+                )
+            displayName: Deploy FPGA bit file into baseimage
+
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Compressing final rootfs archive"
+              echo "###############################################################"
+
+              gzip rootfs_tec0204_bullseye_final_arm64_latest.ext4 -c > rootfs_tec0204_bullseye_final_arm64_latest.ext4.gz
+              echo "##vso[task.setvariable variable=final_rootfs_filename;isOutput=true]rootfs_tec0204_bullseye_final_arm64_latest.ext4.gz"
+              echo "##vso[task.setvariable variable=final_rootfs_artifactname;isOutput=true]${{ parameters.build_type }}-${{ parameters.build_target }}-Debug-debian-a-core-fused-rootfs"
+
+              echo "Compressed rootfs archive..."
+              # echo "###############################################################"
+
+            condition: |
+              or(
+                eq(variables['deploy_fpga_bit_file_into_rootfs'], 'Succeeded'),
+                eq(variables['deploy_mmic_libraries_into_rootfs'], 'Succeeded'),
+                eq(variables['deploy_aos_runnable_into_rootfs'], 'Succeeded')
+                )
+            displayName: Compress final rootfs
+            name: CompressFinalRootfs
+
+
+          - publish: $(CompressFinalRootfs.final_rootfs_filename)
+            artifact: $(CompressFinalRootfs.final_rootfs_artifactname)
+            displayName: Publish adapted rootfs
+            condition: |
+              or(
+                eq(variables['deploy_fpga_bit_file_into_rootfs'], 'Succeeded'),
+                eq(variables['deploy_mmic_libraries_into_rootfs'], 'Succeeded'),
+                eq(variables['deploy_aos_runnable_into_rootfs'], 'Succeeded')
+                )
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Run unit tests - armv8"
+              echo "###############################################################"
+              echo "Create folder to store the unit-tests reports"
+              mkdir test_reports
+
+              echo "Run unit tests"
+              echo "tools/buildchain/aos_components/build_script.sh -o $PWD/rootfs_tec0204_bullseye_final_arm64_latest.ext4 -u $PWD/test_reports/ -t ${TARGET}"
+              tools/buildchain/aos_components/build_script.sh -o $PWD/rootfs_tec0204_bullseye_final_arm64_latest.ext4 -u $PWD/test_reports/ -t ${TARGET}
+              zip -r unit_test_reports_armv8.zip test_reports/
+
+              ls
+
+              unit_test_reports_filename=$(find * -type f -name 'unit_test_reports_armv8.zip');
+              echo "Found file was: $unit_test_reports_filename"
+              echo "realpath $unit_test_reports_filename"
+
+              if [[ ! -z "$unit_test_reports_filename" ]];then
+                echo "##vso[task.setvariable variable=unit_test_reports_armv8_filename;isOutput=true]$(basename $unit_test_reports_filename)"
+                echo "##vso[task.setvariable variable=unit_test_reports_armv8_artifactname;isOutput=true]Report-debian-a-core-unit-tests-armv8"
+                echo "##vso[task.setvariable variable=unit_test_reports_armv8_filepath;isOutput=true]$(dirname $(realpath $unit_test_reports_filename))"
+                echo "##vso[task.setvariable variable=build_unit_test_reports_result]Succeeded"
+              else
+                echo "$unit_test_reports_filename not found."
+                echo "##vso[task.setvariable variable=build_unit_test_reports_result]Failed"
+              fi
+            name: UnitTestsStep_armv8
+            condition: |
+              and(
+                eq(${{ parameters.run_unit_test_aos_runnable }}, 'true'),
+                eq(variables['deploy_aos_runnable_into_rootfs'], 'Succeeded'),
+                eq('${{ parameters.build_target }}', 'armv8')
+                )
+            displayName: Run unit tests - armv8
+
+
+          - publish: $(UnitTestsStep_armv8.unit_test_reports_armv8_filepath)/$(UnitTestsStep_armv8.unit_test_reports_armv8_filename)
+            artifact: $(UnitTestsStep_armv8.unit_test_reports_armv8_artifactname)
+            condition: |
+              and(
+                eq(variables['build_unit_test_reports_result'], 'Succeeded'),
+                eq('${{ parameters.build_target }}', 'armv8'),
+                eq(variables['build_completed'], 'True')
+                )
+            displayName: Publish created test reports (unit-test)
+
+      - job: ClangTidyChecks
+        condition: eq('${{ parameters.source_code_analysis }}', 'true')
+        timeoutInMinutes: 0
+        cancelTimeoutInMinutes: 35790
+        container: ${{ parameters.container }}
+        steps:
+          - checkout: self
+            lfs: true
+            submodules: true
+
+          - bash: |
+              set -e
+              set -o pipefail
+
+              echo "###############################################################"
+              echo "Build business logic for source code analysis"
+              echo "###############################################################"
+              echo "Install conan project recipe"
+              tools/buildchain/business_logic/build_script.sh -b -t x86-64 -x debug 2>&1 | tee build.log
+              echo "###############################################################"
+              echo "Generating HTML reports for SourceCodeAnalysis"
+              python -m clang_html build.log -o clang.html
+              echo "###############################################################"
+              clang_reports_filename=$(find * -type f -name 'clang.html');
+              if [[ ! -z "$clang_reports_filename" ]];then
+                echo "##vso[task.setvariable variable=clang_tidy_reports_filename;isOutput=true]$(basename $clang_reports_filename)"
+                echo "##vso[task.setvariable variable=clang_tidy_reports_artifactname;isOutput=true]Report-debian-a-core-clang-tidy-checks"
+                echo "##vso[task.setvariable variable=clang_tidy_reports_filepath;isOutput=true]$(dirname $(realpath $clang_reports_filename))"
+                echo "##vso[task.setvariable variable=build_clang_tidy_reports_result]Succeeded"
+              else
+                echo "$clang_reports_filename not found."
+                echo "##vso[task.setvariable variable=build_clang_tidy_reports_result]Failed"
+              fi
+              echo "###############################################################"
+            condition: eq(${{ parameters.source_code_analysis }}, 'true')
+            name: ClangTidyReports
+            displayName: Clang-Tidy checks
+
+          - publish: $(ClangTidyReports.clang_tidy_reports_filepath)/$(ClangTidyReports.clang_tidy_reports_filename)
+            artifact: $(ClangTidyReports.clang_tidy_reports_artifactname)
+            displayName: Publish Clang-Tidy HTML Report
+            condition: eq(variables['build_clang_tidy_reports_result'], 'Succeeded')
+
+      - job: GenerateSwuFile
+        timeoutInMinutes: 0
+        cancelTimeoutInMinutes: 35790
+        dependsOn:
+          - BuildCustomRootFsPackg
+        condition: |
+          and(
+            eq(${{ parameters.generate_swu_file }}, 'true'),
+            eq('${{ parameters.build_target }}', 'armv8'),
+            succeeded('BuildCustomRootFsPackg')
+            )
+        variables:
+          final_rootfs_filename: $[ dependencies.BuildCustomRootFsPackg.outputs['CompressFinalRootfs.final_rootfs_filename'] ]
+          final_rootfs_artifactname: $[ dependencies.BuildCustomRootFsPackg.outputs['CompressFinalRootfs.final_rootfs_artifactname'] ]
+        steps:
+          - checkout: self
+            lfs: true
+            persistCredentials: true
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Repo handling: "
+              echo "..............................................................."
+              echo "Fetching master branch..."
+              git fetch origin master:master
+              echo "Fetched master branch..."
+            displayName: Repo handling
+
+          - download: current
+            artifact: $(final_rootfs_artifactname)
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "$(Pipeline.Workspace)/$(final_rootfs_artifactname)"
+              ls $(Pipeline.Workspace)/$(final_rootfs_artifactname)
+              echo "###############################################################"
+
+              echo "###############################################################"
+              echo "Generate SWU file"
+              echo "###############################################################"
+
+              rootfs_filename=$(echo "$(Pipeline.Workspace)/$(final_rootfs_artifactname)")/$(final_rootfs_filename)
+              echo "$rootfs_filename"
+              board_type_target=$(echo "$rootfs_filename" | cut -d '_' -f3)
+              echo "$board_type_target"
+
+              echo "software/os/debian/components/swupdate/generate_swu.sh -r $rootfs_filename -t $board_type_target"
+              software/os/debian/components/swupdate/generate_swu.sh -r $rootfs_filename -t $board_type_target
+
+              echo "Checking if swu file is available..."
+              cd software/os/debian/components/swupdate/build/
+              swu_filename=$(find * -type f -name 'uLRR_image-*.swu');
+              echo "Found file was: $swu_filename"
+
+              if [ ! -z "$swu_filename" ]; then
+                echo "##vso[task.setvariable variable=swu_filename;isOutput=true]$swu_filename"
+                echo "##vso[task.setvariable variable=swu_artifactname;isOutput=true]${{ parameters.build_type }}-${{ parameters.build_target }}-Software-$board_type_target-sw-debian-build-swu-file"
+                echo "##vso[task.setvariable variable=swu_filepath;isOutput=true]$(dirname $(realpath $swu_filename))"
+                echo "##vso[task.setvariable variable=build_swu_result]Succeeded"
+                echo "##vso[task.setvariable variable=run_ct;isOutput=true]true"
+              else
+                echo "swu file not found."
+                echo "##vso[task.setvariable variable=build_swu_result]Failed"
+              fi
+            name: SWUStep
+            displayName: Generate SWU file
+
+          - publish: $(SWUStep.swu_filepath)/$(SWUStep.swu_filename)
+            artifact: $(SWUStep.swu_artifactname)
+            displayName: Publish swu file
+            condition: eq(variables['build_swu_result'], 'Succeeded')
+
+  - stage: ${{ parameters.stage_name }}_Continuous_Testing
+    condition: in(dependencies.${{ parameters.stage_name }}.result, 'Succeeded')
+    pool:
+      name: local-test-benches
+    jobs:
+      - job: Trigger_Weekend_Tests
+        timeoutInMinutes: 0
+        cancelTimeoutInMinutes: 180
+        variables:
+          swu_artifactname: $[ stageDependencies.${{ parameters.stage_name }}.GenerateSwuFile.outputs['SWUStep.swu_artifactname'] ]
+          swu_filename: $[ stageDependencies.${{ parameters.stage_name }}.GenerateSwuFile.outputs['SWUStep.swu_filename'] ]
+        condition: |
+          and(
+            eq(${{ parameters.trigger_ct }}, 'true'),
+            eq('${{ parameters.build_target }}', 'armv8')
+            )
+        steps:
+          - checkout: self
+            lfs: false
+            persistCredentials: true
+          - template: /devops/templates/steps/continuousTesting.yml
+            parameters:
+              assist_run: false
+              test_coverage: testsuite_assist_run
+              spezi_branch: develop
+              testclassfilter: T05_WeekendRun
+              avoid_weekend_testclass: false

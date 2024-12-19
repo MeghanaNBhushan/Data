@@ -1,0 +1,37 @@
+trigger: none
+
+pr:
+  autoCancel: true
+  branches:
+    include:
+      - develop
+  drafts: false
+
+resources:
+  containers:
+  - container: a-core-application-container
+    image: artifactory.boschdevcloud.com/zugspitze-series-docker-local/a-core-application:latest
+    endpoint: sc-ado-docker-registry-artifactory
+    options: --user 0:0 --privileged
+    volumes: # Volumes to mount on the container.
+    - /var/tmp/conan_cache:/var/tmp/conan_cache
+    env: # Variables to map into the container's environment.
+      TARGET: armv8
+      TYPE: debug
+      MIDDLEWARE_INSTANCE: te0950_neutrino
+      AOS_VERSION: default
+      ENABLE_CLANG_TIDY_CHECKS: 'ON'
+
+stages:
+  - template: /devops/templates/stages/build-a-core-application-template.yaml
+    parameters:
+      build_reason: pr
+      vmss: cx-lnx-l-vmss
+      base_image_target: te0950
+      trigger_ct: false
+      middleware_instance: te0950_neutrino
+      package_type: conan
+      deploy_aos_runnable_in_base_image: false
+      deploy_fpga_bit_file_in_base_image: false
+      deploy_mmic_libraries_in_base_image: false
+      generate_swu_file: false

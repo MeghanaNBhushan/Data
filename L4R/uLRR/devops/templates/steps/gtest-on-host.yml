@@ -1,0 +1,30 @@
+steps:
+  - bash: |
+      set -e
+
+      docker pull artifactory.boschdevcloud.com/zugspitze-series-docker-local/sca:latest
+      docker run --rm -t -d --name sca_con \
+        -v $(Pipeline.Workspace)/s/:/ws \
+        artifactory.boschdevcloud.com/zugspitze-series-docker-local/sca bash
+      docker exec -t sca_con bash -c "cd ws; python3 tools/googletest/ulrr/gtest.py"
+    displayName: run GTest
+
+  - task: ArtifactoryGenericUpload@1
+    inputs:
+      artifactoryService: 'sc-ado-artifactory'
+      specSource: 'taskConfiguration'
+      fileSpec: |
+        {
+          "files": [
+            {
+              "pattern": "$(Pipeline.Workspace)/s/build/ulrr_gtest_output.xlsx",
+              "target": "zugspitze-series-generic-local/$(BRANCH_NAME)/$(COMMIT_ID)/Gtest_report/"
+            },
+            {
+              "pattern": "$(Pipeline.Workspace)/s/build/ulrr_gtest_output.xml",
+              "target": "zugspitze-series-generic-local/$(BRANCH_NAME)/$(COMMIT_ID)/Gtest_report/"
+            }
+          ]
+        }
+      failNoOp: true
+    displayName: Upload GTest Report to Artifactory

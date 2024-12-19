@@ -1,0 +1,11 @@
+[width="100%", cols="1a,5a,5a,1a", options="header"]
+|===
+| ID | Feature  |  Stakeholder Summary | Status
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14421[ATR-14421]| ROS Decoder: Adaptations for LRR SW V9| The ROS Decoder is compatible to the communcation interface of the sensor SW (LGU interface description).| In Progress
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14302[ATR-14302]| Reduction of QAC and Coverity warning.| Confidence : 100%
+
+L8 and L9 warnings are brought to 0.| In Progress
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-13542[ATR-13542]| Handling of outgoing requirements from platform project| Confidence : 75%
+
+Not all requirements will be linked but a example will be created to demonstrate how the linkage could be established.| In Progress
+|===

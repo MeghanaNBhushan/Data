@@ -1,0 +1,296 @@
+parameters:
+- name: build_target
+  displayName: Build target
+  type: string
+  default: x86-64
+- name: build_type
+  displayName: Build type
+  type: string
+  default: debug
+- name: middleware_instance
+  displayName: Middleware instance
+  type: string
+  default: car_pc
+- name: build_reason
+  displayName: Build reason
+  type: string
+- name: vmss
+  displayName: linux vmss 
+  type: string
+- name: version
+  displayName: Release version
+  type: string
+  default: None
+
+stages:
+  - stage: PC_Initial
+    condition: eq('${{ parameters.build_reason }}', 'pr')
+    pool:
+      name: ${{ parameters.vmss }}
+    jobs:
+      - job: ConfirmPrBuildRequest
+        timeoutInMinutes: 0
+        cancelTimeoutInMinutes: 35790
+        steps:
+          - template: /devops/templates/steps/check-changed-files.yml
+            parameters:
+              folders_list: software/aos/ software/ros/ devops/ tools/buildchain/ros_components/
+
+  - stage: PC_Build
+    condition: |
+      or(
+        and(
+          eq('${{ parameters.build_reason }}', 'pr'),
+          eq(dependencies.PC_Initial.outputs['ConfirmPrBuildRequest.CheckChangedFiles.pr_build_requird'],true)
+        ),
+          ne('${{ parameters.build_reason }}', 'pr')
+      )
+    pool:
+      name: ${{ parameters.vmss }}
+    jobs:
+      - job: ClangFormatCheck
+        condition: eq('${{ parameters.build_reason }}', 'pr')
+        timeoutInMinutes: 0
+        cancelTimeoutInMinutes: 720
+        container: a-core-application-container
+        steps:
+          - template: /devops/templates/steps/clang-format-check.yml
+          
+      - job: SWBuild
+        timeoutInMinutes: 0 
+        cancelTimeoutInMinutes: 35790 
+        container: a-core-application-container
+        steps:
+          - checkout: self
+            lfs: true
+            submodules: true
+            displayName: Clone repo
+
+          - bash: |
+              set -e
+
+              echo "Target:"
+              echo " - TARGET: ${{ parameters.build_target }}"
+              echo "##vso[task.setvariable variable=TARGET]${{ parameters.build_target }}"
+
+              echo "TYPE:"
+              echo " - TYPE: ${{ parameters.build_type }}"
+              echo "##vso[task.setvariable variable=TYPE]${{ parameters.build_type }}"
+
+              echo "MIDDLEWARE INSTANCE:"
+              echo " - MIDDLEWARE_INSTANCE: ${{ parameters.middleware_instance }}"
+              echo "##vso[task.setvariable variable=MIDDLEWARE_INSTANCE]${{ parameters.middleware_instance }}"
+
+            name: InitStep
+
+          - bash: |
+              set -e
+
+              echo "Sourcing build tool"
+              source tools/build_tool/setup.bash
+
+              echo "###############################################################"
+              echo "Build tool config"
+              echo "###############################################################"
+              echo "Config ir2-build-tool"
+              echo "ir2-build-tool config aos --target-type ${TARGET} --build-type ${TYPE} --middleware-instance ${MIDDLEWARE_INSTANCE}"
+              ir2-build-tool config aos --target-type ${TARGET} --build-type ${TYPE} --middleware-instance ${MIDDLEWARE_INSTANCE}
+
+              echo "###############################################################"
+              echo "Install conan recipe"
+              echo "###############################################################"
+              echo "ir2-build-tool install aos"
+              ir2-build-tool install aos
+
+              echo "###############################################################"
+              echo "Build AOS runnable"
+              echo "###############################################################"
+              echo "ir2-build-tool build aos"
+              ir2-build-tool build aos
+
+              echo "###############################################################"
+            displayName: Build AOS for PC
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Check build complete"
+              echo "###############################################################"
+              BUILD_LOG="build/aos_linux_${TARGET}_${TYPE}/conan_run.log"
+              
+              # Analyse the compiler output
+              echo "python3 devops/scripts/python/libraries/build_log_parser/build_log_parser.py --build_log $BUILD_LOG --check_build_completed"
+              python3 devops/scripts/python/libraries/build_log_parser/build_log_parser.py --build_log $BUILD_LOG --check_build_completed
+              python_exit_status=$?
+
+              # Check if the exit status is 0
+              if [ $python_exit_status -eq 0 ]; then
+                  echo "Python script executed successfully (exit status is 0)"
+                  echo "##vso[task.setvariable variable=build_completed]True"
+              else
+                  echo "Python script failed with exit status $python_exit_status"
+                  echo "##vso[task.setvariable variable=build_completed]False"
+                  exit 1
+              fi
+
+              echo "###############################################################"
+            displayName: Check build complete
+
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Package AOS runnable"
+              echo "###############################################################"
+              echo "Sourcing build tool"
+              source tools/build_tool/setup.bash
+
+              echo "ir2-build-tool package aos --package-type deb"
+              ir2-build-tool package aos --package-type deb
+
+              aos_package_filename=$(find build/aos_linux_${TARGET}_${TYPE}/deb_package/ -type f -name '*.deb');
+              echo "Found file was: $aos_package_filename"
+              echo "realpath $aos_package_filename"
+
+              if [[ ! -z "$aos_package_filename" ]];then
+                echo "##vso[task.setvariable variable=aos_package_filename;isOutput=true]$(basename $aos_package_filename)"
+                echo "##vso[task.setvariable variable=aos_package_artefactname;isOutput=true]Debug-debian-a-core-deb-pckg"
+                echo "##vso[task.setvariable variable=aos_package_filepath;isOutput=true]$(dirname $(realpath $aos_package_filename))"
+                echo "##vso[task.setvariable variable=build_aos_package_result]Succeeded"
+              else
+                echo "$aos_package_filename not found."
+                echo "##vso[task.setvariable variable=build_aos_package_result]Failed"
+              fi
+
+              echo "###############################################################"
+            name: PackageAOSSoftware
+            displayName: Package AOS PC Software
+
+          - publish: $(PackageAOSSoftware.aos_package_filepath)/$(PackageAOSSoftware.aos_package_filename)
+            artifact: $(PackageAOSSoftware.aos_package_artifactname)
+            displayName: Publish generated aos debian package
+            condition: eq(variables['build_aos_package_result'], 'Succeeded')
+  
+          - bash: |
+              set -e
+
+              echo "###############################################################"
+              echo "Build ROS for ${TARGET}"
+              echo "###############################################################"
+
+              echo "tools/buildchain/ros_components/build_script.sh -c -p -a"
+              tools/buildchain/ros_components/build_script.sh -c -p -a
+
+              echo "###############################################################"
+            displayName: Build ROS for PC
+          
+          - bash: |
+              set -e
+              
+              echo "###############################################################"
+              echo "Package PC Software"
+              echo "###############################################################"
+              
+              cd software/ros
+
+              ros_package_filename=$(find * -type f -name '*.deb');
+              echo "Found file was: $ros_package_filename"
+              echo "realpath $ros_package_filename"
+
+              if [[ ! -z "$ros_package_filename" ]];then
+                echo "##vso[task.setvariable variable=ros_package_filename;isOutput=true]$(basename $ros_package_filename)"
+                echo "##vso[task.setvariable variable=ros_package_artifactname;isOutput=true]Software-ros-pc-deb-pckg"
+                echo "##vso[task.setvariable variable=ros_package_filepath;isOutput=true]$(dirname $(realpath $ros_package_filename))"
+                echo "##vso[task.setvariable variable=build_ros_package_result]Succeeded"
+              else
+                echo "$ros_package_filename not found."
+                echo "##vso[task.setvariable variable=build_ros_package_result]Failed"
+              fi
+
+              echo "###############################################################"
+            name: PackageROSSoftware
+            displayName: Package ROS PC Software
+
+          - publish: $(PackageROSSoftware.ros_package_filepath)/$(PackageROSSoftware.ros_package_filename)
+            artifact: $(PackageROSSoftware.ros_package_artifactname)
+            displayName: Publish generated ros debian package
+            condition: eq(variables['build_ros_package_result'], 'Succeeded')
+ 
+  - stage: PC_Deliver
+    condition: |
+      and(
+        in(
+          dependencies.PC_Build.result, 'Succeeded'
+        ),
+        or(
+          eq('${{ parameters.build_reason }}', 'nightly'),
+          eq('${{ parameters.build_reason }}', 'release')
+        )
+      )
+    dependsOn:
+    - PC_Build
+    pool:
+      name: ${{ parameters.vmss }}
+    jobs:
+      - job: DownloadAndPublishArtifacts
+        displayName: Download And Publish Artifacts
+        timeoutInMinutes: 0 
+        cancelTimeoutInMinutes: 35790
+        variables:
+        - name: current_date
+          value: $[ format('{0:yyyyMMdd}', pipeline.startTime) ]
+        - name: upload_folder
+          ${{ if eq(parameters.build_reason, 'nightly') }}: 
+            value: zugspitze-series-generic-local/nightly/$(current_date)-swbuild
+          ${{ if eq(parameters.build_reason, 'release') }}:
+            value: zugspitze-series-generic-local/releases/system-release/${{parameters.version}}
+        - name: aos_pc_software_artifactname
+          value: $[ stageDependencies.PC_Build.SWBuild.outputs['PackageAOSSoftware.aos_package_artifactname'] ]
+        - name: ros_pc_software_artifactname
+          value: $[ stageDependencies.PC_Build.SWBuild.outputs['PackageROSSoftware.ros_package_artifactname'] ]
+        
+        steps:
+          - download: current
+            displayName: Download all artifacts
+          
+          - bash: |
+              mkdir $(Pipeline.Workspace)/software $(Pipeline.Workspace)/debug $(Pipeline.Workspace)/reports
+
+              artifacts=($(aos_pc_software_artifactname) $(ros_pc_software_artifactname))
+
+              for artifact in "${artifacts[@]}"; do
+                prefix="${artifact%%-*}"
+                if [[ "$prefix" == "Debug" ]]; then
+                  mv "$(Pipeline.Workspace)/$artifact"/* $(Pipeline.Workspace)/debug
+                elif [[ "$prefix" == "Software" ]]; then
+                  mv "$(Pipeline.Workspace)/$artifact"/* $(Pipeline.Workspace)/software
+                elif [[ "$prefix" == "Report" ]]; then
+                  mv "$(Pipeline.Workspace)/$artifact"/* $(Pipeline.Workspace)/reports
+                fi
+              done
+            displayName: moving files
+
+          - task: ArtifactoryGenericUpload@1
+            inputs:
+              artifactoryService: 'sc-ado-artifactory'
+              specSource: 'taskConfiguration'
+              fileSpec: |
+                {
+                  "files": [
+                    {
+                      "pattern": "$(Pipeline.Workspace)/software/*",
+                      "target": "$(upload_folder)/software/"
+                    },
+                    {
+                      "pattern": "$(Pipeline.Workspace)/debug/*",
+                      "target": "$(upload_folder)/debug/"
+                    },
+                    {
+                      "pattern": "$(Pipeline.Workspace)/reports/*",
+                      "target": "$(upload_folder)/report/"
+                    }
+                  ]
+                }
+              failNoOp: true
+            displayName: Upload all build artifacts to artifactory

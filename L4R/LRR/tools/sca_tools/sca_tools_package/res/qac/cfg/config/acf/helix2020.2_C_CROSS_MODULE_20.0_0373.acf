@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<acf xmlversion="2.0.0">
+  <components>
+    <component name="qac" target="C" version="9.9.0"></component>
+    <component name="qacpp" target="C++" version="4.7.0"></component>
+    <component name="rcma" target="C_CPP" version="2.3.0"></component>
+  </components>
+  <component_settings>
+    <input_to component="rcma" target="C_CPP" version="2.3.0">
+      <option argument="close_name::sig_char=511" name="-po "></option>
+    </input_to>
+    <input_to component="qac" target="C" version="9.9.0">
+      <option argument="df::query_timeout=500" name="-prodoption "></option>
+      <option argument="df::function_timeout=60000" name="-prodoption "></option>
+      <option argument="df::inter=2" name="-prodoption "></option>
+      <option argument="df::analyse_header_functions=intra" name="-prodoption "></option>
+      <option argument="df::struct_last_array_member_size_1+" name="-prodoption "></option>
+      <option argument="511" name="-namelength "></option>
+      <option argument="511" name="-xnamelength "></option>
+    </input_to>
+  </component_settings>
+</acf>

@@ -1,0 +1,15 @@
+<ToolCollection>
+  <ToolCollectionName>jq</ToolCollectionName>
+  <ToolResponsible>alexander.fruck@de.bosch.com</ToolResponsible>
+  <Version>1.6</Version>
+  <Date>2020-01-20</Date>
+  <ZipDirectory>TCC\ZippedTools</ZipDirectory>
+  <IndicatorDirectory>TCC</IndicatorDirectory>
+  <Tools>
+    <Tool>
+      <ToolName>jq</ToolName>
+      <SourcePath>TCC\Tools\jq\1.6_WIN64</SourcePath>
+      <Mirror>No</Mirror>
+    </Tool>
+  </Tools>
+</ToolCollection>

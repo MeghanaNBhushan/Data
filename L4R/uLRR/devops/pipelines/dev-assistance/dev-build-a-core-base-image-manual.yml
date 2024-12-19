@@ -1,0 +1,72 @@
+parameters:
+- name: build_target
+  displayName: Build target
+  values:
+  - zcu102
+  - tec0204
+  - systemroot
+- name: build_arch
+  displayName: Build architecture
+  values:
+  - aarch64
+- name: use_cache
+  displayName: Use cache
+  type: boolean
+- name: build_dtb
+  displayName: Build DTB (no dependency)
+  type: boolean
+- name: create_boot_bin
+  displayName: Create BOOT.bin (depends on DTB)
+  type: boolean
+- name: build_kernel
+  displayName: Build kernel (depends on DTB)
+  type: boolean
+- name: create_rootfs
+  displayName: Create initial rootfs (no dependency)
+  type: boolean
+- name: final_rootfs
+  displayName: Install comp. in rootfs (cfg and kernel) (depends on Kernel, RootFs and Cfg.)
+  type: boolean
+- name: create_ulrr_cfg
+  displayName: Build ulrr cfg. (*.deb) (no dependency)
+  type: boolean
+- name: create_swu_file
+  displayName: Build SWu file (depends on Final RootFs)
+  type: boolean
+- name: run_deploy_stage
+  displayName: Run deploy and validate stage
+  type: boolean
+- name: rootfs_version
+  displayName: Rootfs version
+  type: string
+  default: "0.7.11"
+- name: vitis_version
+  type: string
+  default: 2021.2
+
+
+trigger: none
+
+pr: none
+
+pool:
+  name: dev-lnx-l-vmss
+
+stages:
+  - template: /devops/templates/stages/build-a-core-base-image-template.yaml
+    parameters: # Parameters used in a stage template.
+      build_reason: manual
+      build_target: ${{parameters.build_target}}
+      build_arch: ${{parameters.build_arch}}
+      vitis_version: ${{parameters.vitis_version}}
+      use_cache: ${{parameters.use_cache}}
+      build_dtb: ${{parameters.build_dtb}}
+      create_boot_bin: ${{parameters.create_boot_bin}}
+      build_kernel: ${{parameters.build_kernel}}
+      create_rootfs: ${{parameters.create_rootfs}}
+      final_rootfs: ${{parameters.final_rootfs}}
+      create_ulrr_cfg: ${{parameters.create_ulrr_cfg}}
+      create_swu_file: ${{parameters.create_swu_file}}
+      rootfs_version: ${{parameters.rootfs_version}}
+      run_deploy_stage: ${{parameters.run_deploy_stage}}
+

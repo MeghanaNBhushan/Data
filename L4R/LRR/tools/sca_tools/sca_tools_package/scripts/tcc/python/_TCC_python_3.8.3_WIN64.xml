@@ -1,0 +1,15 @@
+<ToolCollection>
+  <ToolCollectionName>python</ToolCollectionName>
+  <Responsible>patrick.nagel@de.bosch.com</Responsible>
+  <Version>999</Version>
+  <Date>2018-07-05</Date>
+  <ZipDirectory>TCC\ZippedTools</ZipDirectory>
+  <IndicatorDirectory>TCC</IndicatorDirectory>
+  <Tools>
+    <Tool>
+      <ToolName>python3</ToolName>
+      <SourcePath>TCC\Tools\python3\3.8.3_WIN64</SourcePath>
+      <Mirror>No</Mirror>
+    </Tool>
+  </Tools>
+</ToolCollection>

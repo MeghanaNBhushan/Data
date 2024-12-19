@@ -1,0 +1,54 @@
+parameters: 
+  - name: pathToFlashFile
+    type: string
+  - name: enableNoProxy
+    type: string
+    default: true
+  - name: targetIP
+    type: string
+    default: 192.168.2.16
+  - name: targetHostName
+    type: string
+    default: tec0204
+
+   
+steps:
+  - bash: |
+      set -e
+
+      ping_check() {
+      for i in {1..5}; do
+          if ping -c 1 ${1} >/dev/null; then
+              echo "Ping successful."
+              return 0
+          else
+              echo "Ping failed. Retrying in 10 seconds..."
+              sleep 10
+          fi
+      done
+      echo "Unable to reach ${1} after multiple attempts. Exiting script."
+      exit 1
+      }
+
+      ping_check "${{ parameters.targetIP }}"
+      get_sd_var() {
+          ssh -o StrictHostKeyChecking=no ${{ parameters.targetHostName }} -q "fw_printenv $1" | awk -F '=' '{print $2}'
+      }
+
+      before_sd_rootdev=$(get_sd_var "sd_rootdev")
+      before_sd_rootdev_altboot=$(get_sd_var "sd_rootdev_altboot")
+
+      echo "##vso[task.setvariable variable=before_sd_rootdev;isOutput=true]$before_sd_rootdev"	
+      echo "##vso[task.setvariable variable=before_sd_rootdev_altboot;isOutput=true]$before_sd_rootdev_altboot"
+
+      echo "--------------------------------------------------------------------------------------------------------------"
+      echo "Boot Partition before Flashing SWU Image:"
+      echo "sd_rootdev: $before_sd_rootdev"
+      echo "sd_rootdev_altboot: $before_sd_rootdev_altboot"
+      echo "--------------------------------------------------------------------------------------------------------------"
+
+      python $(Pipeline.Workspace)/s/tools/testbench_toolkit/swupdate/swupdateclient/main.py --timeout 3600 ${{ parameters.pathToFlashFile }} ${{ parameters.targetIP }} 8080 ${{ parameters.enableNoProxy }}
+      sleep 10
+    
+    name: FlashSWU
+    displayName:  Flash SWU

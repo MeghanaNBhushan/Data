@@ -1,0 +1,6 @@
+#!/usr/bin/env groovy
+
+@Library("LUCxBau@21.5.6") _
+
+lucx.bau(configsDirs: ["jenkins/configs"], config:'jenkins/configs/nightly/IntTest_nightly.yaml', isPath:true, debug:true)
+

@@ -1,0 +1,38 @@
+steps:
+  - task: ArtifactoryGenericDownload@3
+    inputs:
+      connection: 'sc-ado-artifactory'
+      specSource: 'taskConfiguration'
+      fileSpec: |
+        {
+          "files": [
+            {
+              "pattern": "zugspitze-series-generic-local/$(BRANCH_NAME)/$(COMMIT_ID)/fusionimage.zip",
+              "target": "$(Build.SourcesDirectory)/artifactorydownload/"
+            }
+          ]
+        }
+      failNoOp: true
+    displayName: Download binaries
+    
+  - bash: |
+      set -e
+
+      unzip $(Build.SourcesDirectory)/artifactorydownload/$(BRANCH_NAME)/$(COMMIT_ID)/fusionimage.zip -d $(Build.SourcesDirectory)
+      mv -f $(Build.SourcesDirectory)/images/linux/rootfs.ext4 $(Build.SourcesDirectory)/images/linux/boot.vfat /srv/tftp
+    displayName: Unarchive and move files 
+
+# The variables allnetPowerStripUser and allnetPowerStripPassword are set as local environment variables in the test bench
+  - bash: |
+      set -e
+
+      curl --noproxy "*" -u $allnetPowerStripUser:$allnetPowerStripPassword "http://192.168.0.100/xml/?mode=actor&type=switch&id=1&action=0"
+      sleep 15
+      curl --noproxy "*" -u $allnetPowerStripUser:$allnetPowerStripPassword "http://192.168.0.100/xml/?mode=actor&type=switch&id=1&action=1"
+      sleep 15
+      expect $(Build.SourcesDirectory)/tools/flashing_sd/flash_zcu.expect boot rootfs logging
+    displayName: Flash procedure
+
+  - publish: $(Build.SourcesDirectory)/flash.log
+    artifact: log-$(System.StageAttempt)-$(System.JobAttempt)
+    displayName: Publish log

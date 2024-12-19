@@ -1,0 +1,7 @@
+    - name: Fetch Tags
+      executionOrder: ^TPL:execOrder;
+      skipIfOnlyFilesChanged:
+      - ^INCLUDE:jenkins/configs/includes/skipFilesChangedListDoxygen.yaml;
+      steps:
+      - cmd: python FetchTags.py
+        fromPath: ./jenkins/scripts

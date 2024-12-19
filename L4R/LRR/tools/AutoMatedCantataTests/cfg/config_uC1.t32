@@ -1,0 +1,30 @@
+
+
+; Environment variables
+
+OS=
+TMP=C:\Temp
+SYS=C:\tools\T32_Gen5\
+ID=C19020262988
+
+RCL=NETASSIST
+PORT=20000
+PACKLEN=1024
+
+; USB information
+ 
+PBI=
+USB
+CONNECTIONMODE=AUTOCONNECT
+NODE=C19020262988
+
+; Printer settings 
+PRINTER=WINDOWS
+
+; Screen fonts
+
+SCREEN=
+VICON
+HEADER=Trace32-uC1
+FDI 
+

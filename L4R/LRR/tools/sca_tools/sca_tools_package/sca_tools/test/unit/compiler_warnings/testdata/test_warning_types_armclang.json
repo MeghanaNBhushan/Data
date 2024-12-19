@@ -1,0 +1,34 @@
+[
+    {
+        "controls": [], 
+        "currently_used": "Yes", 
+        "enabled_by_default": "Yes", 
+        "name": "-W#pragma-messages", 
+        "severity_name": "8", 
+        "should_be_used": "Yes"
+    }, 
+    {
+        "controls": [], 
+        "currently_used": "No", 
+        "enabled_by_default": "No", 
+        "name": "-Waddress-of-temporary", 
+        "severity_name": "Unspecified", 
+        "should_be_used": "No"
+    }, 
+    {
+        "controls": [], 
+        "currently_used": "Yes", 
+        "enabled_by_default": "No", 
+        "name": "-Wconditional-uninitialized", 
+        "severity_name": "10", 
+        "should_be_used": "Yes"
+    }, 
+    {
+        "controls": [], 
+        "currently_used": "No", 
+        "enabled_by_default": "No", 
+        "name": "-Wzero-length-array", 
+        "severity_name": "Unspecified", 
+        "should_be_used": "Unknown"
+    }
+]

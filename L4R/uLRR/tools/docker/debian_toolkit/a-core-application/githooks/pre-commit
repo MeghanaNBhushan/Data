@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+# An example hook script to verify what is about to be committed.
+# Called by "git commit" with no arguments.  The hook should
+# exit with non-zero status after issuing an appropriate message if
+# it wants to stop the commit.
+# Clang-Format Checker Precommit Hook
+
+# Wrapper for detecting whether git clang-format
+# is available
+clang_exists()
+{
+  type git clang-format >/dev/null 2>&1
+}
+
+# Give instructions on how to make git clang-format
+# available in the devcontainer or local PC.
+if ! clang_exists
+then
+	echo "[Error] Git pre-commit hook failed - Missing 'git clang-format'"
+	echo "[Info ] When commiting outside the devcontainer you must have installed clang-format:"
+	echo "        Command: sudo apt install clang-format" 
+	exit 1
+fi
+
+# Get all path of all cpp, c, h and hpp files in staging. It is important
+# to note that we only care about these files extensions for clang formatting.
+allfiles=$(git diff --staged --name-only -- *.cpp *.c *.hpp *.h)
+
+if [ -z "${allfiles}" ]
+then
+# Whenever ${allfiles} is empty it means the commit
+# does not contain any file extensions that we care
+# for clang-format checking. No need to run the
+# clang format checker we can safely return.
+    exit 0
+fi
+
+# Check whether the changes made in the files
+# are formatted with clang-format (only newly added changes)
+clangformatout=$(git clang-format --diff ${allfiles} -q)
+
+# Redirect the previous command output to stderr  
+exec 1>&2  
+
+# Check the output of clang-format 
+if [ "$clangformatout" != "" ]  
+then
+    echo "[Error] The commited files have changes which are not formatted with clang-format."
+    echo "[Info ] Shortcuts in VSCode for formatting:"
+    echo "        Format Document:"
+    echo "           Linux   -> Shift+Ctrl+I"
+    echo "           Windows -> Shift+Alt+I"
+    echo "        Format Selection:"
+    echo "           Linux   -> Ctrl+K Ctrl+F"
+    echo "           Windows -> Ctrl+K Ctrl+F"
+
+    echo "\nProblems found:" 
+    git clang-format --diff ${allfiles}
+    echo "\nPlease address the above problems."
+
+    exit 1
+fi
+
+exit 0

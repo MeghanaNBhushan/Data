@@ -1,0 +1,14 @@
+    - name: rng publish
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: 06_rng_publish.bat
+        fromPath: ./ad_radar_apl/tools/rng
+        name: rng_publish
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\RNG_publish
+        fromPath: ./ad_radar_apl/tools/rng/
+        includes: "rn_TestProject/**"
+        afterFail: false
+        zip: false
+      

@@ -1,0 +1,22 @@
+    - name: Prepare FOSS
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: python.exe prepare_foss.py -c foss_apl.cfg -d ./FOSS
+        fromPath: jenkins/scripts/prepare_foss
+        name: prepare_foss_apl
+      - cmd: python.exe prepare_foss.py -c foss_DiaTester.cfg -d ./FOSS
+        fromPath: jenkins/scripts/prepare_foss
+        name: prepare_foss_DiaTester
+      - cmd: python.exe prepare_foss_ROS.py -c foss_ROS4LGP.cfg -d ./FOSS -s ../../../athena_mt/tools/ROS4LGP
+        fromPath: jenkins/scripts/prepare_foss
+        name: prepare_foss_ROS
+      - cmd: python.exe create_zip.py
+        fromPath: jenkins/scripts/prepare_foss
+        name: foss_create_zip
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\FOSS
+        fromPath: jenkins/scripts/prepare_foss
+        includes: "*.zip"
+        afterFail: false
+        zip: false

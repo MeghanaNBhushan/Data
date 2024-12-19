@@ -1,0 +1,8 @@
+project=bl
+os_type=linux
+target_type=armv8
+build_type=debug
+middleware_instance=tec0204_linux
+suppress_warnings=false
+skip_unit_tests=false
+aos_version=default

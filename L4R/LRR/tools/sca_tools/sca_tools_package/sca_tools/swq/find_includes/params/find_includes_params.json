@@ -1,0 +1,70 @@
+{
+    "argparser": {
+        "root": {
+            "description": "Finds all source files which include given header files."
+        }
+    },
+    "parameters": {
+        "PROJECT_ROOT": {
+            "mandatory": true
+        },
+        "BLACKLIST_PATTERN": {
+            "description": "Absolute path to a file that contains only one line with a pattern for the file blacklist pattern.",
+            "cli_option_short": "bp"
+        },
+        "CODE_DIRS_FILE": {
+            "description": "Absolute path to a file that contains a list with folders (relative to the repo root) that should be scanned on includes.",
+            "cli_option_short": "cdf"
+        },
+        "FIND_INCLUDES_GIT_DIFF_FILTER": {
+            "description": "Git diff filter used to identify changed files. It is 'rd' by default",
+            "cli_option": "git_diff_filter",
+            "cli_option_short": "gdf"
+        },
+        "FIND_INCLUDE_STRATEGY": {
+            "description": "Specify how many c/cpp files with the given h/hpp/inl files included (directly or indirectly) to return. For \"all\" it returns a list of ALL c/cpp found. This is recommended when hpp/inl files contain C/C++ template code. For \"minimal\", a MINIMAL set of c/cpp is returned.",
+            "cli_option_short": "fis"
+        },
+        "FROM_LIST": {
+            "description": "Read file list from specified input file. Otherwise, the list of source files is taken from the git diff of the current branch in the repository and its merge-base with origin/develop. Absolute or relative to repo root paths can be used.",
+            "cli_option_short": "fl"
+        },
+        "FROM_STDIN": {
+            "env": false,
+            "json": false,
+            "description": "Read file list from stdin. Otherwise, the file list is taken from git diff of the current branch in the repository and its merge-base with origin/develop.",
+            "cli_option_short": "fs"
+        },
+        "HEADER_EXTENSIONS": {
+            "cli": false
+        },
+        "MERGE_BASE": {
+            "description": "Branch the diff is made against, default is origin/develop.",
+            "cli_option_short": "mb"
+        },
+        "OUTPUT_FILE": {
+            "description": "Write result list of source files to specified output file. Absolute or relative to repo root paths can be used.",
+            "cli_option_short": "of"
+        },
+        "SOURCE_EXTENSIONS": {
+            "cli": false
+        },
+        "SOURCE_OUTPUT_EXTENSIONS": {
+            "cli": false
+        },
+        "THIRDPARTY_PREFIXES": {
+            "description": "Absolute path to a file that contains a list with 3rdparty prefixes to be excluded from the scan on includes.",
+            "cli_option_short": "tp"
+        },
+        "TO_STDOUT": {
+            "env": false,
+            "json": false,
+            "description": "Write results to stdout. Otherwise, the results are appended to the file which is specified as output file either from JSON configuration file, or from CLI.",
+            "cli_option_short": "ts"
+        },
+        "WITH_MAPPING_REPORT": {
+            "description": "Changes find_includes behaviour to generate a mapping headers to compilation units report. It accepts a path to the resulted report file.",
+            "cli_option_short": "wmr"
+        }
+    }
+}

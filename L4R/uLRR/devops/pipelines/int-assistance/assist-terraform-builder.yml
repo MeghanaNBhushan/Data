@@ -1,0 +1,58 @@
+parameters:
+  - name: deploy
+    type: boolean
+    default: false
+    displayName: Deploy? --> Attention deploy will set changes on productive infrastructure!!
+
+variables:
+  - group: cs-terraform-ar-credentials
+  - group: cs-azure-base-information
+
+
+trigger: none
+pr: none
+
+pool:
+  name: azure-virtual-machines
+  demands: 
+    - Agent.Name -equals terraform-builder-vm
+
+stages:
+  - stage: Test 
+    jobs:
+      - job: test
+        displayName: Testing code
+        steps:
+          - bash: |
+              # Required for terraform to azure authetication
+              export ARM_CLIENT_ID=$(ar-terraform-builder-id)
+              export ARM_CLIENT_SECRET=$(ar-terraform-builder-secret)
+              export ARM_TENANT_ID=$(azure-bosch-tenant)
+              export ARM_SUBSCRIPTION_ID=$(azure-cs-subscription)
+              
+              cd $(Build.SourcesDirectory)/tools/terraform/ir2softwarebuild
+              terraform init
+              terraform plan 
+            displayName: Run terraform plan
+
+  - stage: Deploy
+    condition: eq('${{ parameters.deploy }}', 'True' )
+    jobs:
+    - deployment: 
+      environment: terraform
+      displayName: Deploying code
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - bash: |
+                  # Required for terraform to azure authetication
+                  export ARM_CLIENT_ID=$(ar-terraform-builder-id)
+                  export ARM_CLIENT_SECRET=$(ar-terraform-builder-secret)
+                  export ARM_TENANT_ID=$(azure-bosch-tenant)
+                  export ARM_SUBSCRIPTION_ID=$(azure-cs-subscription)
+                  
+                  cd $(Build.SourcesDirectory)/tools/terraform/ir2softwarebuild
+                  terraform init
+                  terraform apply --auto-approve
+                displayName: Run terraform apply

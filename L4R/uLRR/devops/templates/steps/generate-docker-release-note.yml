@@ -1,0 +1,41 @@
+parameters:
+  - name: container_version
+    type: string
+  - name: build_reason
+    type: string
+
+steps:
+  - template: /devops/templates/steps/mount-storage-account.yml
+    parameters:
+      sa_user_name: $(swbuildir2st-user)
+      sa_user_password: $(swbuildir2st-key)
+      sa_uri: //swbuildir2st.file.core.windows.net/a-core-application-container
+      mountdir: /mnt/a-core-application-container
+  - bash: |
+      set -e
+      
+      echo "Generating Docker Release Notes"
+      if [[ "${{ parameters.container_version }}" != "None" ]]; then
+        echo "Generating release note for version ${{ parameters.container_version }}"
+        python3 $(Pipeline.Workspace)/s/devops/scripts/python/docker_release_note_generator/main.py --version ${{ parameters.container_version }} --commit_id $(Build.SourceVersion) --commit_url https://github.boschdevcloud.com/Half-Dome/ad-radar-sensor/commit/$(Build.SourceVersion) --docker_dir $(Pipeline.Workspace)/s/tools/docker/debian_toolkit/a-core-application --pkl_dir /mnt/a-core-application-container/release_notes --build_reason "${{ parameters.build_reason }}"
+      else
+        echo "error: Container version is not provided"
+        echo "##vso[task.setvariable variable=releaseNotes_result]Failed"
+        exit 1
+      fi
+      if [[ -f "$(Pipeline.Workspace)/s/devops/scripts/python/docker_release_note_generator/devcontainer_release_note_${{ parameters.container_version }}.pdf" ]]; then
+        echo "##vso[task.setvariable variable=releaseNotes_path;isOutput=true]$(Pipeline.Workspace)/s/devops/scripts/python/docker_release_note_generator"
+        echo "##vso[task.setvariable variable=releaseNotes_filename;isOutput=true]devcontainer_release_note_${{ parameters.container_version }}.pdf"
+        echo "##vso[task.setvariable variable=releaseNotes_artifactname;isOutput=true]Report-Docker-Release-Note"
+        echo "##vso[task.setvariable variable=releaseNotes_result]Succeeded"
+      else
+        echo "error: Release notes generation failed, expected artifact not found"
+        echo "##vso[task.setvariable variable=releaseNotes_result]Failed"
+      fi
+    name: GenerateReleaseNote
+    displayName: 'Generate Docker Release Note'
+
+  - publish: $(GenerateReleaseNote.releaseNotes_path)/$(GenerateReleaseNote.releaseNotes_filename)
+    artifact: $(GenerateReleaseNote.releaseNotes_artifactname)
+    displayName: 'Publish release note to pipeline storage'
+    condition: eq(variables['releaseNotes_result'], 'Succeeded')

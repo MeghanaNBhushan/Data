@@ -1,0 +1,39 @@
+// mutex
+//
+
+#ifndef INCLUDED_PRLGCC_MUTEX
+#define INCLUDED_PRLGCC_MUTEX
+
+#include <bits/prlgcc_c++config.h>
+
+#if defined (__PRL_GLIBCXX__)
+
+#  if (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 6)
+
+#    include <4.6/mutex>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 7)
+
+#    include <4.7/mutex>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 8)
+
+#    include <4.8/mutex>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 9)
+
+#    include <4.9/mutex>
+
+#  else
+
+#    include_next <mutex>
+
+#  endif
+
+#else
+
+#    include_next <mutex>
+
+#endif
+
+#endif

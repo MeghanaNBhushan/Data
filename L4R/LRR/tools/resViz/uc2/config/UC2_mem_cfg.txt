@@ -1,0 +1,38 @@
+########################################################################
+# MEMORY SECTIONS
+# 	Format: <name>, <base_adress>, <size>, [RAM|ROM]
+# 	All values need to be in hex
+########################################################################
+
+# ------- RAM -------
+0 DSPR, 70000000, 3BFE0, RAM  
+1 DSPR, 60000000, 3BFE0, RAM  
+2 DSPR, 50000000, 17FE0, RAM  
+3 DSPR, 40000000, 17FE0, RAM
+4 DSPR, 30000000, 17FE0, RAM
+5 DSPR, 10000000, 17FE0, RAM
+0 DLMU, b0000000, 10000, RAM
+1 DLMU, b0010000, 10000, RAM
+2 DLMU, b0020000, 10000, RAM
+3 DLMU, B0030000, 10000, RAM
+4 DLMU, B0100000, 10000, RAM
+5 DLMU, B0110000, 10000, RAM
+LMU 0 , b0040000, 40000, RAM  
+LMU 1 , B0084000, 3C000, RAM
+LMU 2 , B00C0000, 40000, RAM
+EMEM  , 991da960, 25690, RAM # deactivated, not usable for APPL-SW
+# ------- ROM -------
+‭PFLS 0, 80094000, 56C000, ROM ‭56C000‬
+########################################################################
+# Ignore Sections (do not change or delete this line)
+# 	Note: the section can be defined as perl regex
+########################################################################
+
+debug
+psram
+gstackfix
+Applpfls1.BlockEpilog
+Applpfls1.end
+comment
+rbLinker_DriveBlock0
+rbLinker_lmu0_nc.vector

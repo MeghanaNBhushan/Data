@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rcf name="default" version="1.0">
+  <rulegroup name="RB-C 20.0">
+    <rule active="yes" help="__bosch_help__/rb_Group1.html" id="rb1">
+      <text>All C-Files, Ignore never</text>
+      <enforcement>
+        <rule active="yes" help="__bosch_help__/rb_Group1se.html" id="rb1se">
+          <text>All C-Files, Ignore never, syntax error</text>
+          <enforcement>
+            <message component="qac" id="0231" mapped="yes"></message>
+            <message component="qac" id="0234" mapped="yes"></message>
+            <message component="qac" id="0241" mapped="yes"></message>
+            <message component="qac" id="0245" mapped="yes"></message>
+            <message component="qac" id="0246" mapped="yes"></message>
+            <message component="qac" id="0249" mapped="yes"></message>
+            <message component="qac" id="0250" mapped="yes"></message>
+            <message component="qac" id="0258" mapped="yes"></message>
+            <message component="qac" id="0259" mapped="yes"></message>
+            <message component="qac" id="0268" mapped="yes"></message>
+            <message component="qac" id="0434" mapped="yes"></message>
+            <message component="qac" id="0551" mapped="yes"></message>
+            <message component="qac" id="0601" mapped="yes"></message>
+            <message component="qac" id="0633" mapped="yes"></message>
+            <message component="qac" id="0637" mapped="yes"></message>
+            <message component="qac" id="0648" mapped="yes"></message>
+            <message component="qac" id="0660" mapped="yes"></message>
+            <message component="qac" id="0662" mapped="yes"></message>
+            <message component="qac" id="0666" mapped="yes"></message>
+            <message component="qac" id="0670" mapped="yes"></message>
+            <message component="qac" id="0805" mapped="yes"></message>
+            <message component="qac" id="0808" mapped="yes"></message>
+            <message component="qac" id="0817" mapped="yes"></message>
+            <message component="qac" id="0820" mapped="yes"></message>
+            <message component="qac" id="0823" mapped="yes"></message>
+            <message component="qac" id="0824" mapped="yes"></message>
+            <message component="qac" id="0825" mapped="yes"></message>
+            <message component="qac" id="0826" mapped="yes"></message>
+            <message component="qac" id="0827" mapped="yes"></message>
+            <message component="qac" id="0829" mapped="yes"></message>
+            <message component="qac" id="0830" mapped="yes"></message>
+            <message component="qac" id="0831" mapped="yes"></message>
+            <message component="qac" id="0833" mapped="yes"></message>
+            <message component="qac" id="0840" mapped="yes"></message>
+            <message component="qac" id="0846" mapped="yes"></message>
+            <message component="qac" id="0849" mapped="yes"></message>
+            <message component="qac" id="0851" mapped="yes"></message>
+            <message component="qac" id="0852" mapped="yes"></message>
+            <message component="qac" id="0855" mapped="yes"></message>
+            <message component="qac" id="0863" mapped="yes"></message>
+            <message component="qac" id="0876" mapped="yes"></message>
+            <message component="qac" id="0879" mapped="yes"></message>
+            <message component="qac" id="0886" mapped="yes"></message>
+            <message component="qac" id="0887" mapped="yes"></message>
+            <message component="qac" id="0896" mapped="yes"></message>
+            <message component="qac" id="0897" mapped="yes"></message>
+            <message component="qac" id="0898" mapped="yes"></message>
+            <message component="qac" id="0899" mapped="yes"></message>
+            <message component="qac" id="0901" mapped="yes"></message>
+            <message component="qac" id="0902" mapped="yes"></message>
+            <message component="qac" id="0903" mapped="yes"></message>
+            <message component="qac" id="0904" mapped="yes"></message>
+            <message component="qac" id="0907" mapped="yes"></message>
+            <message component="qac" id="0911" mapped="yes"></message>
+            <message component="qac" id="0913" mapped="yes"></message>
+            <message component="qac" id="0917" mapped="yes"></message>
+            <message component="qac" id="0920" mapped="yes"></message>
+            <message component="qac" id="0925" mapped="yes"></message>
+            <message component="qac" id="0926" mapped="yes"></message>
+            <message component="qac" id="0927" mapped="yes"></message>
+            <message component="qac" id="0928" mapped="yes"></message>
+            <message component="qac" id="0981" mapped="yes"></message>
+            <message component="qac" id="1001" mapped="yes"></message>
+            <message component="qac" id="1002" mapped="yes"></message>
+            <message component="qac" id="1003" mapped="yes"></message>
+            <message component="qac" id="1004" mapped="yes"></message>
+            <message component="qac" id="1005" mapped="yes"></message>
+            <message component="qac" id="1008" mapped="yes"></message>
+            <message component="qac" id="1009" mapped="yes"></message>
+            <message component="qac" id="1010" mapped="yes"></message>
+            <message component="qac" id="1012" mapped="yes"></message>
+            <message component="qac" id="1013" mapped="yes"></message>
+            <message component="qac" id="1014" mapped="yes"></message>
+            <message component="qac" id="1015" mapped="yes"></message>
+            <message component="qac" id="1019" mapped="yes"></message>
+            <message component="qac" id="1021" mapped="yes"></message>
+            <message component="qac" id="1028" mapped="yes"></message>
+            <message component="qac" id="1029" mapped="yes"></message>
+            <message component="qac" id="1034" mapped="yes"></message>
+            <message component="qac" id="1035" mapped="yes"></message>
+            <message component="qac" id="1037" mapped="yes"></message>
+            <message component="qac" id="1038" mapped="yes"></message>
+            <message component="qac" id="1041" mapped="yes"></message>
+            <message component="qac" id="1042" mapped="yes"></message>
+            <message component="qac" id="1043" mapped="yes"></message>
+            <message component="qac" id="1044" mapped="yes"></message>
+            <message component="qac" id="1045" mapped="yes"></message>
+            <message component="qac" id="1046" mapped="yes"></message>
+            <message component="qac" id="1049" mapped="yes"></message>
+            <message component="qac" id="1095" mapped="yes"></message>
+            <message component="qac" id="1122" mapped="yes"></message>
+            <message component="qac" id="1138" mapped="yes"></message>
+            <message component="qac" id="2025" mapped="yes"></message>
+            <message component="qac" id="2050" mapped="yes"></message>
+            <message component="qac" id="2051" mapped="yes"></message>
+            <message component="qac" id="3445" mapped="yes"></message>
+            <message component="qac" id="3607" mapped="yes"></message>
+            <message component="qac" id="3664" mapped="yes"></message>
+          </enforcement>
+        </rule>
+      </enforcement>
+    </rule>
+    <rule active="yes" help="__bosch_help__/rb_Group8.html" id="rb8">
+      <text>QAC-Annotation error in code. Has to be solved.</text>
+      <enforcement>
+        <message component="qac" id="3104" mapped="yes"></message>
+        <message component="qac" id="4810" mapped="yes"></message>
+        <message component="qac" id="4811" mapped="yes"></message>
+        <message component="qac" id="4812" mapped="yes"></message>
+        <message component="qac" id="4813" mapped="yes"></message>
+        <message component="qac" id="4814" mapped="yes"></message>
+        <message component="qac" id="4815" mapped="yes"></message>
+        <message component="qac" id="4816" mapped="yes"></message>
+        <message component="qac" id="4817" mapped="yes"></message>
+        <message component="qac" id="4820" mapped="yes"></message>
+        <message component="qac" id="4821" mapped="yes"></message>
+        <message component="qac" id="4822" mapped="yes"></message>
+        <message component="qac" id="4823" mapped="yes"></message>
+        <message component="qac" id="4824" mapped="yes"></message>
+        <message component="qac" id="4825" mapped="yes"></message>
+        <message component="qac" id="4826" mapped="yes"></message>
+        <message component="qac" id="4827" mapped="yes"></message>
+        <message component="qac" id="4828" mapped="yes"></message>
+        <message component="qac" id="4829" mapped="yes"></message>
+        <message component="qac" id="4830" mapped="yes"></message>
+        <message component="qac" id="4831" mapped="yes"></message>
+        <message component="qac" id="4832" mapped="yes"></message>
+        <message component="qac" id="4833" mapped="yes"></message>
+        <message component="qac" id="4834" mapped="yes"></message>
+        <message component="qac" id="4835" mapped="yes"></message>
+      </enforcement>
+    </rule>
+    <rule active="yes" help="__bosch_help__/rb_Group9.html" id="rb9">
+      <text>QAC configuration problem, must be solved to get valid results.</text>
+      <enforcement>
+        <message component="qac" id="0010" mapped="yes"></message>
+        <message component="qac" id="0040" mapped="yes"></message>
+        <message component="qac" id="0041" mapped="yes"></message>
+        <message component="qac" id="0042" mapped="yes"></message>
+        <message component="qac" id="0050" mapped="yes"></message>
+        <message component="qac" id="0097" mapped="yes"></message>
+        <message component="qac" id="0159" mapped="yes"></message>
+        <message component="qac" id="0473" mapped="yes"></message>
+        <message component="qac" id="0818" mapped="yes"></message>
+        <message component="qac" id="0819" mapped="yes"></message>
+        <message component="qac" id="0822" mapped="yes"></message>
+        <message component="qac" id="0869" mapped="yes"></message>
+        <message component="qac" id="0882" mapped="yes"></message>
+        <message component="qac" id="0918" mapped="yes"></message>
+        <message component="qac" id="0970" mapped="yes"></message>
+        <message component="qac" id="2750" mapped="yes"></message>
+        <message component="qac" id="2751" mapped="yes"></message>
+        <message component="qac" id="2752" mapped="yes"></message>
+        <message component="qac" id="2753" mapped="yes"></message>
+        <message component="qac" id="2754" mapped="yes"></message>
+        <message component="qac" id="2756" mapped="yes"></message>
+        <message component="qac" id="2757" mapped="yes"></message>
+        <message component="qac" id="2758" mapped="yes"></message>
+        <message component="qac" id="3105" mapped="yes"></message>
+        <message component="qac" id="3106" mapped="yes"></message>
+        <message component="qac" id="3107" mapped="yes"></message>
+        <message component="qac" id="3117" mapped="yes"></message>
+      </enforcement>
+    </rule>
+    <rule active="yes" help="__bosch_help__/rb_GroupInfo.html" id="rbInfo">
+      <text>Additional provided information to a warning. It's not a warning.</text>
+      <enforcement>
+        <message component="qac" id="1565" mapped="yes"></message>
+        <message component="qac" id="1566" mapped="yes"></message>
+        <message component="qac" id="1568" mapped="yes"></message>
+        <message component="qac" id="1569" mapped="yes"></message>
+        <message component="qac" id="1570" mapped="yes"></message>
+        <message component="qac" id="1571" mapped="yes"></message>
+        <message component="qac" id="1572" mapped="yes"></message>
+        <message component="qac" id="1573" mapped="yes"></message>
+        <message component="qac" id="1574" mapped="yes"></message>
+        <message component="qac" id="1575" mapped="yes"></message>
+        <message component="qac" id="1576" mapped="yes"></message>
+        <message component="qac" id="1577" mapped="yes"></message>
+        <message component="qac" id="1578" mapped="yes"></message>
+        <message component="qac" id="1579" mapped="yes"></message>
+        <message component="qac" id="1580" mapped="yes"></message>
+        <message component="qac" id="1581" mapped="yes"></message>
+        <message component="qac" id="1582" mapped="yes"></message>
+        <message component="qac" id="1585" mapped="yes"></message>
+        <message component="qac" id="1586" mapped="yes"></message>
+        <message component="qac" id="1590" mapped="yes"></message>
+        <message component="qac" id="1592" mapped="yes"></message>
+        <message component="qac" id="1593" mapped="yes"></message>
+        <message component="qac" id="1594" mapped="yes"></message>
+        <message component="qac" id="1598" mapped="yes"></message>
+        <message component="qac" id="1599" mapped="yes"></message>
+        <message component="qac" id="3390" mapped="yes"></message>
+      </enforcement>
+    </rule>
+  </rulegroup>
+  <rulegroup name="RB-Cross 20.0">
+    <rule active="yes" help="__bosch_help__/rb_GroupInfo.html" id="rbInfo">
+      <text>Additional provided information to a warning. It's not a warning.</text>
+      <enforcement>
+        <message component="rcma" id="1565" mapped="yes"></message>
+        <message component="rcma" id="1566" mapped="yes"></message>
+        <message component="rcma" id="1567" mapped="yes"></message>
+        <message component="rcma" id="1568" mapped="yes"></message>
+        <message component="rcma" id="1570" mapped="yes"></message>
+        <message component="rcma" id="1571" mapped="yes"></message>
+        <message component="rcma" id="1572" mapped="yes"></message>
+        <message component="rcma" id="1573" mapped="yes"></message>
+        <message component="rcma" id="1574" mapped="yes"></message>
+        <message component="rcma" id="1575" mapped="yes"></message>
+        <message component="rcma" id="1576" mapped="yes"></message>
+        <message component="rcma" id="1577" mapped="yes"></message>
+        <message component="rcma" id="1578" mapped="yes"></message>
+        <message component="rcma" id="1579" mapped="yes"></message>
+        <message component="rcma" id="1580" mapped="yes"></message>
+        <message component="rcma" id="1581" mapped="yes"></message>
+        <message component="rcma" id="1582" mapped="yes"></message>
+        <message component="rcma" id="1583" mapped="yes"></message>
+        <message component="rcma" id="1584" mapped="yes"></message>
+        <message component="rcma" id="1585" mapped="yes"></message>
+        <message component="rcma" id="1586" mapped="yes"></message>
+        <message component="rcma" id="1587" mapped="yes"></message>
+        <message component="rcma" id="1588" mapped="yes"></message>
+        <message component="rcma" id="1589" mapped="yes"></message>
+        <message component="rcma" id="1590" mapped="yes"></message>
+        <message component="rcma" id="1591" mapped="yes"></message>
+        <message component="rcma" id="1592" mapped="yes"></message>
+        <message component="rcma" id="1593" mapped="yes"></message>
+        <message component="rcma" id="1594" mapped="yes"></message>
+        <message component="rcma" id="1595" mapped="yes"></message>
+        <message component="rcma" id="1596" mapped="yes"></message>
+        <message component="rcma" id="1597" mapped="yes"></message>
+        <message component="rcma" id="1598" mapped="yes"></message>
+        <message component="rcma" id="1599" mapped="yes"></message>
+        <message component="rcma" id="3966" mapped="yes"></message>
+        <message component="rcma" id="3967" mapped="yes"></message>
+        <message component="rcma" id="3968" mapped="yes"></message>
+      </enforcement>
+    </rule>
+    <rule active="yes" help="__bosch_help__/rb_Group1.html" id="rb1">
+      <text>All C-File, Ignore never</text>
+      <enforcement>
+        <rule active="yes" help="__bosch_help__/rb_Group1u.html" id="rb1u">
+          <text>All C-Files, Ignore never, undefined behaviour</text>
+          <enforcement>
+            <message component="rcma" id="1509" mapped="yes"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="__bosch_help__/rb_Group1i.html" id="rb1i">
+          <text>All C-File, Ignore never, important</text>
+          <enforcement>
+            <message component="rcma" id="1506" mapped="yes"></message>
+            <message component="rcma" id="1507" mapped="yes"></message>
+            <message component="rcma" id="1510" mapped="yes"></message>
+            <message component="rcma" id="1515" mapped="yes"></message>
+            <message component="rcma" id="1516" mapped="yes"></message>
+            <message component="rcma" id="1520" mapped="yes"></message>
+            <message component="rcma" id="1521" mapped="yes"></message>
+            <message component="rcma" id="1525" mapped="yes"></message>
+          </enforcement>
+        </rule>
+      </enforcement>
+    </rule>
+  </rulegroup>
+</rcf>

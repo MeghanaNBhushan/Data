@@ -1,0 +1,3 @@
+cl.exe /FfileA.obj /nologo /c /FD /EHsc /W3 /TP /Od /MT /GR /c /FS /Zi /bigobj 3rdpartytools/qac_helper/test/testdata/src/fileA.cpp 
+cl.exe /FfileB.obj /nologo /c /FD /EHsc /W3 /TP /Od /MT /GR /c /FS /Zi /bigobj 3rdpartytools/qac_helper/test/testdata/src/fileB.cpp
+ 

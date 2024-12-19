@@ -1,0 +1,4 @@
+// Jenkinsfile
+@Library("LUCxBau@21.5.6") _
+
+lucx.bau(configsDirs: ["jenkins/configs"])

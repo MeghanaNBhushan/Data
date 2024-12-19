@@ -1,0 +1,43 @@
+// future
+//
+
+#ifndef INCLUDED_PRLGCC_FUTURE
+#define INCLUDED_PRLGCC_FUTURE
+
+#include <bits/prlgcc_c++config.h>
+
+#if defined (__PRL_GLIBCXX__)
+
+#  if (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 5)
+
+#    include <4.5/future>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 6)
+
+#    include <4.6/future>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 7)
+
+#    include <4.7/future>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 8)
+
+#    include <4.8/future>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 9)
+
+#    include <4.9/future>
+
+#  else
+
+#    include_next <future>
+
+#  endif
+
+#else
+
+#  include_next <future>
+
+#endif
+
+#endif

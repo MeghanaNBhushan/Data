@@ -1,0 +1,27 @@
+    - name: A2L Update ^TPL:variant;
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: a2l_update_cml.bat ^TPL:a2l_build_env; ^TPL:variant;
+        fromPath: ./ad_radar_apl/tools/scripts/a2lUpdate
+        name: a2l_update
+      - cmd: a2l_update_olda.bat ^TPL:variant;
+        fromPath: ./ad_radar_apl/tools/scripts/a2lUpdate
+        name: a2l_update_olda
+      - cmd: a2l_copy.bat ^TPL:variant;
+        fromPath: ./ad_radar_apl/tools/scripts/a2lUpdate
+        name: a2l_copy
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\A2L
+        fromPath: generatedFiles/^TPL:variant;/a2l
+        includes: "*.a2l"
+        afterFail: false
+        zip: true
+        zipName: A2L_Update_^TPL:variant;
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\A2L
+        fromPath: athena_mt/RadarFC/^TPL:variant;/measurement/database/a2l_xcp_on_eth
+        includes: "*.a2l"
+        afterFail: false
+        zip: true
+        zipName: A2L_Xcp_on_Eth_Update_^TPL:variant;

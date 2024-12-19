@@ -1,0 +1,10 @@
+{
+  "QAC_MODULES": ["qacpp-5.1.0", "qac-10.1.0"],
+  "ACF_FILE": ["helix2021.3_CPP_2.3.acf"],
+  "RCF_FILE": ["helix2020.2_CPP_2.3.rcf"],
+  "VCF_FILE": "prqa_ccda_config_git_1.0.xml",
+  "USER_MESSAGES": ["helix2020.2_CPP_2.3_component_path.xml"],
+  "SYNC_TYPE_JSON_PATH_PATTERN_WHITELIST": "\\.cpp$",
+  "HELPER_SUPPRESS_C_HEADER": "true",
+  "ANALYZE_PARAMS": "--file-based-analysis --force-complete --inter-tu-dataflow --show-timings --retry 2"
+}

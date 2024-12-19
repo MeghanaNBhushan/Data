@@ -1,0 +1,83 @@
+parameters:
+- name: build_type
+  displayName: Build type
+  values:
+  - debug
+  default: debug
+
+schedules:
+- cron: "0 20 * * 6,0"
+  displayName: Weekend Pipeline
+  branches:
+    include:
+    - develop
+  always: true
+trigger: none
+pr: none
+
+resources:
+  containers:
+  - container: a-core-application-container-armv8-debug
+    image: artifactory.boschdevcloud.com/zugspitze-series-docker-local/a-core-application:latest
+    endpoint: sc-ado-docker-registry-artifactory
+    options: --user 0:0 --privileged
+    volumes: # Volumes to mount on the container.
+    - /var/tmp/conan_cache:/var/tmp/conan_cache
+    env: # Variables to map into the container's environment.
+      TARGET: armv8
+      TYPE: debug
+      MIDDLEWARE_INSTANCE: tec0204_linux
+  - container: a-core-application-container-armv8-release
+    image: artifactory.boschdevcloud.com/zugspitze-series-docker-local/a-core-application:latest
+    endpoint: sc-ado-docker-registry-artifactory
+    options: --user 0:0 --privileged
+    volumes: # Volumes to mount on the container.
+    - /var/tmp/conan_cache:/var/tmp/conan_cache
+    env: # Variables to map into the container's environment.
+      TARGET: armv8
+      TYPE: release
+      MIDDLEWARE_INSTANCE: tec0204_linux
+  - container: a-core-application-container-x86-debug
+    image: artifactory.boschdevcloud.com/zugspitze-series-docker-local/a-core-application:latest
+    endpoint: sc-ado-docker-registry-artifactory
+    options: --user 0:0 --privileged
+    volumes: # Volumes to mount on the container.
+    - /var/tmp/conan_cache:/var/tmp/conan_cache
+    env: # Variables to map into the container's environment.
+      TARGET: x86-64
+      TYPE: debug
+      MIDDLEWARE_INSTANCE: tec0204_linux
+  - container: a-core-application-container-x86-release
+    image: artifactory.boschdevcloud.com/zugspitze-series-docker-local/a-core-application:latest
+    endpoint: sc-ado-docker-registry-artifactory
+    options: --user 0:0 --privileged
+    volumes: # Volumes to mount on the container.
+    - /var/tmp/conan_cache:/var/tmp/conan_cache
+    env: # Variables to map into the container's environment.
+      TARGET: x86-64
+      TYPE: release
+      MIDDLEWARE_INSTANCE: tec0204_linux
+
+
+stages:
+    # armv8_debug
+  - template: /devops/templates/stages/build-a-core-weekend-template.yaml
+    parameters:
+      stage_name: A_CORE_armv8_debug
+      build_target: armv8
+      build_type: ${{ parameters.build_type }}
+      vmss: cx-lnx-l-vmss
+      container: a-core-application-container-armv8-debug
+      source_code_analysis: false
+      run_unit_test_aos_runnable: false
+
+    # x86_debug
+  - template: /devops/templates/stages/build-a-core-weekend-template.yaml
+    parameters:
+      stage_name: A_CORE_x86_64_debug
+      build_target: x86-64
+      build_type: ${{ parameters.build_type }}
+      vmss: cx-lnx-l-vmss
+      container: a-core-application-container-x86-debug
+      source_code_analysis: false
+      run_unit_test_aos_runnable: false

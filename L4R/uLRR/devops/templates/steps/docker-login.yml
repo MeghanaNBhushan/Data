@@ -1,0 +1,15 @@
+parameters:
+- name: user
+  type: string
+- name: token
+  type: string
+- name: host
+  type: string
+  default: artifactory.boschdevcloud.com
+
+steps:
+- script: |
+    echo -n ${{ parameters.token }} | docker login -u ${{ parameters.user }} --password-stdin ${{ parameters.host }}
+  retryCountOnTaskFailure: 2
+  displayName: Docker repository login ${{ parameters.host }}
+  

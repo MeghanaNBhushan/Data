@@ -1,0 +1,24 @@
+    - name: FluxErrorCheck_Details
+      executionOrder: ^TPL:execOrder;
+      skipIfOnlyFilesChanged:
+      - ^INCLUDE:jenkins/configs/includes/skipFilesChangedList.yaml;
+      - ^INCLUDE:jenkins/configs/includes/skipFilesChangedListCantata.yaml;
+      steps:
+      - cmd: python flux_error_detail.py
+        fromPath: ad_radar_apl/tools/scripts/FluxErrorChecker
+        name: Flux_Errors_Detail
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Quality_reports\Flux_Errors
+        fromPath: ./generatedFiles/SWQualityReports/FluxError_report
+        includes: "*.txt"
+        afterFail: false
+        zip: true
+        zipName: FluxErrorsDetails
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Quality_reports\Flux_Errors
+        fromPath: ./generatedFiles/SWQualityReports/FluxError_report
+        includes: "*.csv"
+        afterFail: false
+        zip: false
+

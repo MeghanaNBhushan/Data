@@ -1,0 +1,41 @@
+parameters:
+- name: before_sd_rootdev
+  type: string
+- name: before_sd_rootdev_altboot
+  type: string
+- name: targetHostName
+  type: string
+  default: tec0204
+- name: targetIP
+  type: string
+  default: 192.168.2.16
+- name: kernel_id
+  type: string
+
+steps:
+  - bash: |
+      cd $(Pipeline.Workspace)/s/tools/robot_framework/debian_base_image
+      robot -d output -v hostname:${{ parameters.targetHostName }} -v target_ip:${{ parameters.targetIP }} -v previous_rootdev:${{ parameters.before_sd_rootdev }} -v previous_rootdev_altboot:${{ parameters.before_sd_rootdev_altboot }} -v expected_kernel_id:${{ parameters.kernel_id }} tests 
+
+      exit_code=$?
+      
+      if [[ $exit_code -eq 0 ]]; then
+        echo "Somketests Execution was successful"
+        echo "##vso[task.setvariable variable=somketests]Succeeded"
+      else
+        echo "error: Somketests Execution Failed"
+        echo "##vso[task.setvariable variable=somketests]Failed"
+      fi
+
+      echo "##vso[task.setvariable variable=somketests_filepath;isOutput=true]$(Pipeline.Workspace)/s/tools/robot_framework/debian_base_image/output"
+      echo "##vso[task.setvariable variable=smoketests_artifactname;isOutput=true]Report-Debian-Base-Image-Smoketests"
+
+      exit $exit_code
+    name: Somketests
+    displayName: Run somke tests
+
+
+  - publish: $(Somketests.somketests_filepath)/
+    artifact: $(Somketests.smoketests_artifactname)
+    displayName: Publish somke tests reports
+    condition: succeededOrFailed()

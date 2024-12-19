@@ -1,0 +1,10 @@
+{
+    "build_dir": "../",
+    "export_dir": "./export",
+    "output_dir": "./output",
+    "cfg_dir": "./cfg",
+    "adoc_input_dir": "./adoc_input",
+    "adoc_dir": "./adoc",
+    "release_name": "LRR_LGU_PF_V9.0.0",
+    "jira_fixversion": "LRR_LGU_PF_V9.0.0"
+}

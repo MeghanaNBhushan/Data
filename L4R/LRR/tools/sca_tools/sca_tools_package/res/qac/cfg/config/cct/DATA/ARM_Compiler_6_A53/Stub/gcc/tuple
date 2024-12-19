@@ -1,0 +1,34 @@
+// tuple
+//
+
+#ifndef INCLUDED_PRLGCC_TUPLE
+#define INCLUDED_PRLGCC_TUPLE
+
+#include <bits/prlgcc_c++config.h>
+
+#if defined (__PRL_GLIBCXX__)
+
+#  if (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 4)
+
+#    include <4.4/tuple>
+
+#  elif ( ( (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 6) )   \
+    ||  ( (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 7) )      \
+    ||  ( (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 8) )      \
+    ||  ( (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 9) ) )
+
+#    include <4.6/tuple>
+
+#  else
+
+#    include_next <tuple>
+
+#  endif
+
+#else
+
+#  include_next <tuple>
+
+#endif
+
+#endif

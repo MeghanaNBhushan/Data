@@ -1,0 +1,6 @@
+    - name: Checkout SCM 
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - call: Repository.prepareGitRepo
+        revision: ^ENV:LUCX_COMMIT_HASH;
+

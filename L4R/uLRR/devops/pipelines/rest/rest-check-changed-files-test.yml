@@ -1,0 +1,81 @@
+parameters:
+  - name: build_reason
+    type: string
+    default: nightly
+  - name: version
+    type: string
+    default: 0.0.0
+
+
+pr: none
+trigger: none
+
+pool: munich-d16asv5-vmss
+
+
+variables:
+  - name: branch_name
+    value: feature/ATR-19984---create-PR-Pipeline-for-Base-Image
+
+stages:
+  - stage: A
+    jobs:
+      - job: first
+        steps:
+          # - template: /devops/templates/steps/check-changed-files.yml
+          #   parameters:
+          #     folders_list: devops/ software/ tools/docker/
+          - bash: |
+              echo "##vso[task.setvariable variable=filename;isOutput=true]testfile.txt"
+            name: setOutput
+          - bash: | 
+              echo $(setOutput.filename)
+              pwd
+              echo "Hello world" > $(setOutput.filename)
+              ls -la
+          - publish: $(System.DefaultWorkingDirectory)/$(setOutput.filename)
+            artifact: testartifact
+
+  - stage: Deliver
+    jobs:
+      - job: DownloadAndPublishArtifacts
+        variables:
+          swu_artifactname: $[stageDependencies.A.first.outputs['setOutput.filename']]
+          current_date: $[ format('{0:yyyyMMdd}', pipeline.startTime) ]
+        steps:
+          - bash: |
+              echo $(swu_artifactname)
+              cd $(Pipeline.Workspace)
+              ls -la
+          - download: current
+            artifact: $(swu_artifactname)
+          - task: ArtifactoryGenericUpload@1
+            condition: eq('${{ parameters.build_reason }}', 'nightly')
+            inputs:
+              artifactoryService: 'sc-ado-artifactory'
+              specSource: 'taskConfiguration'
+              fileSpec: |
+                {
+                  "files": [
+                    {
+                      "pattern": "$(swu_artifactname)",
+                      "target": "zugspitze-series-generic-local/janis/$(current_date)-swbuild/"
+                    }
+                  ]
+                }
+              failNoOp: true
+            displayName: Upload nightly build SWU file
+
+
+  # - stage: B
+  #   condition: eq(dependencies.A.outputs['first.CheckChangedFiles.pr_build_requird'],true)
+  #   jobs:
+  #     - job: seccond
+  #       steps:
+  #         - bash: echo "I will be executed on true"
+  # - stage: C
+  #   condition: ne(dependencies.A.outputs['first.CheckChangedFiles.pr_build_requird'],true)
+  #   jobs:
+  #     - job: third
+  #       steps:
+  #         - bash: echo "I will be executed on false"

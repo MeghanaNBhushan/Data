@@ -1,0 +1,46 @@
+# @copyright (c) 2023 by Robert Bosch GmbH. All rights reserved.
+#
+# The reproduction, distribution and utilization of this file as
+# well as the communication of its contents to others without express
+# authorization is prohibited. Offenders will be held liable for the
+# payment of damages and can be prosecuted. All rights reserved
+# particularly in the event of the grant of a patent, utility model
+# or design.
+#
+# Azure pipeline to build, validate and upload radar sensor product engineering documentation (PoED)
+
+
+trigger: none
+
+# Manuel Trigger also required
+
+pr: none
+
+pool:
+  name: docu-lnx-m-vmss
+
+stages:
+- stage: BuildProductEngineeringDocumentation
+  displayName: Build product engineering documentation (PoED)
+  variables:
+  - group: cs-docs4radar-credentials
+  - group: cs-docs4radarst-sas
+  jobs:
+
+  - job: BuildNeeds
+    displayName: Build needs
+    variables:
+      - name: TIME_STAMP
+        value: $[format('{0:yyyyMMdd}T{0:HHmmss}', pipeline.startTime)]
+    steps:
+      - template: /devops/templates/steps/build-docu.yml
+        parameters:
+          build_html: no
+          build_needs: yes
+          build_latexpdf: no
+          publish_azure_webserver: no
+          publish_artifactory_develop: no
+          publish_artifactory_master: no
+          publish_artifactory_feature: no
+          time_stamp : $(TIME_STAMP)
+          zip_name: documentation-build-needs

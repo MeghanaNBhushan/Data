@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- This file is API generated -->
+<settings version="2">
+ <component_directories/>
+ <root_paths/>
+ <editor_settings/>
+ <feedback_settings>
+  <feedback_setting value="yes" name="fastAnalysis"/>
+  <feedback_setting value="5" name="inactivityTime"/>
+  <feedback_setting value="yes" name="inactivityTrigger"/>
+  <feedback_setting value="yes" name="incrementalAnalysis"/>
+  <feedback_setting value="yes" name="saveTrigger"/>
+ </feedback_settings>
+ <license_servers>
+  <server port="5065" host="rb-lic-rlm-prqa-cc.de.bosch.com"/>
+  <server port="5065" host="rb-lic-rlm-prqa-gl.de.bosch.com"/>
+  <server port="5065" host="rb-lic-rlm-prqa2.de.bosch.com"/>
+ </license_servers>
+</settings>

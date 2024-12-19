@@ -1,0 +1,27 @@
+// hashtable
+//
+
+#ifndef INCLUDED_PRLGCC_HASHTABLE
+#define INCLUDED_PRLGCC_HASHTABLE
+
+#if defined (__PRL_GLIBCXX__)
+
+#if (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 3)
+
+#include <4.3/hashtable>
+
+#elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 4)
+
+#include <4.4/hashtable>
+
+#else
+
+#include_next <tr1_impl/hashtable>
+
+#endif
+
+#endif
+
+#include_next <tr1_impl/hashtable>
+
+#endif

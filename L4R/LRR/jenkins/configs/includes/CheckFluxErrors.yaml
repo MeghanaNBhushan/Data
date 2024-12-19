@@ -1,0 +1,9 @@
+    - name: FluxErrorCheck_Errors 
+      executionOrder: ^TPL:execOrder;
+      skipIfOnlyFilesChanged:
+      - ^INCLUDE:jenkins/configs/includes/skipFilesChangedList.yaml;
+      - ^INCLUDE:jenkins/configs/includes/skipFilesChangedListCantata.yaml;
+      steps:
+      - cmd: python flux_error_counter.py
+        fromPath: ad_radar_apl/tools/scripts/FluxErrorChecker
+        name: Flux_Errors_Checker

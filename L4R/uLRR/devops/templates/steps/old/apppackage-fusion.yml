@@ -1,0 +1,170 @@
+steps:
+  - task: ArtifactoryGenericDownload@3
+    condition: eq(variables.PreviousStageExecuted, true)
+    inputs:
+      connection: 'sc-ado-artifactory'
+      specSource: 'taskConfiguration'
+      fileSpec: |
+        {
+          "files": [
+            {
+              "pattern": "zugspitze-series-generic-local/$(BRANCH_NAME)/$(COMMIT_ID)/baseimage.zip",
+              "target": "$(Build.SourcesDirectory)/artifactorydownload/"
+            }
+          ]
+        }
+      failNoOp: true
+    displayName: Download previous stage base image
+
+  - task: ArtifactoryGenericDownload@3
+    condition: ne(variables.PreviousStageExecuted, true)
+    inputs:
+      connection: 'sc-ado-artifactory'
+      specSource: 'taskConfiguration'
+      fileSpec: |
+        {
+          "files": [
+            {
+              "pattern": "zugspitze-series-generic-local/master/latest/baseimage.zip",
+              "target": "$(Build.SourcesDirectory)/artifactorydownload/"
+            }
+          ]
+        }
+      failNoOp: true
+    displayName: Download master latest base image
+
+  - bash: |
+      unzip $(Build.SourcesDirectory)/artifactorydownload/$(BRANCH_NAME)/$(COMMIT_ID)/baseimage.zip -d $(Build.SourcesDirectory)/software/zcu-102/
+    condition: eq(variables.PreviousStageExecuted, true)
+    displayName: Extracting baseimage.zip articfact into the zcu-102 project
+
+  - bash: |
+      unzip $(Build.SourcesDirectory)/artifactorydownload/master/latest/baseimage.zip -d $(Build.SourcesDirectory)/software/zcu-102/
+    condition: ne(variables.PreviousStageExecuted, true)
+    displayName: Extracting master latest baseimage.zip articfact into the zcu-102 project
+
+  - task: DownloadBuildArtifacts@1
+    inputs:
+      buildType: 'current'
+      downloadType: 'single'
+      artifactName: 'rCoreExecutable'
+      downloadPath: '$(Build.SourcesDirectory)'
+    displayName: Downloading r5.elf to the vmss for later installation
+
+  - bash: |
+      docker pull artifactory.boschdevcloud.com/zugspitze-series-docker-local/apppackage:latest
+      docker run -td --rm -v $(Build.SourcesDirectory):/ws --privileged=true --name apppackage_con artifactory.boschdevcloud.com/zugspitze-series-docker-local/apppackage:latest /sbin/init
+    displayName: Launching docker container
+
+  - bash: |
+      cd $(Build.SourcesDirectory)/tools/cmake/toolchain
+      sed -i "s@/opt/petalinux/sdk-v2021.2/sysroots@/home/AzDevOps/petalinux/sdk-v2021.2/sysroots@g" toolchainfile-petalinux-aarch64-a52.cmake
+      docker exec -t apppackage_con bash -c "\
+        cp /ws/tools/cmake/toolchain/toolchainfile-petalinux-aarch64-a52.cmake /home/AzDevOps/petalinux/sdk-v2021.2/sysroots/cortexa72-cortexa53-xilinx-linux/opt/ros/noetic/share/ros; \
+        source /home/AzDevOps/petalinux/sdk-v2021.2/environment-setup-cortexa72-cortexa53-xilinx-linux; \
+        source /home/AzDevOps/petalinux/sdk-v2021.2/sysroots/cortexa72-cortexa53-xilinx-linux/opt/ros/noetic/setup.sh; \
+        
+        mkdir -p /ws/software/ros/build/aarm_arch64; \
+        mkdir -p /ws/tools/buildchain/aarm_arch64_outputbuild; \
+        cd /ws/tools/buildchain/aarm_arch64_outputbuild; \
+        cmake -DPYTHON_EXECUTABLE='/usr/bin/python3' -DCMAKE_TOOLCHAIN_FILE=/home/AzDevOps/petalinux/sdk-v2021.2/sysroots/cortexa72-cortexa53-xilinx-linux/opt/ros/noetic/share/ros/toolchainfile-petalinux-aarch64-a52.cmake /ws/tools/buildchain/ -G Ninja; \
+        ninja package"
+      
+      echo "Getting the name of generated package"
+      cd $(Build.SourcesDirectory)/tools/buildchain/aarm_arch64_outputbuild/
+      rpm_app_pckg=$(ls -t | head -n1)
+      echo "Built file was: $rpm_app_pckg"
+      echo "##vso[task.setvariable variable=rpm_app_pckg;isOutput=true]$rpm_app_pckg"
+    name: RpmCrossCompileStep
+    displayName: Cross-compile ROS nodes for aarm aarch 
+
+  - bash: |
+      docker exec -t apppackage_con bash -c "\
+        source /opt/ros/noetic/setup.bash; \
+
+        mkdir -p /ws/software/ros/build/x86_64; \
+        mkdir -p /ws/tools/buildchain/x86_64_outputbuild; \
+        cd /ws/tools/buildchain/x86_64_outputbuild; \
+        cmake /ws/tools/buildchain/ -G Ninja; \
+        ninja package"
+
+      echo "Getting the name of generated package"
+      cd $(Build.SourcesDirectory)/tools/buildchain/x86_64_outputbuild/
+      deb_app_pckg=$(ls -t | head -n1)
+      echo "Built file was: $deb_app_pckg"
+      echo "##vso[task.setvariable variable=deb_app_pckg;isOutput=true]$deb_app_pckg"
+    name: DebCrossCompileStep
+    displayName: Cross-compile ROS nodes for intel aarch 
+
+  - bash: |
+      sudo pkill --signal SIGKILL unattended-upgrades
+      sudo pkill --signal SIGKILL unattended-upgr
+      sudo killall apt apt-get
+      sudo rm /var/lib/apt/lists/lock
+      sudo rm /var/cache/apt/archives/lock
+      sudo rm /var/lib/dpkg/lock*
+      sudo dpkg --configure -a
+      sudo apt update
+
+      sudo apt-get install -y qemu-user-static
+      sudo apt-get install -y binfmt-support
+      update-binfmts --display | grep aarch64
+    displayName: Installing native qemu
+
+  - task: PythonScript@0
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath:  $(Pipeline.Workspace)/s/devops/scripts/python/qemu-fusion.py
+      arguments: --rootfs_filepath $(Build.SourcesDirectory)/software/zcu-102/images/linux/rootfs.ext4 --rpm_pckgs $(Build.SourcesDirectory)/tools/buildchain/aarm_arch64_outputbuild/$(RpmCrossCompileStep.rpm_app_pckg) --files_install {"\"$(Build.SourcesDirectory)/uLRR_R5.elf\":\"/lib/firmware/\"}
+      pythonInterpreter: /usr/bin/python3.8
+      failOnStderr: true
+    displayName: QEMU fusion
+
+  - bash: |
+      cd $(Build.SourcesDirectory)/software/zcu-102
+      zip -r fusionimage.zip ./images/
+    displayName: Packaging the artifacts
+
+  - publish: $(Build.SourcesDirectory)/software/zcu-102/fusionimage.zip
+    artifact: sw-build-binaries-$(System.StageAttempt)-$(System.JobAttempt)
+    displayName: Publish sw build binaries
+
+  - publish: $(Build.SourcesDirectory)/software/zcu-102/images/linux/rootfs.ext4
+    artifact: sw-build-rootfs-$(System.StageAttempt)-$(System.JobAttempt)
+    displayName: Publish updated rootfs
+
+  - publish: $(Build.SourcesDirectory)/tools/buildchain/aarm_arch64_outputbuild/$(RpmCrossCompileStep.rpm_app_pckg)
+    artifact: ad-radar-sensor-app-arm-$(System.StageAttempt)-$(System.JobAttempt)
+    displayName: Publish rpm package
+
+  - publish: $(Build.SourcesDirectory)/tools/buildchain/x86_64_outputbuild/$(DebCrossCompileStep.deb_app_pckg)
+    artifact: ad-radar-sensor-app-deb-$(System.StageAttempt)-$(System.JobAttempt)
+    displayName: Publish debian package
+
+  - task: ArtifactoryGenericUpload@1
+    inputs:
+      artifactoryService: 'sc-ado-artifactory'
+      specSource: 'taskConfiguration'
+      fileSpec: |
+        {
+          "files": [
+            {
+              "pattern": "$(Build.SourcesDirectory)/software/zcu-102/fusionimage.zip",
+              "target": "zugspitze-series-generic-local/$(BRANCH_NAME)/$(COMMIT_ID)/fusionimage.zip"
+            },
+            {
+              "pattern": "$(Build.SourcesDirectory)/software/zcu-102/images/linux/rootfs.ext4",
+              "target": "zugspitze-series-generic-local/$(BRANCH_NAME)/$(COMMIT_ID)/rootfs.ext4"
+            },
+            {
+              "pattern": "$(Build.SourcesDirectory)/tools/buildchain/aarm_arch64_outputbuild/$(RpmCrossCompileStep.rpm_app_pckg)",
+              "target": "zugspitze-series-generic-local/$(BRANCH_NAME)/$(COMMIT_ID)/binaries/$(RpmCrossCompileStep.rpm_app_pckg)"
+            },
+            {
+              "pattern": "$(Build.SourcesDirectory)/tools/buildchain/x86_64_outputbuild/$(DebCrossCompileStep.deb_app_pckg)",
+              "target": "zugspitze-series-generic-local/$(BRANCH_NAME)/$(COMMIT_ID)/binaries/$(DebCrossCompileStep.deb_app_pckg)"
+            }
+          ]
+        }
+      failNoOp: true
+    displayName: Upload build files to Artifactory

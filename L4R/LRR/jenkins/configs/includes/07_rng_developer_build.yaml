@@ -1,0 +1,14 @@
+    - name: rng developer build
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: python developerBuild.py -exp ^TPL:export; -cnv ^TPL:convert; -cmp ^TPL:compile; -crt ^TPL:create; -pub ^TPL:publish;
+        fromPath: ./jenkins/scripts/rng
+        name: rng_developer_build
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\RNG_developer
+        fromPath: ./ad_radar_apl/tools/rng/
+        includes: "rn_TestProject/**"
+        afterFail: false
+        zip: false
+      

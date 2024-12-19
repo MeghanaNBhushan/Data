@@ -1,0 +1,6 @@
+    - name: FluxErrorCheck_Nightly
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: python nightchecker.py
+        fromPath: ad_radar_apl/tools/scripts/FluxErrorChecker
+        name: Flux_Errors_Checker_Night

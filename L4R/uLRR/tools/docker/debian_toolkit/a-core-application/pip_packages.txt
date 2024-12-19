@@ -1,0 +1,10 @@
+conan==1.56
+click
+empy
+fpdf
+jsonschema
+netifaces
+pexpect
+xlsxwriter
+clang-html
+rich

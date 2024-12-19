@@ -1,0 +1,10 @@
+[flake8]
+format=%(path)s::%(row)d,%(col)d::%(code)s::%(text)s
+per-file-ignores =
+	# Ignore
+    lucxbox/tools/py_format_check/format_tracker.py:E125
+exclude =
+	# No need to traverse the git folder
+    .git,
+    # No need to lint the virtual environment
+    venv

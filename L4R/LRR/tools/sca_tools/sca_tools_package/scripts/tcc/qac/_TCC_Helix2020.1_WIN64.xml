@@ -1,0 +1,14 @@
+<ToolCollection>
+  <ToolCollectionName>helix</ToolCollectionName>
+  <Responsible>CC-ADPJ-DoitSoftwareQualityTeam@bcn.bosch.com</Responsible>
+  <Version>2020.1</Version>
+  <Date>2020-01-01</Date>
+  <IndicatorDirectory>TCC</IndicatorDirectory>
+  <Tools>
+    <Tool>
+      <ToolName>helix_qac</ToolName>
+      <SourcePath>TCC\Tools\helix_qac\2020.1_WIN64</SourcePath>
+      <Mirror>No</Mirror>
+    </Tool>
+  </Tools>
+</ToolCollection>

@@ -1,0 +1,14 @@
+*.pyc
+*.coverage
+reports/
+htmlcov/
+
+.idea/
+.vscode/
+venv/
+
+build/
+dist/
+*.egg-info/
+
+specs/

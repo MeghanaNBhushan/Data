@@ -1,0 +1,22 @@
+steps:
+  - bash: |
+      mkdir -p $(Build.Repository.LocalPath)/tools/docker/petalinux_toolkit/application/zcu-102/images/linux/
+      mv $(Build.Repository.LocalPath)/software/zcu-102/images/linux/sdk.sh $(Build.Repository.LocalPath)/tools/docker/petalinux_toolkit/application/zcu-102/images/linux/
+      rm -r $(Build.Repository.LocalPath)/software/zcu-102/images
+      rm -r $(Build.Repository.LocalPath)/software/zcu-102/build
+      rm -r $(Build.Repository.LocalPath)/software/zcu-102/sstate-cache
+      rm -r $(Build.Repository.LocalPath)/software/zcu-102/downloads
+      rm -r $(Build.Repository.LocalPath)/software/zcu-102/baseimage.zip
+      cp -r $(Build.Repository.LocalPath)/software/zcu-102 $(Build.Repository.LocalPath)/tools/docker/petalinux_toolkit/application/
+    displayName: Container pre-build
+  - task: Bash@3
+    continueOnError: true
+    timeoutInMinutes: 35790
+    inputs:
+      targetType : inline
+      script: |
+        cd $(Build.Repository.LocalPath)/tools/docker/petalinux_toolkit/application
+        docker build -t artifactory.boschdevcloud.com/zugspitze-series-docker-local/apppackage:latest --no-cache ./
+        docker push artifactory.boschdevcloud.com/zugspitze-series-docker-local/apppackage:latest
+      failOnStderr: true
+    displayName: Build apppackage container

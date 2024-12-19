@@ -1,0 +1,32 @@
+^INCLUDE:jenkins/configs/includes/properties.yaml<abortIfNotLatest=>; # aborts the PR's current build if there is a newer one running
+
+testHwU: fr5cu
+
+variant_FR5CU: FR5CU
+
+testStU: ^ENV:setup;
+hw: ^PARAM:SELECT_HARDWARE;
+
+user_id: cis9lr
+
+filter: "check_dsp_error_table;check_dsp_opmode;check_dsp_spu_status;check_daddy_error_information;check_dem_events;check_locations;check_trap_information;check_safe_state;check_Location_Interface;check_smu;swTest_checkSendInSpec;swTest_checkSendTemporaryState;swTest_checkPersistentstate"
+filter_unstable: "*"
+test_mode: " "
+
+
+<%
+int order = 0
+%>
+
+pipelines:
+- nodes: 
+  - label: ^ENV:node_label;
+    executionOrder: 0
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM.yaml<execOrder=${order=0}>;
+    - ^INCLUDE:jenkins/configs/includes/Unstash_existing_artefacts.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/SoftIntTest.yaml<execOrder=${++order}, hw=^YAML:testHwU;, st = ^YAML:testStU;, filter=^YAML:filter;,tm=^YAML:test_mode;, ar=^YAML:hw;>;
+    - ^INCLUDE:jenkins/configs/includes/SoftIntTest_unstable.yaml<execOrder=${++order}, hw=^YAML:testHwU;, st = ^YAML:testStU;, filter=^YAML:filter_unstable;,tm=^YAML:test_mode;, ar=^YAML:hw;>;
+    - ^INCLUDE:jenkins/configs/includes/Stash.yaml<execOrder=${++order}>;
+    
+    

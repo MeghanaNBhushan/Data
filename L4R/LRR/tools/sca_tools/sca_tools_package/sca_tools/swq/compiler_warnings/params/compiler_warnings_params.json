@@ -1,0 +1,92 @@
+{
+    "argparser": {
+        "root": {
+            "description": "Compiler warnings parser with excel export possibilities."
+        }
+    },
+    "parameters": {
+        "BLACK_LIST": {
+            "description": "Mention the black list files for which warnings are not be considered",
+            "cli_option_short": "bl"
+        },
+        "CHANGED_FILES": {
+            "description": "Files containing a list of changed files",
+            "cli_option_short": "ch"
+        },
+        "CODEOWNERS_FILE": {
+            "description": "Absolute path or relative to PROJECT_ROOT to the codeowners file",
+            "cli_option_short": "cf"
+        },
+        "COMPILER": {
+            "description": "Compiler",
+            "cli_option_short": "c",
+            "mandatory": true
+        },
+        "COMPILER_LOG": {
+            "description": "Path to compiler log file to parse the warnings from (globbing is allowed)",
+            "cli_option_short": "cl",
+            "mandatory": true
+        },
+        "COMPILER_WARNINGS_MAPPING_COLUMN": {
+            "description": "Column name for mapping. Usually this is \"File\", \"FilePath\", etc. Default is \"Filename\"",
+            "cli_option": "mapping_column",
+            "cli_option_short": "mc"
+        },
+        "COMPILER_WARNINGS_REPORT_BASENAME": {
+            "description": "Base name of compiler warnings report",
+            "cli_option": "report_basename",
+            "cli_option_short": "rb"
+        },
+        "COMPILER_WARNINGS_REPORT_DIR": {
+            "description": "Absolute or relative to project root path where compiler warning reports are generated",
+            "cli_option": "report_dir",
+            "cli_option_short": "rd"
+        },
+        "EXPORT_FORMATS": {
+            "description": "Set export formats.",
+            "cli_option_short": "ef"
+        },
+        "GITIGNORE_MAPPING": {
+            "description": "Same as \"-olt / --only_last_team\" argument and is overridden if \"-olt / --only_last_team\" is specified. Keeping for compatibility reasons for lucxbox users",
+            "cli_option_short": "gm",
+            "deprecated": true,
+            "deprecation_message": "\"GITIGNORE_MAPPING\" / -gm / --gitignore_mapping is deprecated. Please use \"ONLY_LAST_TEAM\" / -olt / --only_last_team instead"
+        },
+        "JOBS": {
+            "description": "Number of threads",
+            "cli_option_short": "j"
+        },
+        "ONLY_LAST_TEAM": {
+            "description": "Include only the last matched team in the teams report",
+            "cli_option_short": "olt"
+        },
+        "OUTPUT": {
+            "description": "Output file to log the warnings existing on the changed files",
+            "cli_option_short": "o"
+        },
+        "QUIET": {
+            "description": "Print only errors",
+            "cli_option_short": "q"
+        },
+        "TARGET_DIRECTORY": {
+            "description": "List of paths (separated by space) to include warning only from specified locations",
+            "cli_option_short": "td"
+        },
+        "THRESHOLD": {
+            "description": "Threshold of allowed overall warnings before script returns non-zero exit code",
+            "cli_option_short": "t"
+        },
+        "THRESHOLD_FILE": {
+            "description": "Threshold file which lists thresholds for each warning name. Threshold file is a json",
+            "cli_option_short": "tf"
+        },
+        "TYPES_DB": {
+            "description": "Compiler warning types database file (json)",
+            "cli_option_short": "tdb"
+        },
+        "USE_RELATIVE_PATHS": {
+            "description": "Use relative file paths when mapping components",
+            "cli_option_short": "rp"
+        }
+    }
+}

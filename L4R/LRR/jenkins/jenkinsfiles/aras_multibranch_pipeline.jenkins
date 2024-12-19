@@ -1,0 +1,8 @@
+@Library("LUCxBau@21.5.6") _
+
+if(env.BRANCH_NAME == "AD_Radar_PF")
+{
+    lucx.bau(config:'jenkins/configs/AD_Radar_PF_develop.yaml', isPath:true)
+} else {
+    lucx.bau(config:'jenkins/configs/AD_Radar_PF.yaml', isPath:true)
+}

@@ -1,0 +1,124 @@
+parameters:
+  - name: container_version
+    displayName: Container version (eq. to "0.0.1")
+    type: string
+  - name: willBeLatest
+    displayName: Is the built container, the latest?
+    type: boolean
+    default: false
+
+variables:
+  - group: cs-swbuildir2st-credentials
+  - group: cs-acr-push-credentials
+  - name: container_image
+    value: ir2acr.azurecr.io/a-core-debian-base-image
+  - name: container_id
+    value: a-core-debian-base-image-container
+
+trigger: none
+pr: none
+
+pool: int-lnx-m-vmss
+
+stages:
+- stage: BaseImageContainer
+  jobs:
+  - job: BaseImageContainerBuild
+    timeoutInMinutes: 0 
+    cancelTimeoutInMinutes: 35790
+    steps:
+    - checkout: self  
+      lfs: true
+
+    - template: /devops/templates/steps/mount-storage-account.yml
+      parameters:
+        sa_user_name: $(swbuildir2st-user)
+        sa_user_password: $(swbuildir2st-key)
+        sa_uri: //swbuildir2st.file.core.windows.net/debian-build
+        mountdir: /mnt/debian-build
+
+    - template: /devops/templates/steps/docker-login.yml
+      parameters:
+        user: $(ir2acr-push-user)
+        token: $(ir2acr-push-password)
+        host: ir2acr.azurecr.io
+
+    - bash: |
+        set -e
+
+        echo "Container version:"
+        echo " - container_version: ${{ parameters.container_version }}"
+
+        echo "Will be latest:"
+        echo " - willBeLatest: ${{ parameters.willBeLatest }}"
+
+        echo "Container image:"
+        echo " - container_image: $(container_image)"
+
+      displayName: Debug step
+
+
+    - bash: |
+        set -e
+
+        echo "Copying the Vitis installer... "
+        sudo rsync -ah --progress /mnt/debian-build/Vitis/Xilinx_Unified_2021.2_1021_0703.tar.gz $(Build.SourcesDirectory)/tools/docker/debian_toolkit/base-image/
+
+        echo "Going to Dockerfile folder... "
+        cd $(Build.SourcesDirectory)/tools/docker/debian_toolkit/base-image/
+
+        echo "Copying the xilinx_install_config.txt, from the Software, to be reused... "
+        sudo cp ../../../../software/os/debian/docker/debian-11/data/xilinx_install_config.txt .
+
+        echo "Uncompress Vitis installer"
+        tar -xzf Xilinx_Unified_2021.2_1021_0703.tar.gz
+
+        echo "Delete archive to avoid, loading unnecessary data"
+        sudo rm -rf Xilinx_Unified_2021.2_1021_0703.tar.gz
+      displayName: Pre build steps
+
+
+    - bash: |
+        set -e
+
+        echo "Going to Dockerfile folder... "
+        cd $(Build.SourcesDirectory)/tools/docker/debian_toolkit/base-image/
+        
+        echo "Build docker container... "
+        DOCKER_BUILDKIT=1 docker build --progress plain ./ --rm -t $(container_image):${{ parameters.container_version }}
+
+        echo " - willBeLatest: ${{ parameters.willBeLatest }}"
+        if [[ "${{ parameters.willBeLatest }}" == "True" ]]; then
+            echo "Resquested to be latest... "
+            docker tag $(container_image):${{ parameters.container_version }} $(container_image):latest
+        fi
+
+        echo "Testing final docker container... "
+        docker run -td -v $(Build.SourcesDirectory):/ws --name $(container_id) $(container_image):${{ parameters.container_version }} /bin/bash
+        docker ps
+
+        if docker ps --filter name=$(container_id) --format "{{.ID}}" | grep -q .; then
+            echo "Container is running"
+            echo "##vso[task.setvariable variable=isContainerRunning]True"
+        else
+            echo "Container is not running"
+            echo "##vso[task.setvariable variable=isContainerRunning]False"
+        fi
+      displayName: Building base image container
+      name: BuildStep
+    
+  
+    - bash: |
+        set -e
+
+        if [ "$(isContainerRunning)" == "True" ]; then
+            echo "Container is running"
+            docker stop $(container_id)
+            docker image ls
+            docker push -a $(container_image)
+        else
+            echo "Container is not running"
+            exit 1
+        fi
+      displayName: Publish base image container
+      condition: eq(variables['isContainerRunning'], 'True')

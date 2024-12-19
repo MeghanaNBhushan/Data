@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<acf xmlversion="2.0.0">
+  <component_settings>
+    <!--target="C++" version="X.Y.Z" are not necessary for merge> -->
+    <input_to component="qacpp">
+      <!-- code metric parameters -->
+      <option argument="+" name="-ppmetrics"></option>
+      <option argument="STCYC>15:6140" name="-threshold "></option>
+      <option argument="STPTH>800:6141" name="-threshold "></option>
+      <option argument="STPAR>5:6142" name="-threshold "></option>
+      <option argument="STMIF>2:6143" name="-threshold "></option>
+      <option argument="STST3>80:6144" name="-threshold "></option>
+      <option argument="STGTO>0:6145" name="-threshold "></option>
+    </input_to>
+  </component_settings>
+</acf>

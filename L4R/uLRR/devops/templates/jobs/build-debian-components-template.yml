@@ -1,0 +1,310 @@
+parameters:
+- name: build_target
+  displayName: Build target
+  values:
+  - zcu102
+  - tec0204
+  - systemroot
+- name: update_cache
+  type: boolean
+- name: build_arch
+  displayName: Build architecture
+  values:
+  - aarch64
+- name: use_cache
+  displayName: Use cache
+  type: boolean
+- name: build_dtb
+  displayName: Build DTB (no dependency)
+  type: boolean
+- name: create_boot_bin
+  displayName: Create BOOT.bin (depends on DTB)
+  type: boolean
+- name: build_kernel
+  displayName: Build kernel (depends on DTB)
+  type: boolean
+- name: create_rootfs
+  displayName: Create initial rootfs (no dependency)
+  type: boolean
+- name: final_rootfs
+  displayName: Install comp. in rootfs (cfg and kernel) (depends on Kernel, RootFs and Cfg.)
+  type: boolean
+- name: create_ulrr_cfg
+  displayName: Build ulrr cfg. (*.deb) (no dependency)
+  type: boolean
+- name: create_swu_file
+  displayName: Build SWu file (depends on Final RootFs)
+  type: boolean
+- name: rootfs_version
+  displayName: Rootfs version
+  type: string
+- name: vitis_version
+  type: string
+
+jobs:
+  - job: BuildDTB
+    timeoutInMinutes: 0 
+    cancelTimeoutInMinutes: 35790 
+    condition: |
+      and(
+        or(
+          eq('${{ parameters.build_dtb }}', 'true'),
+          eq(variables['build_dtb_required'], 'true')
+          ),
+        in('${{ parameters.build_target }}', 'zcu102', 'tec0204')
+      )
+    variables:
+      - name: build_dtb_required
+        ${{ if and(or(eq(parameters.create_boot_bin, true), eq(parameters.build_kernel, true), eq(parameters.final_rootfs, true), eq(parameters.create_swu_file, true)), eq(parameters.use_cache, false)) }}: 
+          value: true
+        ${{ else }}:
+          value: false
+    steps:
+    - checkout: self  
+      lfs: true
+    - template: /devops/templates/steps/build-dtb.yml
+      parameters:
+        build_target: ${{parameters.build_target}}
+        update_cache: ${{parameters.update_cache}}
+
+
+  - job: BuildBootBin
+    timeoutInMinutes: 0 
+    cancelTimeoutInMinutes: 35790 
+    dependsOn:
+      - BuildDTB
+    condition: |
+      and(
+        eq('${{ parameters.create_boot_bin }}', 'true'),
+        in('${{ parameters.build_target }}', 'zcu102', 'tec0204'),
+        or(
+          and(
+            eq('${{ parameters.use_cache }}', 'false'),
+            in(dependencies.BuildDTB.result, 'Succeeded')
+          ),
+          and(
+            eq('${{ parameters.use_cache }}', 'true'),
+            in(dependencies.BuildDTB.result, 'Skipped')
+          )
+        )
+      )
+    variables:  
+      dtb_filename: $[dependencies.BuildDTB.outputs['DTBStep.dtb_filename']]
+      dtb_artifactname:  $[dependencies.BuildDTB.outputs['DTBStep.dtb_artifactname']]
+    steps:
+    - checkout: self  
+      lfs: true
+    - download: current
+      artifact: $(dtb_artifactname)
+      condition: ne(variables['dtb_artifactname'], '')
+    - template: /devops/templates/steps/build-boot-bin.yml
+      parameters:
+        build_target: ${{parameters.build_target}}
+        update_cache: ${{parameters.update_cache}}
+        path_to_dtb_file: $(Pipeline.Workspace)/$(dtb_artifactname)/$(dtb_filename)
+        
+
+
+  - job: BuildKernel
+    timeoutInMinutes: 0
+    cancelTimeoutInMinutes: 35790 
+    dependsOn:
+      - BuildDTB
+    condition: |
+      and(
+        or(
+          eq('${{ parameters.build_kernel }}', 'true'),
+          eq(variables['build_kernel_required'], 'true')
+        ),
+        in('${{ parameters.build_target }}', 'zcu102', 'tec0204'),
+        or(
+          and(
+            eq('${{ parameters.use_cache }}', 'false'),
+            in(dependencies.BuildDTB.result, 'Succeeded')
+          ),
+          and(
+            eq('${{ parameters.use_cache }}', 'true'),
+            in(dependencies.BuildDTB.result, 'Skipped')
+          )
+        )
+      )
+    variables:  
+      - name: dtb_filename
+        value: $[dependencies.BuildDTB.outputs['DTBStep.dtb_filename']]
+      - name: dtb_artifactname
+        value: $[dependencies.BuildDTB.outputs['DTBStep.dtb_artifactname']]
+      - name: build_kernel_required
+        ${{ if and(or(eq(parameters.final_rootfs, true), eq(parameters.create_swu_file, true)), eq(parameters.use_cache, false)) }}: 
+          value: true
+        ${{ else }}:
+          value: false
+    steps:
+    - checkout: self  
+      lfs: true
+    - download: current
+      artifact: $(dtb_artifactname)
+      condition: ne(variables['dtb_artifactname'], '')
+    - template: /devops/templates/steps/build-kernel.yml
+      parameters:
+        build_target: ${{parameters.build_target}}
+        update_cache: ${{parameters.update_cache}}
+        vitis_version: ${{parameters.vitis_version}}
+        path_to_dtb_file: $(Pipeline.Workspace)/$(dtb_artifactname)/$(dtb_filename)
+
+
+  - job: BuildRootFS
+    timeoutInMinutes: 0 
+    cancelTimeoutInMinutes: 35790
+    condition: |
+      and(
+        or(
+          eq('${{ parameters.create_rootfs }}', 'true'),
+          eq(variables['create_rootfs_required'], 'true')
+        ),
+        in('${{ parameters.build_target }}', 'zcu102', 'tec0204', 'systemroot')
+      )
+    variables:
+      - name: create_rootfs_required
+        ${{ if and(or(eq(parameters.final_rootfs, true), eq(parameters.create_swu_file, true)), eq(parameters.use_cache, false)) }}: 
+          value: true
+        ${{ else }}:
+          value: false
+    steps:
+    - checkout: self  
+      lfs: true
+    - template: /devops/templates/steps/build-rootfs.yml
+      parameters:
+        build_target: ${{parameters.build_target}}
+        version: ${{parameters.rootfs_version}}
+        update_cache: ${{parameters.update_cache}}
+
+
+  - job: BuildUlrrCfg
+    timeoutInMinutes: 0 
+    cancelTimeoutInMinutes: 35790 
+    condition: |
+      and(
+        or(
+          eq('${{ parameters.create_ulrr_cfg }}', 'true'),
+          eq(variables['create_ulrr_cfg_required'], 'true')
+        ),
+        in('${{ parameters.build_target }}', 'zcu102', 'tec0204')
+      )
+    variables:
+      - name: create_ulrr_cfg_required
+        ${{ if and(or(eq(parameters.final_rootfs, true), eq(parameters.create_swu_file, true)), eq(parameters.use_cache, false)) }}: 
+          value: true
+        ${{ else }}:
+          value: false
+    steps:
+    - checkout: self  
+      lfs: true
+    - template: /devops/templates/steps/build-ulrr-cfg.yml
+      parameters:
+        build_target: ${{parameters.build_target}}
+        update_cache: ${{parameters.update_cache}}
+
+
+  - job: BuildFinalRootFS
+    timeoutInMinutes: 0 
+    cancelTimeoutInMinutes: 35790
+    dependsOn:
+      - BuildKernel
+      - BuildRootFS
+      - BuildUlrrCfg
+    condition: |
+      and(
+        or(
+          eq('${{ parameters.final_rootfs }}', 'true'),
+          eq(variables['final_rootfs_required'], 'true')
+        ),
+        in('${{ parameters.build_target }}', 'zcu102', 'tec0204'),
+        or(
+          and(
+            eq('${{ parameters.use_cache }}', 'false'),
+            in(dependencies.BuildKernel.result, 'Succeeded'),
+            in(dependencies.BuildRootFS.result, 'Succeeded'),
+            in(dependencies.BuildUlrrCfg.result, 'Succeeded')
+          ),
+          and(
+            eq('${{ parameters.use_cache }}', 'true'),
+            in(dependencies.BuildKernel.result, 'Skipped'),
+            in(dependencies.BuildRootFS.result, 'Skipped'),
+            in(dependencies.BuildUlrrCfg.result, 'Skipped')
+          )
+        )
+      )
+    variables:  
+      - name: kernel_pckg_filename
+        value: $[dependencies.BuildKernel.outputs['KernelStep.kernel_pckg_filename']]
+      - name: kernel_pckg_artifactname
+        value: $[dependencies.BuildKernel.outputs['KernelStep.kernel_pckg_artifactname']]
+      - name: rootfs_filename
+        value: $[dependencies.BuildRootFS.outputs['SysRootStep.rootfs_filename']]
+      - name: rootfs_artifactname
+        value: $[dependencies.BuildRootFS.outputs['SysRootStep.rootfs_artifactname']]
+      - name: ulrr_cfg_filename
+        value: $[dependencies.BuildUlrrCfg.outputs['UlrrCfgStep.ulrr_cfg_filename']]
+      - name: ulrr_cfg_artifactname
+        value: $[dependencies.BuildUlrrCfg.outputs['UlrrCfgStep.ulrr_cfg_artifactname']]
+      - name: final_rootfs_required
+        ${{ if and(eq(parameters.create_swu_file, true), eq(parameters.use_cache, false)) }}: 
+          value: true
+        ${{ else }}:
+          value: false
+    steps:
+    - checkout: self  
+      lfs: true
+    - download: current
+      artifact: $(kernel_pckg_artifactname)
+      condition: ne(variables['kernel_pckg_artifactname'], '')
+    - download: current
+      artifact: $(rootfs_artifactname)
+      condition: ne(variables['rootfs_artifactname'], '')
+    - download: current
+      artifact: $(ulrr_cfg_artifactname)
+      condition: ne(variables['ulrr_cfg_artifactname'], '')
+    - template: /devops/templates/steps/build-final-rootfs.yml
+      parameters:
+        build_target: ${{parameters.build_target}}
+        build_arch: ${{parameters.build_arch}}
+        update_cache: ${{parameters.update_cache}}
+        path_to_kernel_file: $(Pipeline.Workspace)/$(kernel_pckg_artifactname)/$(kernel_pckg_filename)
+        path_to_rootfs_file: $(Pipeline.Workspace)/$(rootfs_artifactname)/$(rootfs_filename)
+        path_to_ulrrcfg_file: $(Pipeline.Workspace)/$(ulrr_cfg_artifactname)/$(ulrr_cfg_filename)
+
+  - job: BuildSWUFile
+    timeoutInMinutes: 0 
+    cancelTimeoutInMinutes: 35790 
+    dependsOn:
+      - BuildFinalRootFS
+    condition: |
+      and(
+        eq('${{ parameters.create_swu_file }}', 'true'),
+        in('${{ parameters.build_target }}', 'zcu102', 'tec0204'),
+        or(
+          and(
+            eq('${{ parameters.use_cache }}', 'false'),
+            in(dependencies.BuildFinalRootFS.result, 'Succeeded')
+          ),
+          and(
+            eq('${{ parameters.use_cache }}', 'true'),
+            in(dependencies.BuildFinalRootFS.result, 'Skipped')
+          )
+        )
+      )
+    variables:
+      final_rootfs_filename: $[dependencies.BuildFinalRootFS.outputs['FinalSysRootStep.final_rootfs_filename']]
+      final_rootfs_artifactname: $[dependencies.BuildFinalRootFS.outputs['FinalSysRootStep.final_rootfs_artifactname']]
+    steps:
+    - checkout: self  
+      lfs: true
+      persistCredentials: true
+    - download: current
+      artifact: $(final_rootfs_artifactname)
+      condition: ne(variables['final_rootfs_artifactname'], '')
+    - template: /devops/templates/steps/build-swu-file.yml
+      parameters:
+        build_target: ${{parameters.build_target}}
+        update_cache: ${{parameters.update_cache}}
+        path_to_final_rootfs_file: $(Pipeline.Workspace)/$(final_rootfs_artifactname)/$(final_rootfs_filename)

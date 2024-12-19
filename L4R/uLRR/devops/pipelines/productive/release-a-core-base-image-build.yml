@@ -1,0 +1,27 @@
+parameters:
+- name: swu_version
+  displayName: Release version (e.g., 1.0.1)
+  type: string
+- name: build_target
+  type: string
+  default: tec0204
+- name: debug
+  type: boolean
+  displayName: Run pipeline in debug mode (for testing only)
+  default: false
+
+trigger: none
+
+pr: none
+
+pool:
+  name: cx-lnx-l-vmss
+
+stages:
+  - template: /devops/templates/stages/build-a-core-base-image-template.yaml
+    parameters:
+      swu_version: ${{parameters.swu_version}}
+      build_target: ${{parameters.build_target}}
+      build_reason: release
+      update_cache: true
+      debug: ${{parameters.debug}}

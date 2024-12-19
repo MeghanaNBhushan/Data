@@ -1,0 +1,4 @@
+vrte-rbdn-conan-all-virtual	https://platformara.jfrog.io/artifactory/api/conan/vrte-rbdn-conan-all-virtual/ True
+vrte-rbdn-conan-snapshots-local	https://platformara.jfrog.io/artifactory/api/conan/vrte-rbdn-conan-snapshots-local/ True
+vrte-rbdn-conan-releases-local https://platformara.jfrog.io/artifactory/api/conan/vrte-rbdn-conan-releases-local/ True
+vrte-rbdn-conan-local-dev-local https://platformara.jfrog.io/artifactory/api/conan/vrte-rbdn-conan-local-dev-local/ True

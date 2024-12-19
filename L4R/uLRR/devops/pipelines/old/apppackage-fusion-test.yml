@@ -1,0 +1,34 @@
+variables:
+- name: BRANCH_NAME
+  value: $(System.PullRequest.SourceBranch)
+- name: COMMIT_ID 
+  value: $(system.pullRequest.sourceCommitId)
+
+trigger: none
+
+pr: none
+
+stages:
+- stage: Application
+  variables:
+  - group: artifactory-credentials
+  jobs:
+  - job: RCoreBuild
+    pool: seattle-d2sv3-vmss
+    steps:
+      - template: /devops/templates/steps/r-core-build.yml
+
+  - job: ApplicationBuild
+    dependsOn: RCoreBuild
+    pool: munich-d16asv5-vmss
+    timeoutInMinutes: 0 
+    cancelTimeoutInMinutes: 35790 
+    steps:
+    - checkout: self  
+      lfs: true
+    - template: /devops/templates/steps/docker-login.yml
+      parameters:
+        user: $(devops-artifactory-access-user)
+        token: $(devops-artifactory-access-token)
+    - template: /devops/templates/steps/apppackage-fusion.yml
+

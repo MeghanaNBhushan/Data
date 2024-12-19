@@ -1,0 +1,15 @@
+[settings]
+arch=armv8
+build_type=Debug
+compiler=gcc
+compiler.cppstd=17
+compiler.libcxx=libstdc++11
+compiler.version=8.4
+os=Linux
+
+[options]
+
+[env]
+
+[build_requires]
+armv8_linux_gcc8/0.12.0@aos/dev

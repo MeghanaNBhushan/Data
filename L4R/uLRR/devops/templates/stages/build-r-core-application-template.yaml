@@ -1,0 +1,156 @@
+parameters:
+- name: build_reason
+  displayName: Build reason
+  type: string
+- name: build_variant
+  displayName: Build variant
+  type: string
+  default: R_tec0204
+- name: win_vmss
+  displayName: windows vmss to run the pipeline
+  type: string
+- name: linux_vmss
+  displayName: linux vmss for Initial/Deliver stages
+  type: string
+- name: version
+  displayName: Release version
+  type: string
+  default: None
+
+stages:
+  - stage: R_Core_Initial
+    condition: eq('${{ parameters.build_reason }}', 'pr')
+    pool:
+      name: ${{ parameters.linux_vmss }}
+    jobs:
+      - job: ConfirmPrBuildRequest
+        timeoutInMinutes: 0
+        cancelTimeoutInMinutes: 35790
+        steps:
+          - template: /devops/templates/steps/check-changed-files.yml
+            parameters:
+              folders_list: software/rt_ip/ devops/ tools/
+
+  - stage: R_Core_Build
+    condition: |
+      or(
+        or(
+          eq('${{ parameters.build_reason }}', 'pr'),
+          eq(dependencies.R_Core_Initial.outputs['ConfirmPrBuildRequest.CheckChangedFiles.pr_build_requird'],true)
+        ),
+          ne('${{ parameters.build_reason }}', 'pr')
+      )
+    pool:
+      name: ${{ parameters.win_vmss }}
+    jobs:
+      - job: SWBuild
+        timeoutInMinutes: 0 
+        cancelTimeoutInMinutes: 35790 
+        steps:
+          - checkout: self
+            lfs: true
+            submodules: true
+            displayName: Clone repo
+              
+          - powershell: |
+              cd $(Build.SourcesDirectory)/software/rt_ip
+              ./cmake_gen.bat -v ${{ parameters.build_variant }} -c -m
+              $r_core_software_filename = Get-ChildItem -Recurse -Filter 'r_core_software_${{ parameters.build_variant }}.zip' | Select-Object -First 1
+              Write-Host "Found file was: $($r_core_software_filename.FullName)"
+              Write-Host "realpath: $($r_core_software_filename.DirectoryName)"
+
+              if ($r_core_software_filename -ne $null) {
+                $r_core_software_filename = $r_core_software_filename.FullName
+                Write-Host "##vso[task.setvariable variable=r_core_software_filename;isOutput=true]$($r_core_software_filename | Split-Path -Leaf)"
+                Write-Host "##vso[task.setvariable variable=r_core_software_artifactname;isOutput=true]Software-r-core-${{ parameters.build_variant }}"
+                Write-Host "##vso[task.setvariable variable=r_core_software_filepath;isOutput=true]$($r_core_software_filename | Split-Path -Parent)"
+                Write-Host "##vso[task.setvariable variable=build_r_core_software_result]Succeeded"
+              } else {
+                Write-Host "$r_core_software_filename not found."
+                Write-Host "##vso[task.setvariable variable=build_r_core_software_result]Failed"
+              }
+            name: SWBuildRCore_${{ parameters.build_variant }}
+            displayName: SWBuildRCore
+          
+          - publish: $(SWBuildRCore_${{ parameters.build_variant }}.r_core_software_filepath)/$(SWBuildRCore_${{ parameters.build_variant }}.r_core_software_filename)
+            artifact: $(SWBuildRCore_${{ parameters.build_variant }}.r_core_software_artifactname)
+            displayName: Publish r-core Software
+            condition: eq(variables['build_r_core_software_result'], 'Succeeded')
+
+
+  - stage: R_Core_Deliver
+    condition: |
+      and(
+        in(
+          dependencies.R_Core_Build.result, 'Succeeded'
+        ),
+        or(
+          eq('${{ parameters.build_reason }}', 'nightly'),
+          eq('${{ parameters.build_reason }}', 'release')
+        )
+      )
+    dependsOn:
+    - R_Core_Build
+    pool:
+      name: ${{ parameters.linux_vmss }}
+    jobs:
+      - job: DownloadAndPublishArtifacts
+        displayName: Download And Publish Artifacts
+        timeoutInMinutes: 0 
+        cancelTimeoutInMinutes: 35790
+        variables:
+        - name: current_date
+          value: $[ format('{0:yyyyMMdd}', pipeline.startTime) ]
+        - name: upload_folder
+          ${{ if eq(parameters.build_reason, 'nightly') }}: 
+            value: zugspitze-series-generic-local/nightly/$(current_date)-swbuild
+          ${{ if eq(parameters.build_reason, 'release') }}:
+            value: zugspitze-series-generic-local/releases/system-release/${{parameters.version}}
+        - name: r_core_software_artifactname
+          value: $[ stageDependencies.R_Core_Build.SWBuild.outputs['SWBuildRCore_${{ parameters.build_variant }}.r_core_software_artifactname'] ]
+        steps:
+          - download: current
+            displayName: Download all artifacts
+          
+          - bash: |
+              mkdir $(Pipeline.Workspace)/software $(Pipeline.Workspace)/debug $(Pipeline.Workspace)/reports
+
+              artifacts=($(r_core_software_artifactname) )
+              
+              for artifact in "${artifacts[@]}"; do
+                prefix="${artifact%%-*}"
+                if [[ "$prefix" == "Debug" ]]; then
+                  mv "$(Pipeline.Workspace)/$artifact"/* $(Pipeline.Workspace)/debug
+                elif [[ "$prefix" == "Software" ]]; then
+                  mv "$(Pipeline.Workspace)/$artifact"/* $(Pipeline.Workspace)/software
+                elif [[ "$prefix" == "Report" ]]; then
+                  mv "$(Pipeline.Workspace)/$artifact"/* $(Pipeline.Workspace)/reports
+                fi
+              done
+            displayName: moving files
+
+          - task: ArtifactoryGenericUpload@1
+            inputs:
+              artifactoryService: 'sc-ado-artifactory'
+              specSource: 'taskConfiguration'
+              fileSpec: |
+                {
+                  "files": [
+                    {
+                      "pattern": "$(Pipeline.Workspace)/software/*",
+                      "target": "$(upload_folder)/software/"
+                    },
+                    {
+                      "pattern": "$(Pipeline.Workspace)/debug/*",
+                      "target": "$(upload_folder)/debug/"
+                    },
+                    {
+                      "pattern": "$(Pipeline.Workspace)/reports/*",
+                      "target": "$(upload_folder)/report/"
+                    }
+                  ]
+                }
+              failNoOp: true
+            displayName: Upload all build artifacts to artifactory
+
+          

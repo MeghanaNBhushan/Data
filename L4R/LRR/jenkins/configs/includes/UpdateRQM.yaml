@@ -1,0 +1,21 @@
+    - name: Update RQM ^TPL:hw;
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: python Unstash_logs.py -hw ^TPL:hw; -j ^ENV:JOBNAME_ARTEFACTS; -bn ^ENV:BUILDNUMBER_ARTEFACTS;
+        fromPath: ./ad_radar_apl/tools/STARe_TREK
+      - cmd: python create_excel_report.py
+        fromPath: ./ad_radar_apl/tools/STARe_TREK
+      - cmd: python genini.py -tp ^TPL:test_plan_id; -in  ^TPL:iteration_name; 
+        fromPath: ./ad_radar_apl/tools/STARe_TREK
+      - cmd: python run.py
+        fromPath: ./ad_radar_apl/tools/STARe_TREK
+      - cmd: git clean -fdx
+        fromPath: ./ad_radar_apl/tools/STARe_TREK
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\RQMlogs
+        fromPath: ./ad_radar_apl/tools/STARe_TREK/
+        includes: "*/**"
+        afterFail: true
+        zip: true
+        zipName: RQMlogs_^TPL:hw;

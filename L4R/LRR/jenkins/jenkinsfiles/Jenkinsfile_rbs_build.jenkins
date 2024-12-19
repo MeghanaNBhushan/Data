@@ -1,0 +1,5 @@
+@Library("LUCxBau@21.5.6") _
+
+
+lucx.bau(config: 'jenkins/configs/pf_rbs_develop.yaml', isPath: true)
+

@@ -1,0 +1,21 @@
+    - name: BCT Build
+      executionOrder: ^TPL:execOrder;
+      executeOnFileChange:
+      - tcc_toolversion_uC.txt
+      - "**.cfg"
+      - "**.mic"
+      - "**.arxml"
+      steps:
+      - cmd: python ad_radar_apl/tools/builder/bct_builder_tool/aeee_mic/cubas_gen/cubas_gen.py -v ^TPL:uc1; -d -b rebuild -cp ^TPL:cfg_path_uc1; 
+      - cmd: python ad_radar_apl/tools/builder/bct_builder_tool/aeee_mic/cubas_gen/cubas_gen.py -v ^TPL:uc2; -d -b rebuild -cp ^TPL:cfg_path_uc2;
+        name: bct_build
+        fromPath: ./
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\ABACUS_build\
+        includes: ^TPL:uc1;_gen.log
+        fromPath: ./build/^TPL:uc1;
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\ABACUS_build\
+        includes: ^TPL:uc2;_gen.log
+        fromPath: ./build/^TPL:uc2;

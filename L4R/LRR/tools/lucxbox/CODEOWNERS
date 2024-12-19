@@ -1,0 +1,6 @@
+# Each line is a file pattern followed by one or more owners.
+# See the documentation for more information:
+# https://help.github.com/articles/about-codeowners/
+
+# add all framework developers as PR reviewers
+*   @dci2lr @enm2rlz @sse2lr

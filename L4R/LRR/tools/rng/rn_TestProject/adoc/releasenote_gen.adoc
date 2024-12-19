@@ -1,0 +1,1836 @@
+﻿= System Release Note FR5CU LGU Platform
+ifdef::backend-html5[]
+:Author: Robert Bosch GmbH 
+endif::backend-html5[]
+:toc: left
+:toclevels: 5
+:sectnums:
+:confidentiality: Confidential
+:icons: font
+:title-page:
+ifdef::backend-html5[]
+{docdatetime}
+endif::backend-html5[]
+
+ifdef::backend-html5[]
+//OpenGades document ID - used to link this document into overall openGades export
+//@DOC{SYS_RN, type=, status=draft}
+endif::backend-html5[]
+
+// Test Defines for variants
+//:INTERNAL_RELEASE_NOTE:
+//:CUSTOMER_APPROVAL_LETTER:
+
+// define extra variant (not available from outside via json) to show SRN check documentation tables:
+//:SHOW_SRN_CHECKS:
+
+ifdef::CUSTOMER_APPROVAL_LETTER[]
+[big]*Customer Approval Sheet*
+endif::CUSTOMER_APPROVAL_LETTER[]
+
+ifdef::SHOW_SRN_CHECKS[]
+[width="100%", cols=".^,.^", options="header"]
+|===
+// Header
+| Check No.
+| Description
+// Row
+| CHK01
+| Scope of the release along with the release content and the product category (release type) is mentioned.
+// Row
+| CHK06
+| Baseline infromation mentioned in the Release note is consistent and in line with the current release.
+|===
+endif::SHOW_SRN_CHECKS[]
+
+[cols="2s,5a",frame=none,grid=rows,stripe=all]
+|===
+// Row
+| Customer
+| 
+ifndef::INTERNAL_RELEASE_NOTE[]
+External, according to respective DROP
+endif::INTERNAL_RELEASE_NOTE[]
+
+ifdef::INTERNAL_RELEASE_NOTE[]
+Internal
+endif::INTERNAL_RELEASE_NOTE[]
+//Row
+| Project
+| FR5CU LGU Platform
+// Row
+| Vehicle
+| Passenger car / truck to be defined by customer    
+// Row
+| Product
+| FR5CU (Far Range Radar Gen5), LRR   
+// Row
+| Predecessor Baseline
+| LRR_LGU_PF_V8.0.0    link: https://inside-share-hosted-apps.bosch.com/DMS/GetDocumentService/Document.svc/GetDocumentURL?documentID=P12S147629-1956972250-182[link][link]
+// Row
+| Release Baseline
+| LRR_LGU_PF_V9.0.0    link: https://inside-share-hosted-apps.bosch.com/DMS/GetDocumentService/Document.svc/GetDocumentURL?documentID=P12S147629-1956972250-182[Link][link]
+// Row
+| Bosch Product Release Category (1..5) +
+(_see DROP guideline chapter 4.2.1_)
+| *Cat. 2*: Special use case a) for A to C samples delivered to customer and used on public streets / test tracks with safety measures ensured by customer to block sensor signals from vehicle bus. 
+// Row
+| Customer Release Category +
+(_if applicable_)
+| N/A 
+// Row
+| Safety level +
+(_acc. to ISO26262:2018_) +
+Project / Product Scope is as required for the final product in the market
+| *Release Scope:* +
+QM  +
+*Project / Product Scope:* +
+ASIL-B
+|===
+
+The following table shows the <<table-risks, Summary of Risks>>.
+A project relevant risk is a possible event or condition with a positive (opportunity / chance) or negative (threat) effect on the project targets. 
+
+[[table-risks]]
+.Summary of Risks
+[width="100%", cols="1a,8a,3a", options="header"]
+|===
+// Header
+^| No. 
+^| Risks / Risk assessment report
+^| Remarks 
+// Row
+^| *R1*
+^| The system, hardware and software test coverage of the product LRR is incomplete.
+^| Applicable for C0 & C1
+// Row
+^| *R2*
+^| Potential risk of malfunction of SW due to unresolved warnings for static code analysis and compiler warnings. 
+^| Applicable for C0 & C1
+|===
+
+[.text-justify]
+The following table shows the <<table-limitations, Summary of Limitations / Restrictions>>.
+A project relevant limitation is a target / feature of the product which the customer and Bosch is looking forward to, but which is not yet part of the release.
+
+ifdef::SHOW_SRN_CHECKS[]
+[width="100%", cols=".^,.^", options="header"]
+|===
+// Header
+| Check No.
+| Description
+// Row
+| CHK02
+| Availability of evaluation of the remaining risks in case the defined target values are not reached. Applicable for all the topics across the project. Are the customer specific release limitations documented.
+|===
+endif::SHOW_SRN_CHECKS[]
+
+[[table-limitations]]
+.Summary of Limitations / Restrictions
+[width="100%", cols="1a,8a,3a", options="header"]
+|===
+// Header
+^| No. 
+^| Limitations / Restrictions 
+^| Remarks 
+
+// Row
+^| *L1*
+^| The product LRR in its current version has no safety mechanisms implemented. This includes that there is no fail-safe or fail-indicate concept implemented. This also includes that signals from this product can be wrong / corrupted, at a wrong time (delayed or too early) or completely missing. +
+The customer is responsible for a safety analysis including risks resulting from the current maturity level of the product LRR. Bosch supports in this analysis on request.
+The customer is responsible to implement sufficient measures corresponding to this safety analysis (e.g. safety driver, emergency switch, blocking gateway to the vehicle bus). +
+Functions on perception and vehicle level shall consider the maturity level of the product LRR and the vehicle shall be controllable at any time by the driver. Fail safe concept must be independent of sensor data.
+^| Applicable for C0 & C1
+// Row
+^| *L4*
+^| For vehicle tests only trained test drivers are allowed. 
+^| Applicable for C0 & C1
+// Row
+^| *L5*
+^| The power supply has to be provided first to the sensor and then to the measurement unit to assure a successful start-up behavior.
+^| Applicable for C0 & C1
+// Row
+.2+^| *L6*
+^| Sensor power supply must be protected with a fuse and must only be connected with clamp 15. 
+^| Applicable for C0
+// Row
+^| Sensor power supply must be protected with a fuse and must only be connected with clamp 30. 
+^| Applicable for C1
+// Row
+^| *L7*
+^| The use of the product LRR requires successful approval according country specific regulations in those countries where the radar unit is operated. Sensor type approval or test license does not spare or replace vehicle approval wherever required. 
+^| Applicable for C0 & C1
+// Row
+^| *L9*
+^| The product LRR in its current version cannot be used for EMC, ESD, mechanical, climate or chemical tests. 
+^| Applicable for C0 & C1
+// Row
+^| *L10*
+^| The product LRR in its current version cannot be used for functions with ASIL classification.
+^| Applicable for C0 & C1
+// Row
+.2+^| *L11*
+^| EMC performance shows deviations 
+
+* Conducted emission voltage (CEV): Limit violations in FM band 
+* Radiated emission antenna (REA): Limit violations in GNSS bands 
+* Bulk current injected (BCI): susceptibility in MMIC PLL clock can cause ghost locations. 
+* Radiated immunity antenna (RIA): same as BCI 
+* ESD active test shows limited robustness: 4kV 
+^|Applicable for C0
+^|EMC performance shows deviations 
+
+* Emission (CEV) and Radiated emission antenna (REA): Minor limit violations (<2dB) in FM band and Taxi band.
+* Radiated immunity antenna (RIA) susceptibility in MMIC PLL clock can cause ghost locations at 200MHz. No anomalies with BCI (Bulk current injected and MT (Mobile Transmitter)
+* ESD active test shows limited robustness: 8kV 
+^|Applicable for C1
+// Row
+^| *L13*
+^| Thermal limitations, for sensors with metrology the maximum environmental temperature is 65°C, the sensor surface temperature can reach up to 115°C. Do not touch the sensor during operation. 
+^| Applicable for C0 & C1
+// Row
+^| *L14*
+^| Due to the current maturity of the product LRR ghost locations, missing locations and / or locations with wrong attributes / properties cannot be excluded.
+^| Applicable for C0 & C1
+// Row
+^| *L15*
+^| No failure reaction in case the velocity of the ego vehicle data is higher than 100 m/s2 or lower than - 100m/s2, the sensor stops updating location data (safety concept not implemented, cf. limitation L1). 
+^| Applicable for C0 & C1
+// Row
+^| *L16*
+^| Flashing over CANape is possible. Measurements over CANape with POD is possible for max. 45min.
+^| Applicable for C0 & C1
+// Row
+^| *L17*
+^| Measurement Cycle Synchronization is only working when changed via Diagnostic Service. After execution of the diagnostic service a sensor reset (power cycle) is required. Changing MCS during runtime via PDU may lead to a monitoring beeing triggered and hence to a stop of measurement. 
+^| Applicable for C0 & C1
+|===
+
+ifndef::CUSTOMER_APPROVAL_LETTER[] 
+
+<<<<
+[#SYSTEM_DESCRIPTION]
+== SYSTEM DESCRIPTION
+This System Release Note covers the following main functions and features:
+
+[[table-features]]
+.Features
+[width="100%", cols="2a,8a", options="header"]
+|===
+// Header
+^| Main Function / Feature 
+^| Comments 
+// Row
+^| Location gateway unit (LGU) 
+^| The radar sensor and control unit (SCU) contains a radar transceiver operating in the globally harmonized frequency range of 76.0 – 77.0 GHz. Targets in front of the sensor reflect the transmitted radar signal to the receivers. The distance of the target corresponds to the time of flight of the electromagnetic wave. The relative speed of the target is measured as well. The target's angular positions in azimuth and elevation are measured. 
+// Row
+^| Location data interface 
+^| The main function is to send locations on a BroadR-Reach interface. +
+The interface is based on the signal specification, 1024 locations are transmitted. 
+// Row
+^| Configure mounting position 
+^| Mounting position is coded via Diag-Interface (Ethernet).  
+// Row
+^| Receiving ego vehicle data  
+^| Read vehicle motion data from central ECU or PC over Ethernet. 
+// Row
+^| Diagnostic interface 
+^| Diagnostic interface based on DoIP/UDS. Diagnostic tester based on Python script which is provided. 
+|===
+
+<<<<
+[#RELEASE_SCOPE]
+== RELEASE SCOPE
+=== VARIANTS
+
+ifdef::SHOW_SRN_CHECKS[]
+[width="100%", cols=".^,.^", options="header"]
+|===
+// Header
+^| Check No.
+^| Description
+// Row
+^| CHK01
+^| Scope of the release along with the release content and the product category (release type) is mentioned.
+|===
+endif::SHOW_SRN_CHECKS[]
+
+The following system variants are covered by this System Release Note:
+
+[[table-variants]]
+.Variants
+// Check for V8.0.0 : add Limitation if we are mentioning about Truck variant---
+[width="100%", cols="1a,2a,2a", options="header"]
+|===
+// Header
+^| No.
+^| Name of variant
+^| Description
+// Row
+^| 1
+^| 
+Passenger car / +
+Truck 
+^| As defined by the customer
+|===
+//--- Check for V8.0.0
+=== DOCUMENTS
+
+ifdef::SHOW_SRN_CHECKS[]
+[width="100%", cols=".^,.^", options="header"]
+|===
+// Header
+^| Check No.
+^| Description
+// Row
+^| CHK11
+^| Is overall test summary for the requirements based testing at the system and SW level documented. Is this inline with the current release category as defined in the CC-DD0515-1.
+// Row
+^| CHK15
+^| If the linked documents (for eg. SW release note, HW release notes, … in a Sys RN) is consistent & up to date with the naming, version?
+|===
+endif::SHOW_SRN_CHECKS[]
+
+The system release is based on the following documents: +
+(Note: Links should always refer to a specific valid version) 
+
+[[table-documents]]
+.Documents
+[width="100%", cols="1a,3a,5a,1a,2a,2a", options="header"]
+|===
+// Header
+^| No.
+^| Document
+^| Name / Version / Date
+^| Link
+^| Delivery to customer +
+[yes, no]
+^| State +
+[new, +
+changed, +
+unchanged]
+// Row
+^| 1
+^| HW Release Note
+(for C0 sample ECU)
+^| GEN5_21014_HWRelNote_FR5CU_C0_MT  
+^| link:../../../supplier_docu/HW/[link] 
+^| no
+^| unchanged
+// Row
+^| 2
+^| HW Release Note
+(for C1 sample ECU)
+^| GEN5_21089_HWRelNote_FR5CU_C1_1.1 
+^| link:../../../supplier_docu/HW/[link] 
+^| no
+^| unchanged
+// Row
+^| 3
+^| SW / SYS Test Documents 
+^| ATR_Test_Summary_Report_v9.0.0.pdf 
+^| link:../../../test_reports_manual/[link] 
+^| no 
+^| changed
+|===
+
+<<<<
+[#DELIVERY_SCOPE]
+== DELIVERY SCOPE
+
+=== COMPONENTS
+
+The current extent of delivery contains the following components: 
+
+[[table-components]]
+[width="100%", cols="1a,2a,6a,2a", options="header"]
+.Components
+|===
+// Header
+^| No.
+^| Component
+^| Part number & version
+^| State +
+[new, +
+changed, +
+unchanged]
+// Row
+^| 1
+^| SW
+| SW version number: same as System Release Version 
+
+ifdef::INTERNAL_RELEASE_NOTE[]
+[blue]_START INTERNAL INFO_
+
+SW Container Number: uc1:1037610176 / uc2: 1037610177  
+
+GIT Commit: bfb43600ec02f6b39571f26b8035796688ec768a link:https://sourcecode01.de.bosch.com/projects/ARAS/repos/aras/commits/bfb43600ec02f6b39571f26b8035796688ec768a[link] 
+
+Git Tag: LRR_LGU_PF_V9.0.0_rc1 
+
+[blue]_END INTERNAL INFO_
+endif::INTERNAL_RELEASE_NOTE[]
+
+^|changed
+// Row
+^| 2
+^| HW
+| Bosch HW part number: FR5CU C0
+
+* 0265.B62.486-02: no metrology
+* 0265.B62.487-02: metrology variant “AK2” 
+* 0265.B62.488-02: metrology variant "HMDT"  
+^|unchanged
+// Row
+^| 2
+^| HW
+| Bosch HW part number: FR5CU C1
+
+* 0265.B62.554-01: no metrology
+* 0265.B62.555-01: metrology variant “AK2” 
+* 0265.B62.556-01: metrology variant "HMDT"  
+^|unchanged
+|===
+
+=== RE-USED SW / INTERNAL SW
+
+ifdef::SHOW_SRN_CHECKS[]
+[width="100%", cols=".^,.^", options="header"]
+|===
+// Header
+^| Check No.
+^| Description
+// Row
+^| CHK08
+^| Information about the Used basis SW (e.g. Plattform or other Project) & is released for the intended use.
+// Row
+^| CHK10
+^| Approval of integrated third party/supplier SW (evaluation of remaining risks, condisering also compliance to RBGF182, e.g. with related separate release document)? Is the list of 3rd supplier SW consistent with the data in the QG and the QAP?
+|===
+endif::SHOW_SRN_CHECKS[]
+
+[.text-justify]
+The following internal SW (e.g. Platform, Infrastructure, Product line,….) is being used in the current release:
+
+[[table-reused-SW-internal-SW]]
+.Internal SW Components
+[width="100%", cols="2a,2a,2a,2a,4a,3a", options="header"]
+|===
+// Header
+^| Supplier
+^| Component
+^| Version
+^| Delivery / Release Note Available +
+[yes, no]
+^| Delivery / Relesase Note Filename [Link]
+^| Remarks
+// Row
+^| PJ-IF
+^| Basic SW incl. AUTOSAR Stack
+^| PJIF_Foxtrot-15_Radar 
+^| yes
+^| Release_Note_for_PJIF_Foxtrot-15.pdf 
+
+link:../../../supplier_docu/SW/[link]
+| Cat1 see https://inside-docupedia.bosch.com/confluence/display/CPDA/Overview+PJ-IF+Releases[Link]
+// Row
+^| PJ-RC
+^| DSP
+^| PJRC_2205.4 
+^| yes
+^| Release_Note_for_PJRC-2205.4.pdf 
+
+link:../../../supplier_docu/SW/[link]
+| Cat2 +
+Valid Assumptions of Use (AoU) for this release: 
+https://sites.inside-share2.bosch.com/sites/108927/Documents/02_Eng/02_SW/04_IntTest/05_AssumptionsOfUse/Gen5_Platform_SCU_Assumptions_of_Use.dsf(1)/Gen5_Platform_SCU_Assumptions_of_Use_1.0.dsf[Link]
+
+ifdef::INTERNAL_RELEASE_NOTE[]
+// Row
+6+| [blue]*Internal Info*
+// Row
+^| PJ-IF
+^| Boot Manager
+^| V8.1.2 
+^| see PJ-IF release note
+^| Bootmanager.pdf 
+
+link:../../../supplier_docu/SW/[link]
+| Delivery Note only 
+// Row
+^| PJ-IF
+^| HSM
+^| HSM_7_4_R1_VMS_2_0_1 
+^| see PJ-IF release note
+^| Release_Note_for_PJIF_Foxtrot-15.pdf 
+
+link:../../../supplier_docu/SW/[link]
+| see PJ-IF release note
+// Row
+^| PJ-RC
+^| STIL Core
+^| None 
+^| no
+^| not available
+^| not existing yet
+// Row
+^| CAP
+^| Flash Boot Loader
+^| V1.1.0 
+^| yes
+^| Generic_LRR_FBL_ReleaseNote_V1p1p0.pdf 
+
+link:../../../supplier_docu/SW/[link]
+| none
+endif::INTERNAL_RELEASE_NOTE[]
+|===
+
+=== 3rd PARTY SW / EXTERNAL SW
+
+ifdef::SHOW_SRN_CHECKS[]
+[width="100%", cols=".^,.^", options="header"]
+|===
+// Header
+^| Check No.
+^| Description
+// Row
+^| CHK10
+^| Approval of integrated third party/supplier SW (evaluation of remaining risks, condisering also compliance to RBGF182, e.g. with related separate release document)? Is the list of 3rd supplier SW consistent with the data in the QG and the QAP?
+|===
+endif::SHOW_SRN_CHECKS[]
+
+[.text-justify]
+The following 3rd party SW has been used in the current delivery: 
+None, i.e. no third party / external SW is used.
+//Information on the release note is available in the table below.
+
+=== DOCUMENTS
+
+[.text-justify]
+The current delivery scope contains the following documents in addition to the indicated release documents:
+
+[[table-documents-general]]
+.Additional Documents
+[width="100%", cols="1a,3a,3a,1a,1a", options="header"]
+|===
+// Header
+^| No.
+^| Document
+^| Name / Version / Date
+^| Link
+^| State +
+[new, +
+changed, +
+unchanged]
+// Row
+^| 1
+^| Location Gateway Protocol (LGP) Specification
+^| Bosch_Location_Gateway_Protocol.pdf
+^| link:../../../documentation/radar_lgp_def/[link]
+^| changed
+// Row
+^| 2
+^| Bosch_Variant_Handling Guideline
+^| Bosch_Variant_Handling.pdf
+^| link:../../../documentation/radar_variant_handling/[link]
+^| changed
+// Row
+^| 3
+^| System Integration Guideline
+^| FR5CU_LGU_Platform_Systemintegration_Guideline_LRR_LGU_PF_V9.0.0.pdf
+^| link:../../../documentation/[link]
+^| changed
+// Row
+^| 4
+^| Customer_Diagnostic_Specification_Document
+^| Customer_Diagnostic_Specification_Document.pdf
+^| link:../../../documentation/Customer_Diagnostic_Specification/[link]
+^| new
+// Row
+^| 5
+^| DiaTesterTool_how-to
+^| DiaTesterTool_how-to.pdf
+^| link:../../../documentation/DiaTesterTool_how-to/[link]
+^| new
+|===
+
+=== OTHER ITEMS
+
+[.text-justify]
+The current scope of delivery contains the following other items:
+
+[[table-other-items]]
+.Other Items
+[width="100%", cols="1a,2a,3a,1a,1a", options="header"]
+|===
+// Header
+^| No.
+^| Item
+^| Description
+^| Link
+^| State +
+[new, +
+changed, +
+unchanged]
+// Row
+^| 1
+^| ROS Driver & Visualizer
+^| ROS Driver for LGP and Visualizier for multi sensor view
+^| link:../../../tools/ROS4LGP[link] +
+Bosch Internal usage only 
+^| changed
+// Row
+^| 2
+^| Diagnostic Tester Python Script
+^| UDS compliant tester based on python. 
+^| link:../../../tools/DiaTester[link]
+^| changed
+ifdef::INTERNAL_RELEASE_NOTE[]
+// Row
+5+| [blue]*Internal Info*
+// Row
+^| 3
+^| V-Flash Config
+^| Configuration of Vector V-Flash Tool
+^| link:../../../tools/VFlash[link]
+^| changed
+// Row
+^| 4
+^| CANoe Restbus Simulation 
+^| Simulation of sender ECUs
+^| link:../../../measurement/Canoe[link]
+^| changed
+// Row
+^| 5
+^| Metrology 
+^| CANape metrology config incl. A2L
+^| link:../../../measurement/Canape[link]
+^| changed
+endif::INTERNAL_RELEASE_NOTE[]
+|===
+
+<<<<
+[#HISTORY_OF_CHANGES_SINCE_LAST_RELEASE]
+== HISTORY OF CHANGES SINCE LAST RELEASE
+
+ifdef::SHOW_SRN_CHECKS[]
+[width="100%", cols=".^,.^", options="header"]
+|===
+// Header
+^| Check No.
+^| Description
+// Row
+^| CHK12
+^| Is the summary of the increment in the current release as compared to the previous release summarized in the document.
+|===
+endif::SHOW_SRN_CHECKS[]
+
+=== SOFTWARE
+
+[.text-justify]
+The following new features have been implemented / changed / fixed since the last release:
+
+[[table-new-features]]
+[width="100%", cols="1a,5a,5a,1a", options="header"]
+|===
+| ID | Feature  |  Stakeholder Summary | Status
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14413[ATR-14413]| Pre-condition checks for Diagnostics| None| Closed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14307[ATR-14307]| E2E Protection for LGP (only Tx)| All Output PDU's contains an Autosar E2E Header. The header is defined according to autosar profile 44.
+For further signal details please refer to the document "Technical Customer Information - Location Gateway Protocol".
+
+Confidence : 100%| In Progress
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14060[ATR-14060]| Suspend/Reactivate Modulation with Diagnostics| Confidence : 100%
+
+ 
+
+Solution A is implemented, for Solution B needs some more detailed discussion.
+
+ | In Progress
+|===
+
+ifdef::INTERNAL_RELEASE_NOTE[]
+[blue]_START INTERNAL INFO_
+
+[[table-new-features-internal]]
+[width="100%", cols="1a,5a,5a,1a", options="header"]
+|===
+| ID | Feature  |  Stakeholder Summary | Status
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14421[ATR-14421]| ROS Decoder: Adaptations for LRR SW V9| The ROS Decoder is compatible to the communcation interface of the sensor SW (LGU interface description).| In Progress
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14302[ATR-14302]| Reduction of QAC and Coverity warning.| Confidence : 100%
+
+L8 and L9 warnings are brought to 0.| In Progress
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-13542[ATR-13542]| Handling of outgoing requirements from platform project| Confidence : 75%
+
+Not all requirements will be linked but a example will be created to demonstrate how the linkage could be established.| In Progress
+|===
+
+[blue]_END INTERNAL INFO_
+endif::INTERNAL_RELEASE_NOTE[]
+
+[.text-justify]
+The following features have been removed since the last release
+
+*None*
+
+[.text-justify]
+Further refer to the <<table-HW-SW-compatibility-application, Compatibility-Table>> for details about the compatibility of different SW and HW versions.
+
+
+=== HARDWARE
+
+ifdef::SHOW_SRN_CHECKS[]
+[width="100%", cols=".^,.^", options="header"]
+|===
+// Header
+^| Check No.
+^| Description
+// Row
+^| CHK16
+^| Is the HW version up to date and mentioned in the release note?
+|===
+endif::SHOW_SRN_CHECKS[]
+
+[.text-justify]
+*HW version*: FR5CU Radar SCU Gen5 Premium
+
+[.text-justify]
+*Sample state*: C1 Sample
+
+[.text-justify]
+The following changes have been implemented since last sample-stage: please refer to the HW release note in the <<table-documents, table of documents>> for further details.
+
+[.text-justify]
+The following tables show the compatibility between the HW and an
+<<table-HW-SW-compatibility-application, Application SW>>
+as well as a
+<<table-HW-SW-compatibility-FBL, Flash Bootloader>>, respectively.
+
+[[table-HW-SW-compatibility-application]]
+[width="100%", cols=".^,.^,.^,.^", options="header"]
+.Compatibility Table HW/SW (Application)
+|===
+// Header
+^| HW Version +
+Internal 
+^| HW Version +
+Customer  
+^|V3.0.0 + 
+V4.0.0 +
+V5.0.0 +
+V6.0.1
+^|V7.0.0 +
+V8.0.0
+// Row
+^| FR5CU-C0
+^| C0
+^| yes
+^| yes
+// Row
+^| FR5CU-C1
+^| C1
+^| no
+^| yes
+|===
+
+[.text-justify]
+**Note**: The FR5CU software version V3.0.0 and above no longer supports FR5CU B-samples.
+[[table-HW-SW-compatibility-FBL]]
+[width="100%", cols=".^,.^,.^", options="header"]
+.Compatibility Table HW/SW (Flash Bootloader)
+|===
+// Header
+^| HW Version +
+Internal 
+^| HW Version +
+Customer  
+^| LRR V1.1.0
+// Row
+^| FR5CU-C0
+^| C0
+^| yes
+// Row
+^| FR5CU-C1
+^| C1
+^| yes
+|===
+
+[.text-justify]
+**Note**: Flash Bootloader version lesser than V1.1.0 isn't supported for C0 & C1 sample.
+
+
+=== SYSTEM APPLICATION SUMMARY
+
+[.text-justify]
+Not applicable. No application parameters available.
+
+<<<<
+[#FUNCTIONAL_SAFETY]
+== FUNCTIONAL SAFETY
+
+ifdef::SHOW_SRN_CHECKS[]
+[width="100%", cols=".^,.^", options="header"]
+|===
+// Header
+^| Check No.
+^| Description
+// Row
+^| CHK09
+^| Information about the Safety status for the planned content according to the intended use: test coverage of safety requirements/ implementation of safety concept , evaluation of remaining safety risks. 
+// Row
+|===
+endif::SHOW_SRN_CHECKS[]
+
+[.text-justify]
+Project release during development for public roads *CAT 2* (CA2) 
+
+[.text-justify]
+The customer has to implement a fail-safe concept according to the limitations as agreed between Bosch and customer. +
+Please refer to the <<table-risks, Risks>> and <<table-limitations, Limitations>> as stated on the cover sheet / the customer approval sheet which has been already acknowledged.
+
+=== SAFETY-ELEMENT-OUT-OF-CONTEXT (SEooC)
+
+[.text-justify]
+The FR5CU is not developed as a Safety-Element-out-of-Context, hence this section does not apply.
+
+=== SAFETY CASE FOR DEVELOPMENT OF PROJECT AS SAFETY ELEMENT OUT OF CONTEXT (SEooC)
+
+[.text-justify]
+The FR5CU is not developed as a Safety-Element-out-of-Context, hence this section does not apply.
+
+==== Result of safety case confirmation review / functional safety assessment
+
+[.text-justify]
+Not applicable.
+
+==== Release status of the safety case
+
+[.text-justify]
+Not applicable.
+
+<<<<
+[#CPU_RESOURCES]
+== CPU RESOURCES
+
+ifdef::SHOW_SRN_CHECKS[]
+[width="100%", cols=".^,.^", options="header"]
+|===
+// Header
+^| Check No.
+^| Description
+// Row
+^| CHK07
+^| "Status on critical computer resources: runtime, ram, flash, peripherals  (used / available  resources) to be available. (In case of a several ECUs are managed than the measurements shall be extended to all ECU)"
+|===
+endif::SHOW_SRN_CHECKS[]
+
+[.text-justify]
+This information is only provided on request.
+
+ifdef::INTERNAL_RELEASE_NOTE[]
+[blue]_START INTERNAL INFO_
+
+=== Flash/RAM/NVM
+
+[width="100%", cols=".^,.^,.^"]
+|===
+| Customer Agreement on resource consumption
+| * [ ] Yes 
+  * [ ] No
+  * [x] N/A
+| No customer requirements regarding resource consumption available
+|===
+
+.Resource Consumption Master uC C0 sample
+.Resource Concumption1
+[width="100%",cols="20%,20%,20%,20%,20%,20%,20%,20%,20%, options="header"]
+|===
+||PLANNED RAM|USED RAM|FREE RAM|FREE RAM in %|AVAILABLE RAM|TOTAL USED RAM|FREE RAM|% FREE RAM
+|Summary| 1952973 |1171802|781171|39| 2588672 |1171802|1416870|54
+|Application|1085554|1085554|0|0||||
+|Infrastructure|84795|84795|0|0||||
+|Compiler|1454|1453|1|0||||
+||PLANNED FLASH|USED FLASH|FREE FLASH|FREE FLASH in %|AVAILABLE FLASH|TOTAL USED FLASH|FREE FLASH|% FREE FLASH
+|Summary| 4194304 |1106513|3087791|73| 5242880 |1106513|4136367|78
+|Application|510553|483259|27294|5||||
+|Infrastructure|448469|448469|0|0||||
+|Compiler|175197|174785|412|0||||
+|===
+
+.Resource Consumption Slave C0 sample
+.Resource Concumption2
+[width="100%",cols="20%,20%,20%,20%,20%,20%,20%,20%,20%, options="header"]
+|===
+||PLANNED RAM|USED RAM|FREE RAM|FREE RAM in %|AVAILABLE RAM|TOTAL USED RAM|FREE RAM|% FREE RAM
+|Summary| 1703936 |651989|1051947|61| 2129920 |651989|1477931|69
+|Application|604578|584211|20367|3||||
+|Infrastructure|125688|66325|59363|47||||
+|Compiler|1454|1453|1|0||||
+||PLANNED FLASH|USED FLASH|FREE FLASH|FREE FLASH in %|AVAILABLE FLASH|TOTAL USED FLASH|FREE FLASH|% FREE FLASH
+|Summary| 3709338 |783149|2926189|78| 4636672 |783149|3853523|83
+|Application|2400000|390172|2009828|83||||
+|Infrastructure|390000|218693|171307|43||||
+|Compiler|180000|174531|5469|3||||
+|===
+
+[.text-justify]
+NOTE: Due to the low amount of NVM data no risk is seen.
+
+=== Runtime Measurements
+
+.Runtime Measurements
+[width="100%", cols=".^,.^,.^,.^", options="header"]
+|===
+// Header
+^| Runtime Measurements 
+^| Planned/Target Percentage or millisec-onds
+^| Used Percentage or milliseconds
+^| Customer Agree-ment Yes/No 
+// Row
+^| Currently runtime measurement in development
+| 
+| 
+|  
+|===
+
+[blue]_END INTERNAL INFO_
+endif::INTERNAL_RELEASE_NOTE[]
+
+[#DIMENSIONAL_RESULTS]
+== DIMENSIONAL RESULTS [MANDATORY ONLY FOR SW AS A PRODUCT]
+
+[.text-justify]
+The FR5CU is not developed as SW as a Product, hence this section does not apply.
+
+<<<<
+[#VERIFICATION_AND_VALIDATION_STATUS]
+== VERIFICATION AND VALIDATION STATUS
+=== VERIFICATION
+
+[.text-justify]
+The verification status refers to the scope of the current release, i.e. only planned features and activities shall be part of below summary.
+The system has been verified in the following scope:
+
+[[table-verification-status]]
+.Scope of Verification
+[width="100%", cols="1a,2a,4a,2a", options="header"]
+|===
+//Header
+^| No.
+^| Verification type +
+(„Test category“)
+^| Planned scope
+^| Verification Status
+//Row
+^| 1
+^| Basic HW test
+^| Basic electrical commissioning tests, partly tested samples.
+^| Verified
+//Row
+^| 2
+^| SW Unit Tests
+^| Automated execution of unit tests. Test coverage see test summary report
+^| Verified
+//Row
+^| 3
+^| SW Functional Tests
+^| Feature Tests of SW features according to test plan. Only limited coverage of requirements. 
+^| Verified
+//Row
+^| 4
+^| SW Integration Tests
+^| Memory Consumption
+^| Verified
+//Row
+^| 5
+^| System Tests
+^| Regressiontest; Flash software using XCP interface using Vector CANape on test bench and vehicle
+Basic functional tests (internal locations are available via debugger/CANoe)
+^| Verified
+//Row
+^| 6
+^| Vehicle Test
+^| Vehicle test performed, based on CANape metrology
+^| Verified
+|===
+
+[.text-justify]
+For test coverage less than planned refer to coversheet risks.
+
+[.text-justify]
+For failed tests please refer to the chapter <<PROBLEMS_DEFECTS_AND_LIMITATIONS, PROBLEMS, DEFECTS AND LIMITATIONS>>.
+
+ifdef::INTERNAL_RELEASE_NOTE[]
+[blue]_START INTERNAL INFO_
+
+==== SW Test Coverage
+
+ifdef::SHOW_SRN_CHECKS[]
+[width="100%", cols=".^,.^", options="header"]
+|===
+// Header
+^| Check No.
+^| Description
+// Row
+^| CHK04
+^| Availability of Coverage metric at the SW unit level (statement, branch) of SW  : justifications for the Deviations from the target value to be evident.
+|===
+endif::SHOW_SRN_CHECKS[]
+
+see Test Summary Report
+
+[blue]_END INTERNAL INFO_
+endif::INTERNAL_RELEASE_NOTE[]
+
+*Feature List*
+
+[.text-justify]
+The overall status of our features is indicated in the following table:
+
+[[table-feature-status]]
+.Overall Feature Status
+[width="100%", cols="1a,3a,1a,1a", options="header"]
+|===
+//Header
+^| No.
+^| Feature / Function
+^| Requirement Status
+^| Verification Status
+//Row
+^| 1
+|Location data & +
+Location Attributes: +
+
+* Modulation Performance
+* Misalignment
+* Interference
+* Fied of View (FoV)
+^| Agreed
+^| Partially Verified
+//Row
+^| 2
+| Measurement Program 
+^| Agreed
+^| Verified
+//Row
+^| 3
+| Variant Coding: +
+
+*   Mounting position
+*   IP/MAC/DoIP Address 
+*   Destination port number  
+^| Agreed
+^| Verified
+^| 4
+| Ego vehicle data
+^| Agreed
+^| Verified
+^| 5
+| E2E for Sensor Feedback PDU 
+^| Agreed
+^| Verified
+^| 6
+| Measurement Cycle Synchronization 
+^| Agreed
+^| Verified
+^| 7
+| Diagnostic Services +
+
+* Diagnostic Session Control
+* ECU reset
+* Clear Diagnostic Information
+* Control DTC
+* Read DTC Information
+* Data Identifiers
+* Tester Present
+^| Agreed
+^| Verified
+//Row
+^| 8
+| Sensor State +
+^| Agreed
+^| Verified
+//Row
+^| 9
+| Global Time stamp +
+^| Open
+^| Open
+ 
+|===
+
+
+=== VALIDATION
+
+//The Validation Report is intended to summarize the validation results of deliverable SW. It is a prerequisite for the decision to delete the related validation raw data. link to report iff available
+
+[.text-justify]
+HW Validation: Environmental tests on C-samples are ongoing.
+
+[.text-justify]
+System Validation: none
+
+=== STATIC CODE ANALYSIS
+
+ifdef::SHOW_SRN_CHECKS[]
+[width="100%", cols=".^,.^", options="header"]
+|===
+// Header
+^| Check No.
+^| Description
+// Row
+^| CHK03
+^| Static code analysis : Summary report (e.g. MISRA according to MISRA compliance document, coding guideline, Compilers warnings, coverity warnings … ) available in the document.
+|===
+endif::SHOW_SRN_CHECKS[]
+
+[.text-justify]
+Static Code Analysis performed (QAC, Coverity). Open warnings are tracked. Warnings are planned to be fixed/assessed in future releases. 
+
+[.text-justify]
+Potential risk of malfunction of SW.
+
+ifdef::INTERNAL_RELEASE_NOTE[]
+[blue]_START INTERNAL INFO_
+
+==== QAC Warning Report
+
+[[table-QAC-warnings]]
+[cols="2s,5a",frame,grid,stripe=all]
+|===
+// Row
+^| Check Performed 
+^| Yes
+// Row
+^| Tool and Version
+^| Helix QAC 2019.2-1_WIN64, mingw64 5.4.0_WIN64, cmake 3.17.1_WIN64, C_ALL_FILES: qac (C) 9.7.0
+C_CROSS_MODULE: qac (C ) 9.7.0, qacpp (C++) 4.5.0, *rcma (C_CPP) 2.1.0
+C_DA_AD_FILES: qac (C ) 9.7.0, qacpp (C++) 4.5.0,	rcma (C_CPP) 2.1.0
+CPP_ALL_FILES: qacpp (C++) 4.5.0, qac (C ) 9.7.0,	rcma (C_CPP) 2.1.0,	mcpp (C++) 1.6.0,	mta (C_CPP) 2.1.0,	certcppcm (C++) 1.1.0,	namecheck (C++) 2.0.0, CPP_2A: qacpp (C++) 4.5.0, CPP_DA_AD_FILES: qacpp (C++) 4.5.0
+// Row
+^| Risk identified
+^| Yes see Risk 2 on cover sheet
+|===
+
+[width="100%", cols="2a,1a,1a,1a,1a,1a,1a,1a,1a,1a,1a,1a", options="header"]
+|===
+|sw_part|prog_language|1|2|3|4|5|6|7|8|9|All
+|DSP|C|844(-2)|1279(+11)|67(+0)|1606(+0)|138(-3)|174(-25)|87(-15)|73(-4)|5(+1)|4273(-37)
+|DSP|CPP|702(-1)|2624(+34)|475(+23)|4405(+13)|686(+6)|4276(-46)|174(-5)|16(+0)|1(-1)|13359(+23)
+|L4 Radar|C|831(+68)|1506(-29)|27(+3)|1291(+117)|120(+10)|166(-2)|10(+5)|97(+12)|0(+0)|4048(+184)
+|L4 Radar|CPP|362(+107)|576(+69)|248(+73)|772(+31)|89(-19)|159(+36)|28(+13)|0(-4)|0(+0)|2234(+306)
+|Other|C|49(+0)|1733(+0)|2(+0)|81(+0)|122(+0)|7(+0)|1(+0)|50(+0)|0(+0)|2045(+0)
+|Other|CPP|1(+0)|49(+0)|0(+0)|26(+0)|0(+0)|2(+0)|0(+0)|0(+0)|0(+0)|78(+0)
+|PJ-IF|C|34672(-132)|43817(+2)|223(+4)|23354(-170)|958(-7)|645(-14)|268(+8)|758(-68)|1(+1)|104696(-376)
+|PJ-IF|CPP|100(+7)|1447(-17)|43(+5)|1203(+92)|184(+32)|1118(+59)|100(+15)|4(+0)|0(+0)|4199(+193)
+|All||37561(+47)|53031(+70)|1085(+108)|32738(+83)|2297(+19)|6547(+8)|668(+21)|998(-64)|7(+1)|134932(+293)
+|===
+
+==== Coverity Warning Report
+
+[[table-coverity-warnings]]
+[cols="1s,1a",frame,grid,stripe=all]
+|===
+// Row
+^| Check Performed 
+^| Yes
+// Row
+^| Tool and Version
+^| coverity 2019.12_WIN64
+// Row
+^| Risk identified
+^| Yes see Risk 2 on cover sheet
+|===
+
+.Coverity Warning report uC1
+[width="100%", cols="3a,1a,1a,1a,1a,1a", options="header"]
+|===
+|sw_part|prog_language|High|Low|Medium|All
+|DSP|CPP|1|2|1|4
+|L4 Radar|C|0|1|5|6
+|Other|inl|1|0|2|3
+|PJ-IF|C|81|8|26|115
+|All||83|11|34|128
+|===
+
+.Coverity Warning report uC2
+[width="100%", cols="3a,1a,1a,1a,1a,1a", options="header"]
+|===
+|sw_part|prog_language|High|Low|Medium|All
+|DSP|CPP|1|2|1|4
+|L4 Radar|C|2|2|72|76
+|L4 Radar|CPP|0|5|0|5
+|L4 Radar generated|C|0|3|0|3
+|Other|inl|1|0|2|3
+|PJ-IF|C|88|13|31|132
+|PJ-IF|CPP|1|0|1|2
+|PJ-IF|inl|0|0|1|1
+|All||93|25|108|226
+|===
+
+[blue]_END INTERNAL INFO_
+endif::INTERNAL_RELEASE_NOTE[]
+
+=== COMPILER WARNINGS
+
+[.text-justify]
+Compiler warnings are tracked. Open warnings are planned to be fixed / assessed in future releases. 
+
+[.text-justify]
+Potential risk of malfunction of SW.
+
+ifdef::INTERNAL_RELEASE_NOTE[]
+[blue]_START INTERNAL INFO_
+
+[[table-compiler-warnings]]
+[cols="2s,5a",frame,grid,stripe=all]
+|===
+// Row
+^| Check Performed 
+^| Yes
+// Row
+^| Tool and Version
+^| GHS Compiler Version: 2018.1.5 Final Toolbase version: comp_201815_4fp_x64
+// Row
+^| Risk identified
+^| Yes see Risk 2 on cover sheet
+|===
+
+//Compiler Warning Table
+[width="100%",cols="50%,25%,25%", options="header"]
+|===
+| sw_part | Deprecated | Warning
+|===
+
+[blue]_END INTERNAL INFO_
+endif::INTERNAL_RELEASE_NOTE[]
+
+<<<<
+[#PROBLEMS_DEFECTS_AND_LIMITATIONS]
+== PROBLEMS, DEFECTS AND LIMITATIONS
+
+ifdef::SHOW_SRN_CHECKS[]
+[width="100%", cols=".^,.^", options="header"]
+|===
+// Header
+^| Check No.
+^| Description
+// Row
+^| CHK05
+^| "Open defects described with: + 
+- Status of bugs/deviations/problems/.... +
+- Criticality of bugs/deviations/problems/.... +
+- later fix is/may be committed by customer and evaluation of remaning risk is either visible in the document or links to tool tickets(e.g TR) are available. "
+|===
+endif::SHOW_SRN_CHECKS[]
+
+[.text-justify]
+The severity evaluation is done with respect to release category and intended use of SW, according to Problem Resolution Management process.
+Please refer to SUP_PRM / M6 “Definition - Problem Severity” (applicable documents section).
+
+[.text-justify]
+Severity classification: *minor*, *medium*, *strong*
+
+[.text-justify]
+The following problems and known defects are present in this release. +
+(Issue Type: Problem / status: not “closed” / severity: “strong” /  ”medium”) +
+This shall provide additional details to the summary of limitations described in the cover page.
+
+.Problems Statistics
+[width="100%", cols="1a,1a,1a,1a", options="header"]
+|===
+| Severity | Open| In Progress| Closed
+|Strong|0|0|0
+|Medium|0|0|0
+|Minor|0|4|0
+|Total|0|4|0
+|===
+
+.Problems and defects fixed (customer) 
+[width="100%", cols="2a,3a,6a,3a,3a,2a", options="header"]
+|===
+| ID | Summary | Description	| Severity (_see note above_)| Safety Relevance (_yes/no_) | Status
+|===
+
+.Problems and defects open (customer) 
+[width="100%", cols="2a,3a,6a,3a,3a,2a", options="header"]
+|===
+| ID | Summary | Description	| Severity (_see note above_)| Safety Relevance (_yes/no_) | Status
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15184[ATR-15184]| Bosch Radar mounting position mismatch between CANoe and LGP| *Description:* Mounting position data mismatch between "DID response data" and "Mounting position in Location data PDU"
+
+*Impact:* No impact to the sensor as the Mounting position data used by the sensor is correct, only the disaplyed value via communication is incorrect.
+
+*Solution:* The issue does not exists in SW V8.0.0 or higher release as "Mounting position" data is sent in Float32 format| Minor| No| Analyzed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15153[ATR-15153]| Bosch Radar sensor state info timestamp mismatch| Issue: Time stamp information displayed in "Sensor State Information" is incorrect sometimes wrt current sensor / system timestamp
+
+Impact: No impact to the sensor as the current sensor / system timestamp data used by the sensor is correct, only the displayed value via communication is incorrect.
+
+ | Minor| Yes| Analyzed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14851[ATR-14851]| [COMA] Internal commit Id Signal in SensorState TX PDU is in little endian format | Description:
+
+Commit ID signal in "sensor state PDU" is sent in little Endian format.
+
+Bu the expected requirement is to send/display the data in Big Endian format.
+
+Impact:
+
+Commit ID is sent wrong over the BUS, the user may be mislead with the data sent.| Minor| No| In Verification
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-13722[ATR-13722]| MCS: Wrong modulation time offset between sensors in synchronized mode| Description:
+The _SensorTimeOffset_ applies the double value compared to the defined value
+ E.g. _SensorTimeOffset_ of "33 ms" will be applied as 2 x 33 ms = 66 ms.
+
+Impact:
+The sensors are not syncronized correctly. Therefore, interferences will not be avoided in worst case.
+
+Short term fix: use half of the intended SensorTimeOffset e.g. for 33ms set SensorTimeOffset = 16.5ms
+ * {color:#ff0000}+*Caution:*+{color} this work-around has to be removed/set back, once the fixed SW is used| Minor| No| In Verification
+|===
+
+ifdef::INTERNAL_RELEASE_NOTE[]
+[blue]_START INTERNAL INFO_
+
+.Problems Statistics Internal
+[width="100%", cols="1a,1a,1a,1a", options="header"]
+|===
+| Severity | Open| In Progress| Closed
+|Strong|0|0|0
+|Medium|1|3|0
+|Minor|0|9|3
+|Total|1|12|3
+|===
+
+.Problems and defects fixed (internal) 
+[width="100%", cols="2a,3a,6a,3a,3a,2a", options="header"]
+|===
+| ID | Summary | Description	| Severity (_see note above_)| Safety Relevance (_yes/no_) | Status
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14926[ATR-14926]| Response not received for DID-F186 In Programming session | {color:#0747a6}Description:{color}
+
+The V8 software , the F186 DID did not provide the response in the programming session.
+
+{color:#0747a6}Root Cause :{color}
+
+In V8 software ECU reset response received two times(before and after reset)which is causing an issue in the transition and DoIP connection duration.
+
+This could possibly have lead to the inconsistent response for F186 DID in the programming session.
+
+Note : Internally when the V8.0.0 is tested in the open sensor bench we could see positive response for F186 ( Failed 2 out of 15 times).
+
+{color:#0747a6}Impact:{color}
+ The session out from one session to another session takes time.
+
+The active diagnostic session information could not be read in programming session sporadically.
+
+{color:#0747a6}Fix Given:{color}
+
+The Software Version V9.0.0 is updated to ensure only the single reset response is  triggered for ECU Reset.| Minor| No| Closed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14889[ATR-14889]| [SFLP] Current session Ecu response is not matching with expected response| In V8 software ECU reset response received two times(before and after reset)this is causing an issue.
+
+Impact:
+The session out from one session to another session takes time .| Minor| No| Closed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14859[ATR-14859]| DOIP taking time to connect after Reset.| Description:
+The doip is taking time to connect back after reset, because of In V8 software ECU reset response received two times(before and after reset)this is causing an issue.
+
+Impact:
+The services are related to ECU reset delays the response .| Minor| No| Closed
+|===
+
+.Problems and defects open (internal) 
+[width="100%", cols="2a,3a,6a,3a,3a,2a", options="header"]
+|===
+| ID | Summary | Description	| Severity (_see note above_)| Safety Relevance (_yes/no_) | Status
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15661[ATR-15661]| Location Data Block Counter and Attributes block counter are not in sync| None| None| None| Open
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15655[ATR-15655]| CI/CT: CheckMem missing| None| None| None| Open
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15654[ATR-15654]| CI/CT: UC1 Coverage per Component file missing in release and nightly builds| None| None| None| Open
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15653[ATR-15653]| Over voltage dtc is not observed| None| None| None| Open
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15628[ATR-15628]| Sensor Feedback TX PDU TimeOffset Signal value is updating even though MCS Sync Type is equal to Zero| None| Medium| None| Open
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15624[ATR-15624]| After setting under voltage 6.2 Volts the diop is getting disconnected| None| None| None| Open
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15618[ATR-15618]| DOIP is automatically getting disconnected after 5-7 minutes| None| None| No| In Analysis
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15612[ATR-15612]| The CycleTime of SensorStateInfo PDU violates toleranzes| None| None| None| Open
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15606[ATR-15606]| Unexpected DTC for VBat OV Violation| None| Medium| No| Analyzed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15602[ATR-15602]| Issue with V9.0.0 Start up on the bench and in vehicle | None| None| None| More Info
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15596[ATR-15596]| After Hard reset DOIP taking 5000ms to re-connect| None| Medium| None| In Analysis
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15322[ATR-15322]| Sensor Feedback TX PDU TimeOffset Signal value is half of MCS RX Signal value| Description 
+
+After DID value/MCS RX Signal is written to configure a specifc Timeoffset to the Sensor (say Timeoffset = 22000000) , the value in SensorTimeOffset in SensorFeedback PDU must also be the same value (22000000) as configured via DID/RX PDU. But the observation is the TX signal value is half of the configured value (11000000)
+
+Impact 
+
+There will be a mismatch in the transmitted signal value and  the value configured via DID/PDU for the timeoffset | Minor| No| In Verification
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15186[ATR-15186]| Range check fails for MAC address DID data| Description :
+ Range check for MAC address DID 0x601 is not matching with the requirement.
+
+
+ Impact:
+
+No Impact as the MAC address 0x000000000000 and 0xFFFFFFFFFFFF is not used by CUBAS| Minor| No| Analyzed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14961[ATR-14961]| Incorrect local port used for Sensor Broadcast message| Description :
+ Local port ID to be used by Sensor Broadcast PDU by the sensor is not macthing with the requirement.
+
+Root Cause:
+
+The Local (Sensor) port number metioned in the requirement is wrongs and needs to be rectified for Sensor Broadcast PDU
+
+Impact:
+
+No imapact in the software| Minor| No| Analyzed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14945[ATR-14945]| XCP is not working in SW V8.0.0| Description:
+
+XCP was not working in LRR SW V8.0.0
+
+Impact: 
+
+XPC related test could not be done by System test team
+
+Limitation:
+
+Foxtrot-13 PJ-IF delivery had XCP disabled, but shall be enabled in Foxtrot-15
+
+LRR SW V9.0.0 has Foxtrot-15 integrated.| Minor| No| In Implementation
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14925[ATR-14925]| Sensor Broadcast UDP header not modified/Ego Vehicle Multicast Reception not possible with changed destination port number| Multicast reception is not possible when destination port number is changes .
+UDP header is not updated with changed destination port number for Broadcast transmission | Minor| No| In Verification
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14892[ATR-14892]| Location Attributes Cycle time is going beyond the range| Description:
+
+Location Attributes cycle time is exceeding the limit specified in requirements.
+
+Impact:
+
+No Impact, test method needs to be changed as per the new requirement for V8.0.0| Minor| No| Analyzed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14836[ATR-14836]| Manipulated Ethernet/COM Buffer| Description:
+
+The data bytes are manipulated in Rx pdus of Ethernet message. Which leads to improper/incorrect data usage by the sensor.
+
+Impact:
+
+Last two bytes of Rx pdu gets manipulated as a result the data is interpreted wrongly by the sensor and this wrong data is used by the sensor.
+
+The stakeholders who are affected are Radar, DASy, NRCS and Video.| Minor| Yes| Analyzed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14105[ATR-14105]| Cycle time of Sensorstateinfo and Sensorfeedback not correct in C1 sample| Description: 
+The cycle time of LGP PDU's is not matching with the requirements in RBS
+
+ Impact:
+CAN wakeup message is continuously triggered every 60ms, but there is no CAN entity/ECU to acknowledge the Wake up message -> which causes CAN Rx Error frames in trace
+Limitation: This is a CANoe constraint and ECU needs to acknowledge the CAN wakeup message.
+
+ | Minor| No| Analyzed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-13990[ATR-13990]| Interrupting Power while flashing FBL with Vflash and if Retry Flashing, flashing Fails| {color:#0747a6}Description:{color}
+ When the user performs power interruption during re-flashing via vflash tool the flashing fails in the next re-flashing cycle.
+
+During the test log , the DSP DEM event "RB_SLV_SPU_SBST" is triggered which has led to the reflashing failure.
+
+{color:#0747a6}Root Cause :{color}
+
+Currently we have a planned discussion with DSP team and also on the PJ IF Microcontroller team on the nature of this DEM event and the scenario when this is occurred the feedback is as below "Software cannot cause SBST failure, because SBST detects permanent random hardware failures in fetch and pipeline". So the DEM event under consideration on the occurrence of the hardware failure.
+
+{color:#0747a6}Fix Given:{color}
+
+Currently this does not have any software fix for the behavior and discussion with DSP and PJ IF is ongoing on this.
+
+However since V9.0.0 has some other bug fix related to FBL (related to the multiple response for ECU Reset) and also since we have PJ IF Foxtrot-15 and DSP update, we shall perform re-test for this problem ticket.
+
+Also one of the other solution is to check for the VX Box Firmware version which is used in the test environment.
+
+{color:#0747a6}Impact:{color}
+ No impact. Currently no BLU specific re-flashing requirement / use case for system/ iA team/customer
+
+This ticket is considered for testing for internal analysis of the BLU reflashing behavior.| Minor| No| Verified
+|===
+
+[blue]_END INTERNAL INFO_
+endif::INTERNAL_RELEASE_NOTE[]
+
+<<<<
+[#RADIO_FREQUENCY_HOMOLOGATION]
+== RADIO FREQUENCY HOMOLOGATION
+
+[.text-justify]
+Importing and operation of the sensor is only allowed with a valid Radio Frequency Homologation or test license. +
+The customer has to assure that the sensor variant ordered has a valid homologation or test license for the countries it shall be used.
+
+[.text-justify]
+*Frequency of operation: 76-77 GHz*
+
+[.text-justify]
+*The countries in the following <<table-homologation-status, table>> have granted type approvals:* +
+The latest status for each country can be requested from Robert Bosch GmbH or can be found in this homologation table  
+https://inside-share-hosted-apps.bosch.com/DMS/GetDocumentService/Document.svc/GetDocumentURL?documentID=P12S103859-1225618777-20642[link]
+
+[[table-homologation-status]]
+//.Components
+[width="100%", cols=".^,.^,.^,.^,.^", options="header"]
+|===
+//Header
+^| Country
+^| ISO Code
+^| Status
+^| Valid Until
+^| Limitations
+//Row
+^| China
+^| {set:cellbgcolor} CN
+^| {set:cellbgcolor:#FFFF00} under clarification
+^| {set:cellbgcolor} n.a.
+^| none
+//Row
+^| Germany
+^| {set:cellbgcolor} DE
+^| {set:cellbgcolor:#90EE90} granted
+^| {set:cellbgcolor} 30.06.2023
+^| 500 mobile licenses, 100 stationary
+//Row
+^| Hungary
+^| {set:cellbgcolor} HU
+^| {set:cellbgcolor:#90EE90} exempt
+^| {set:cellbgcolor} unlimited
+^| none
+//Row
+^| India
+^| {set:cellbgcolor} IN
+^| {set:cellbgcolor:#90EE90} possible*
+^| {set:cellbgcolor} n.a.
+^| vehicle registration and insurance required, OEM is responsible for both according to India customs
+//Row
+^| Portugal
+^| {set:cellbgcolor} PT
+^| {set:cellbgcolor:#90EE90} exempt
+^| {set:cellbgcolor} unlimited
+^| none
+//Row
+^| Sweden
+^| {set:cellbgcolor} SE
+^| {set:cellbgcolor:#90EE90} exempt
+^| {set:cellbgcolor} unlimited
+^| none
+//Row
+^| USA
+^| {set:cellbgcolor} US
+^| {set:cellbgcolor:#90EE90} granted
+^| {set:cellbgcolor} 01.02.2024
+^| none
+|===
+
+
+// think about adding some colors to above table for fast identification of status
+
+[NOTE]
+*Specific limitations are possible (e.g. limited number of licenses with special stickers, individual information to authority needed, local no-go areas, etc.). + 
+
+[.text-justify]
+Please get in contact with the ITA team mailto:ITA.BoschRadar@de.bosch.com[ITA.BoschRadar@de.bosch.com] for further clarification! 
+
+<<<<
+[#OPEN_SOURCE_SOFTWARE_AND_LICENSE_INFORMATION]
+== OPEN SOURCE SOFTWARE AND LICENSE INFORMATION
+
+ifdef::SHOW_SRN_CHECKS[]
+[width="100%", cols=".^,.^", options="header"]
+|===
+// Header
+^| Check No.
+^| Description
+// Row
+^| CHK13
+^| Is the information about the OSS Scan conducted summarized in the release note? ( only applicable // on customer request, the sentence as provided by the OSS @ CC shall be added to the official documentation)
+// Row
+^| CHK14
+^| In case of OSS used, Is the Disclosure document available and provided as part of the official delivery ? (applicable to check on the availablilty of the disclosure document and the communication mechanism to the customer.)
+|===
+endif::SHOW_SRN_CHECKS[]
+
+[.text-justify]
+Open Source SW scan and license information is required for each SW delivery, this includes license information of included 3rd party SW.
+Following parts are scanned:
+
+•	ECU SW
+•	Radar ROS Decoder
+•	Python Diatester script
+
+[.text-justify]
+Result: No OSS license conflicts found.
+
+// Information on used licenses is listed in attached disclosure reports.
+
+ifdef::INTERNAL_RELEASE_NOTE[]
+
+[[table-open-source-and-license]]
+//.Components
+[width="100%", cols="3a,4a,1a", options="header"]
+|===
+//Header
+^| Scanned Part |Description | Scan Results 
+//Row
+^| ECU ATR Components
+- Python Diagtester Script
+
+^| 
+
+to be delivered
+
+^| //link:../../../oss[link]  
+
+//Row
+^| ROS Decoder
+^| Bosch Internal Open Source License Version 4 (in test_uuid component)
+^| //link:../../../oss[link] 
+
+//Row
+^| PJIF_Foxtrot-15_Radar
+^| DSP and PJ-IF OSS Scans are executed together, only for PJ-IF stable branches. Foxtrot is not stable branch yet.
+
+Commercial Licences:
+
+*	ESCRYPTGmbH (ETASGroup)
+*	ETAS GmbH
+
+Licences are part of CUBAS delivery from CAP (RTAOS, security modules). Licence conditions requested from PJ-IF
+Licences need to be evaluated. Will be tracked with Jira ticket ATR-7602  
+
+^| //link:../../../oss[link] 
+// Row
+^| PJRC_2205.4
+^| //no findings
+^| //link:../../../oss[link] 
+|===
+
+[blue]_END INTERNAL INFO_
+endif::INTERNAL_RELEASE_NOTE[]
+
+<<<<
+[#DEFINITION_OF_SERVICE_LEVEL_AND_DURATION_OF_SUPPORT]
+== DEFINITION OF SERVICE LEVEL AND DURATION OF SUPPORT
+
+[.text-justify]
+The Service Level and Duration of Support for this Release is as mentioned below (see also the general definition in project specific Release and Delivery Strategy, Chapter 4)
+
+The product is supported by our development team, please approach your customer contact in case of any questions/issues +
+Advice is to update to newer version of the software when available for the compatible hardware sample. For details refer the  <<table-HW-SW-compatibility-application, Compatibility-Table>>
+
+<<<<
+[#PARTICULARITIES]
+== PARTICULARITIES
+
+[.text-justify]
+For C samples please consider the following wiring of Vector metrology harnesses for the microcontrollers 1 and 2, based on your sample variant.
+In the depicted figure, the upper two harnesses belong to metrology variant "AK2", the lower two to variant "HMDT".
+
+.C-Sample
+image::resources/C-Sample.png[width=95%,link="./resources/C-Sample.png]
+
+[.text-justify]
+The sensor offers different detection and measurement programs (DMP), which provide different combinations of maximum detection range and range resolution. +
+The sensor can either be configured to *auto mode*, so that the DMP is selected depending on the vehicle speed. Alternatively, a *dedicated DMP* can be selected regardless of vehicle movement.
+
+//Check old release note if data needs to be taken over
+
+[.text-justify]
+By default the radar is set to DMP0, i.e. auto mode.
+
+<<<<
+[#RELEASE_AND_APPROVAL]
+== RELEASE AND APPROVAL
+=== SCOPE OF RESPONSIBILITY
+[.text-justify]
+There is an exclusion of the guarantee in case of vehicle-equipment variants with functional effects on the Bosch components which were not tested and released by Bosch. This also applies to changes in running series, which have not been indicated to and if necessary free-tested by Bosch.
+
+=== EXECUTED AUDITS, REVIEWS AND RELATED RELEASE DOCUMENTATION
+
+ifdef::SHOW_SRN_CHECKS[]
+[width="100%", cols=".^,.^", options="header"]
+|===
+// Header
+^| Check No.
+^| Description
+// Row
+^| CHK17
+^| Is the information about the executed audits, reviews and release documentation up to date ? Are the reason for the required fields in this chapter provided?
+|===
+endif::SHOW_SRN_CHECKS[]
+
+.Major Release 
+[width="100%", cols=".^,.^,.^"]
+|===
+^|
+^| *Yes* 
+^| *No* 
+// Row
+^| *Major Release*
+^| *[ ]*
+^| *[X]* 
+|===
+
+.Applicable Documents
+[width="100%", cols="5a,1a,1a,1a,3a", options="header"]
+|===
+// Header
+^| *Document*
+^| *Released*
+^| *Not Released*
+^| *Not Applicable*
+^| *Reason in case of* +
+*not released or not applicable*
+// Row
+| *SYS-SW QG* +
+Released SYS-SW-QG is mandatory for all Key Milestones +
+For major releases, set to not applicable. +
+For minor releases, set to not applicable. +
+^| *[ ]*
+^| *[ ]*
+^| *[X]*
+^| only minor release
+// Row
+| *SW release note*
+^| *[X]*
+^| *[ ]*
+^| *[ ]*
+^| we provide this document as a combined SYS- and SW release note
+// Row
+| *Application release note*
+^| *[ ]*
+^| *[ ]*
+^| *[X]*
+^| in general not applicable for Radar
+// Row
+| *HW release note* FR5CU
+^| *[x]*
+^| *[ ]*
+^| *[ ]*
+^| for details cf. the <<table-documents, table of documents>>
+|===
+
+
+=== RELEASE RECOMMENDATION
+
+[.text-justify]
+The system was evaluated in the configuration as described above. The summary of the risks and limitations, if any, are available in the cover page of this document.
+
+[.text-justify]
+Based on the results described in this document Robert Bosch recommends to release the system as follows:
+
+.Release Recommendation 
+[width="100%", cols=".^,.^,.^,.^"]
+|===
+// Header
+^| *Result*
+^| *Released*
+^| *Released with Risk measures / limitations*
+^| *Not released*
+// Row
+^| Recommendation
+^| *[ ]*
+^| *[X]*
+^| *[ ]*
+|===
+
+[.text-justify]
+The Customer is responsible for the release of the system in the vehicle.
+
+=== REVIEW AND APPROVAL
+
+[.text-justify]
+Approval fulfilling XC-AD internal requirements and DROP Guideline Ch.4.2.1 “Product release categories (intended use)”.
+
+.Review and approval
+[width="100%", cols=".^,.^,.^,.^"]
+|===
+// Header
+^| Author
+^| Department
+^| Mail
+^| Phone
+// Row
+4+^| *CAT 2, 3, 4, 5 mandatory:* +
+*Author (if not same as Technical project responsible)*
+// Row
+^| Vedavyasa Acharya 
+^| XC-AD/ERA 
+^| mailto:Vedavyasa.Acharya@in.bosch.com[Vedavyasa.Acharya@in.bosch.com] 
+^| +91(80)6136-7720
+// Row
+4+^| *CAT 2, 3, 4, 5 mandatory:* +
+*Technical project responsible for the system: TPM*
+// Row
+^| Marcus Reiher 
+^| XC-AD/ERA1 
+^| mailto:Marcus.Reiher2@de.bosch.com[Marcus.Reiher2@de.bosch.com]
+^| +49 (711) 811-37495
+// Row
+4+^| *CAT 2, 3, 4, 5 mandatory:* +
+*Overall project responsible: PJM*
+// Row
+^| Stefan Chittka 
+^| XC-AD/ERA
+^| mailto:Stefan.Chittka@de.bosch.com[Stefan.Chittka@de.bosch.com]
+^| +49 (152) 09059723 
+// Row
+4+^| *CAT 2, 3, 4, 5 mandatory:* +
+*Supervisor of Technical project responsible for the system: Line manager of TPM*
+// Row
+^| Stefan Chittka 
+^| XC-AD/ERA 
+^| mailto:Stefan.Chittka@de.bosch.com[Stefan.Chittka@de.bosch.com]
+^| +49 (152) 09059723 
+// Row
+4+^| *CAT 2, 3, 4, 5 mandatory: In case of Major SW Release & Key milestones +
+In Focus Project and EPQ is assigned: EPQ / QG Assessor (when EPQ is not assigned / available)* +
+*In Non-Focus Project: QG Assessor*
+// Row
+^| Michael Mellahn 
+^| XC/QMM1-AD
+^| mailto:Michael.Mellahn@de.bosch.com[Michael.Mellahn@de.bosch.com]
+^| +49 (711) 811-91715
+// Row
+4+^| *CAT 2 for external delivery(only test track/public Road Release), 3, 4, 5 mandatory:* +
+*Head of development department*
+// Row
+^| Axel Schwarz
+^| XC-AD/ESE 
+^| mailto:Axel.Schwarz@de.bosch.com[Axel.Schwarz@de.bosch.com]
+^| +49 (160) 93989972 
+// Row
+4+^| *CAT 2, 3, 4 conditional:* +
+*In case of required escalation acc. to DROP Guideline: Head of BU/QMM or head of regional QMM*
+^| n.a.
+^| n.a. 
+^| n.a.
+^| n.a.
+|===
+
+<<<<
+[#TEMPLATE_AND_DOCUMENT_CHANGE_HISTORY]
+== TEMPLATE AND DOCUMENT CHANGE HISTORY
+=== TEMPLATE
+
+[width="100%", cols=".^,.^,.^,.^"]
+|===
+// Header
+^| Date
+^| Template Version
+^| Description
+^| Author
+// Row
+^| 10.10.2021
+^| V2.15 (22.10.2020)
+^| Based on process landscape
+version
+^| Knödl
+^| 09.03.2022
+^| V2.19 (26.10.2021)
+^| Based on process landscape
+version
+^| ERA1-Reiher
+|===
+
+=== DOCUMENT
+[width="100%", cols=".^,.^,.^,.^"]
+|===
+// Header
+^| Date
+^| Document +
+version
+^| Description
+^| Author
+// Row
+^| 29.03.2022
+^| V1.0
+^| Adopted to latest process landscape version
+^| ERA-Acharya
+|===
+
+endif::CUSTOMER_APPROVAL_LETTER[]

@@ -1,0 +1,479 @@
+{
+  "MemRanges": 
+  [
+    {
+      "Name" : "CPU5_DataSratchPad",
+      "Address" : "0x10000000",
+      "Size" : "0x18000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU5_DataCache",
+      "Address" : "0x10018000",
+      "Size" : "0x4000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU5_DataCacheTag",
+      "Address" : "0x100c0000",
+      "Size" : "0x1800",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU5_PrgSratchPad",
+      "Address" : "0x10100000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU5_PrgCache",
+      "Address" : "0x10110000",
+      "Size" : "0x8000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU5_PrgCacheTag",
+      "Address" : "0x101c0000",
+      "Size" : "0x3000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU4_DataSratchPad",
+      "Address" : "0x30000000",
+      "Size" : "0x18000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU4_DataCache",
+      "Address" : "0x30018000",
+      "Size" : "0x4000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU4_DataCacheTag",
+      "Address" : "0x300c0000",
+      "Size" : "0x1800",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU4_PrgSratchPad",
+      "Address" : "0x30100000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU4_PrgCache",
+      "Address" : "0x30110000",
+      "Size" : "0x8000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU4_PrgCacheTag",
+      "Address" : "0x301c0000",
+      "Size" : "0x3000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU3_DataSratchPad",
+      "Address" : "0x40000000",
+      "Size" : "0x18000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU3_DataCache",
+      "Address" : "0x40018000",
+      "Size" : "0x4000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU3_DataCacheTag",
+      "Address" : "0x400c0000",
+      "Size" : "0x1800",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU3_PrgSratchPad",
+      "Address" : "0x40100000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU3_PrgCache",
+      "Address" : "0x40110000",
+      "Size" : "0x8000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU3_PrgCacheTag",
+      "Address" : "0x401c0000",
+      "Size" : "0x3000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU2_DataSratchPad",
+      "Address" : "0x50000000",
+      "Size" : "0x18000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU2_DataCache",
+      "Address" : "0x50018000",
+      "Size" : "0x4000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU2_DataCacheTag",
+      "Address" : "0x500c0000",
+      "Size" : "0x1800",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU2_PrgSratchPad",
+      "Address" : "0x50100000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU2_PrgCache",
+      "Address" : "0x50110000",
+      "Size" : "0x8000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU2_PrgCacheTag",
+      "Address" : "0x501c0000",
+      "Size" : "0x3000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU1_DataSratchPad",
+      "Address" : "0x60000000",
+      "Size" : "0x3c000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU1_DataCache",
+      "Address" : "0x6003c000",
+      "Size" : "0x4000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU1_DataCacheTag",
+      "Address" : "0x600c0000",
+      "Size" : "0x1800",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU1_PrgSratchPad",
+      "Address" : "0x60100000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU1_PrgCache",
+      "Address" : "0x60110000",
+      "Size" : "0x8000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU1_PrgCacheTag",
+      "Address" : "0x601c0000",
+      "Size" : "0x3000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU0_DataSratchPad",
+      "Address" : "0x70000000",
+      "Size" : "0x3c000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU0_DataCache",
+      "Address" : "0x7003c000",
+      "Size" : "0x4000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU0_DataCacheTag",
+      "Address" : "0x700c0000",
+      "Size" : "0x1800",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU0_PrgSratchPad",
+      "Address" : "0x70100000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU0_PrgCache",
+      "Address" : "0x70110000",
+      "Size" : "0x8000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU0_PrgCacheTag",
+      "Address" : "0x701c0000",
+      "Size" : "0x3000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "PFI0",
+      "Address" : "0x80000000",
+      "Size" : "0x300000",
+      "Type":"FLASH"
+    },
+    {
+      "Name" : "PFI1",
+      "Address" : "0x80300000",
+      "Size" : "0x300000",
+      "Type":"FLASH"
+    },
+    {
+      "Name" : "PFI2",
+      "Address" : "0x80600000",
+      "Size" : "0x300000",
+      "Type":"FLASH"
+    },
+    {
+      "Name" : "PFI3",
+      "Address" : "0x80900000",
+      "Size" : "0x300000",
+      "Type":"FLASH"
+    },
+    {
+      "Name" : "PFI4",
+      "Address" : "0x80c00000",
+      "Size" : "0x300000",
+      "Type":"FLASH"
+    },
+    {
+      "Name" : "PFI5",
+      "Address" : "0x80f00000",
+      "Size" : "0x100000",
+      "Type":"FLASH"
+    },
+    {
+      "Name" : "CPU0_DLMU_RAM",
+      "Address" : "0x90000000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU1_DLMU_RAM",
+      "Address" : "0x90010000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU2_DLMU_RAM",
+      "Address" : "0x90020000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU3_DLMU_RAM",
+      "Address" : "0x90030000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "LMU0_RAM",
+      "Address" : "0x90040000",
+      "Size" : "0x40000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "LMU1_RAM",
+      "Address" : "0x90080000",
+      "Size" : "0x40000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "LMU2_RAM",
+      "Address" : "0x900c0000",
+      "Size" : "0x40000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU4_DLMU_RAM",
+      "Address" : "0x90100000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU5_DLMU_RAM",
+      "Address" : "0x90110000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "DAM0",
+      "Address" : "0x90400000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "DAM1",
+      "Address" : "0x90410000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "EMEM0",
+      "Address" : "0x99000000",
+      "Size" : "0x100000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "EMEM1",
+      "Address" : "0x99100000",
+      "Size" : "0x100000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "EMEM2",
+      "Address" : "0x99200000",
+      "Size" : "0x100000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "EMEM3",
+      "Address" : "0x99300000",
+      "Size" : "0x100000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "PFI0_NC",
+      "Address" : "0xa0000000",
+      "Size" : "0x300000",
+      "Type":"FLASH"
+    },
+    {
+      "Name" : "PFI1_NC",
+      "Address" : "0xa0300000",
+      "Size" : "0x300000",
+      "Type":"FLASH"
+    },
+    {
+      "Name" : "PFI2_NC",
+      "Address" : "0xa0600000",
+      "Size" : "0x300000",
+      "Type":"FLASH"
+    },
+    {
+      "Name" : "PFI3_NC",
+      "Address" : "0xa0900000",
+      "Size" : "0x300000",
+      "Type":"FLASH"
+    },
+    {
+      "Name" : "PFI4_NC",
+      "Address" : "0xa0c00000",
+      "Size" : "0x300000",
+      "Type":"FLASH"
+    },
+    {
+      "Name" : "PFI5_NC",
+      "Address" : "0xa0f00000",
+      "Size" : "0x100000",
+      "Type":"FLASH"
+    },
+    {
+      "Name" : "CPU0_DLMU_RAM_NC",
+      "Address" : "0xb0000000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU1_DLMU_RAM_NC",
+      "Address" : "0xb0010000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU2_DLMU_RAM_NC",
+      "Address" : "0xb0020000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU3_DLMU_RAM_NC",
+      "Address" : "0xb0030000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "LMU0_RAM_NC",
+      "Address" : "0xb0040000",
+      "Size" : "0x40000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "LMU1_RAM_NC",
+      "Address" : "0xb0080000",
+      "Size" : "0x40000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "LMU2_RAM_NC",
+      "Address" : "0xb00c0000",
+      "Size" : "0x40000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU4_DLMU_RAM_NC",
+      "Address" : "0xb0100000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "CPU5_DLMU_RAM_NC",
+      "Address" : "0xb0110000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "DAM0_NC",
+      "Address" : "0xb0400000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "DAM1_NC",
+      "Address" : "0xb0410000",
+      "Size" : "0x10000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "EMEM0_NC",
+      "Address" : "0xb9000000",
+      "Size" : "0x100000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "EMEM1_NC",
+      "Address" : "0xb9100000",
+      "Size" : "0x100000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "EMEM2_NC",
+      "Address" : "0xb9200000",
+      "Size" : "0x100000",
+      "Type":"RAM"
+    },
+    {
+      "Name" : "EMEM3_NC",
+      "Address" : "0xb9300000",
+      "Size" : "0x100000",
+      "Type":"RAM"
+    }
+  ],
+  "DataSections": [
+    {
+      "Name":"__example__.__gibsnich__"
+    }
+  ]
+}
+

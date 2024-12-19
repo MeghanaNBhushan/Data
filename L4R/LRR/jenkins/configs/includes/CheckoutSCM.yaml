@@ -1,0 +1,11 @@
+    - name: Checkout SCM 
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - call: Repository.prepareGitRepo
+      - call: PullRequest.addReviewersWithCodeOwnersFile
+      - call: PullRequest.addTasks
+        tasks:
+        - name: PR guidelines are followed
+          description: PR Review Guideline https://inside-docupedia.bosch.com/confluence/display/ATD/PR+Review+Process
+          readd: true
+

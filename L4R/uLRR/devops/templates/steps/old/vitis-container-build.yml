@@ -1,0 +1,38 @@
+steps:
+  - bash: |
+      set -e
+
+      echo "Copying the Vitis installer... "
+      sudo rsync -ah --progress /mnt/debian-build/Vitis/azcopy_linux_amd64_10.17.0.tar.gz .
+      tar -xzf azcopy_linux_amd64_10.17.0.tar.gz
+      cd azcopy_linux_amd64_10.17.0
+      ./azcopy copy "https://swbuildst.file.core.windows.net/debian-build/Vitis/Xilinx_Unified_2021.2_1021_0703.tar.gz?sv=2021-12-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2024-03-30T20:50:12Z&st=2023-03-30T11:50:12Z&spr=https&sig=v4ZpnSuOVyOdZuslPo%2B8KAxZeK1wzKUqWG5KFRxpJcs%3D" "$(Build.SourcesDirectory)/tools/docker/debian_toolkit/vitis_env/Xilinx_Unified_2021.2_1021_0703.tar.gz"
+
+      echo "Going to Dockerfile folder... "
+      cd $(Build.SourcesDirectory)/tools/docker/debian_toolkit/vitis_env/
+
+      echo "Copying the xilinx_install_config.txt, from the Software, to be reused... "
+      sudo cp ../../../../software/os/debian/docker/debian-11/data/xilinx_install_config.txt .
+
+      echo "Uncompress Vitis installer"
+      tar -xzf Xilinx_Unified_2021.2_1021_0703.tar.gz
+
+      echo "Delete archive to avoid, loading unnecessary data"
+      sudo rm -rf Xilinx_Unified_2021.2_1021_0703.tar.gz
+
+      echo "Build docker container... "
+      DOCKER_BUILDKIT=1 docker build --progress plain ./ --rm -t vitis-v2021.2:latest
+
+      echo "Delete uncompressed archive to release space..."
+      sudo rm -rf Xilinx_Unified_2021.2_1021_0703
+
+      echo "Testing final docker container... "
+      docker run -td --rm -v $(Build.SourcesDirectory):/ws --name vitis-container vitis-v2021.2:latest /bin/bash
+      docker ps
+
+      # sudo docker push vitis-v2021.2:latest
+      docker save -o vitis-container.tar vitis-v2021.2:latest
+
+      sudo rsync -ah --progress vitis-container.tar /mnt/debian-build/Vitis/docker_container/dev_folder/
+    displayName: Building Vitis container
+

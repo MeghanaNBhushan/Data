@@ -1,0 +1,83 @@
+# specific branch build
+
+parameters:
+- name: qemu_ros_env_test
+  displayName: Run QEMU for ROS environment test
+  type: boolean
+  default: true
+  values:
+  - true
+  - false
+  
+variables:
+- name: BRANCH_NAME
+  value: $[replace(variables['System.PullRequest.SourceBranch'], 'refs/heads/', '')]
+- group: swbuildst-credentials
+  
+trigger:
+  branches:
+    include:
+      - master
+    
+pr:
+  autoCancel: true
+  branches:
+    include:
+      - master
+      - develop
+  drafts: false
+
+
+stages:
+  # - stage: docker_build
+  #   jobs:
+  #   - job: CheckDockerfile
+  #     pool: berlin-d2sv3-vmss
+  #     steps:
+  #     - checkout: self  
+  #     - task: PowerShell@2
+  #       inputs:
+  #         targetType: 'inline'
+  #         script: |
+  #           $changedfiles = $(git diff HEAD HEAD~ --name-only)
+  #           Write-Host $changedfiles
+  #           $changedfiles -Match "docker/petalinux_toolkit/Dockerfile"
+  #           If ($changedfiles -Match "docker/petalinux_toolkit/Dockerfile")  {
+  #             Write-Host $changedfiles
+  #             Write-Host "##vso[task.setvariable variable=IfRunDockerBuild;isOutput=true]run"
+  #           }
+  #       name: 'CheckRunDockerBuild'
+
+  #   - job: DockerBuild
+  #     dependsOn: CheckDockerfile
+  #     condition: eq(dependencies.CheckDockerfile.outputs['CheckRunDockerBuild.IfRunDockerBuild'],'run')
+  #     pool: sw-build-docker-pool  
+  #     timeoutInMinutes: 0 # how long to run the job before automatically cancelling
+  #     cancelTimeoutInMinutes: 35790 # how much time to give 'run always even if cancelled tasks' before stopping them
+  #     steps:
+  #     - checkout: self  
+  #       lfs: true
+  #     - template: /devops/templates/steps/petalinux-container-build.yml
+
+  - stage: software_build
+    jobs:
+    - job: GetCommitID
+      pool: bangalore-d16asv5-vmss
+      steps:
+      - checkout: self  
+      - template: /devops/templates/steps/fetch_commit_id.yml
+        
+    - job: SWBuild
+      dependsOn: GetCommitID
+      variables:
+        commitID: $[ dependencies.GetCommitID.outputs['commitID.long'] ]  
+      pool: bangalore-d16asv5-vmss
+      timeoutInMinutes: 0 # how long to run the job before automatically cancelling
+      cancelTimeoutInMinutes: 35790 # how much time to give 'run always even if cancelled tasks' before stopping them
+      steps:
+      - checkout: self  
+        lfs: true
+      - template: /devops/templates/steps/petalinux_build.yml
+      - ${{ if eq(parameters.qemu_ros_env_test, true) }}:
+        - template: /devops/templates/steps/test_ros.yml #ROS env. test only performed if qemu_ros_env_test equal to 'true'
+      

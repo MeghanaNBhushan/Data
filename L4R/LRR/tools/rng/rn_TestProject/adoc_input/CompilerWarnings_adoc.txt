@@ -1,0 +1,4 @@
+[width="100%",cols="50%,25%,25%", options="header"]
+|===
+| sw_part | Deprecated | Warning
+|===

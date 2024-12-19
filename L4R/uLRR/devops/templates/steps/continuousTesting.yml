@@ -1,0 +1,224 @@
+parameters:
+- name: assist_run
+  displayName: Assist Testrun
+  type: boolean
+  default: false
+- name: test_coverage
+  displayName: Test coverage
+  values:
+  - full_run
+  - testsuite_assist_run
+  - testcase_assist_run
+  default: full_run
+- name: artifactoryPathSwuImg
+  displayName: Path to Artifactory Swu Image
+  type: string
+  default: releases/system-release/IR2_RSP_V0.5/software/
+- name: artifactoryNameSwuImg
+  displayName: Swu Image Name
+  type: string
+  default: uLRR_image-c985e61.swu
+- name: spezi_drive
+  displayName: Mount path Spezi HiL
+  type: string
+  default: /usr/testbench/spezi
+- name: spezi_project
+  displayName: Name of the spezi Project
+  type: string
+  default: _prj_ir2_ulrr_a0
+- name: spezi_branch
+  displayName: Branch Spezi Repo
+  type: string
+  default: master
+- name: testcase_name
+  displayName: Name of TC (without .py)
+  type: string
+  default: TC0201_SwUpdate_Stability
+- name: testclassfilter
+  displayName: List of Testsuite (splited by a space)
+  type: string
+  default: T02 T0004
+- name: avoid_weekend_testclass
+  displayName: Avoid weekend test class
+  type: boolean
+  default: true
+- name: build_type
+  displayName: Build type
+  type: string
+  default: debug
+
+steps:
+
+ - bash: |
+    echo "spezi repo path: ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}"
+    cd ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}
+    git fetch --progress --all
+    git checkout -f ${{ parameters.spezi_branch }}
+    git clean -d -f
+    git pull --rebase
+    git submodule update --init --recursive --force
+   displayName: pull Spezi Sw from GitHub
+
+ - bash: |
+    if [ -d "${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/testproject" ]; then
+        echo "remove old testproject folder from HIL"
+        rm -r ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/testproject
+    fi
+
+    if [ -d "${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/uut" ]; then
+       echo "remove old uut folder from HIL"
+       rm -r ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/uut
+    fi
+
+    if [ -d "${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/builddir" ]; then
+       python ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/pythomation/controlApps/CT/cleanCT.py
+    fi
+    mkdir ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/uut/
+   displayName: initial TB environment
+
+ - task: DownloadPipelineArtifact@2
+   inputs:
+     buildType: 'current'
+     artifactName: $(swu_artifactname)
+     targetPath: '${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/uut'
+   displayName: Download SwUpdate Image
+   condition: ${{ eq(parameters.assist_run, false) }}
+
+ - bash: |
+    cd ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/uut/
+    cp $(swu_filename) uLrrImage.swu
+   displayName: create a copy from SwUpdate Image
+   condition: ${{ eq(parameters.assist_run, false) }}
+
+ - task: ArtifactoryGenericDownload@1
+   inputs:
+     artifactoryService: 'sc-ado-artifactory'
+     specSource: 'taskConfiguration'
+     fileSpec: |
+       {
+         "files": [
+           {
+             "pattern": "zugspitze-series-generic-local/${{ parameters.artifactoryPathSwuImg }}${{ parameters.artifactoryNameSwuImg }}",
+             "target": "${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/uut/"
+           }
+         ]
+       }
+     failNoOp: true
+   displayName: Download last release SW Image from Artifactory
+
+ - bash: |
+    cd ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/uut/
+    cp ${{ parameters.artifactoryPathSwuImg }}${{ parameters.artifactoryNameSwuImg }} uLRRimage_lastRelease.swu
+   displayName: Rename last release SW Image to uLRRimage_lastRelease.swu
+   condition: ${{ eq(parameters.assist_run, false) }}
+
+ - bash: |
+    cd ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/uut/
+    cp ${{ parameters.artifactoryPathSwuImg }}${{ parameters.artifactoryNameSwuImg }} uLrrImage.swu
+   displayName: Rename last release SW Image to uLrrImage.swu
+   condition: ${{ eq(parameters.assist_run, true) }}
+
+ - task: DownloadPipelineArtifact@2
+   inputs:
+     buildType: 'specific'
+     project: 'uLRR'
+     pipeline: 100 # nightly software build
+     buildVersionToDownload: 'latest'
+     allowPartiallySucceededBuilds: false
+     allowFailedBuilds: false
+     artifactName: 'Software-tec0204-sw-debian-build-swu-file'
+     targetPath: '${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/uut'
+   displayName: Download SW Image from last successful nightly build
+
+ - bash: |
+    cd ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/uut/
+    cp ${{ parameters.artifactoryPathSwuImg }}${{ parameters.artifactoryNameSwuImg }} previousNightly.swu
+   displayName: Rename last successful nightly build SW Image to previousNightly.swu
+
+ - task: ArtifactoryGenericDownload@1
+   inputs:
+     artifactoryService: 'sc-ado-artifactory'
+     specSource: 'taskConfiguration'
+     fileSpec: |
+       {
+         "files": [
+           {
+             "pattern": "zugspitze-series-generic-local/RelevantCT/",
+             "target": "${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/uut/"
+           }
+         ]
+       }
+     failNoOp: true
+   displayName: Download Sw Corrupted Images from Artifactory
+
+ - task: ExtractFiles@1
+   inputs:
+      archiveFilePatterns: "${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/uut/RelevantCT/corruptedSwFiles.zip"
+      destinationFolder: "${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/uut/"
+      cleanDestinationFolder: false
+      overwriteExistingFiles: false
+   displayName: Extract corrupted SW files to uut
+
+ - bash:
+    cp -r $(Pipeline.Workspace)/s/verification_validation/Sys5/spezi/testproject/ ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/
+   displayName: copy TCs to Testbench
+
+ - bash: |
+    rm -r ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/testproject/T05_WeekendRun
+   displayName: remove weekend test class
+   condition: ${{ eq(parameters.avoid_weekend_testclass, true) }}
+
+ - bash:
+    cp -r $(Pipeline.Workspace)/s/tools/testbench_toolkit/swupdate/swupdateclient/ ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/testproject
+   displayName: copy SWUpdate Script to Testproject
+
+ - task: PythonScript@0
+   inputs:
+     scriptSource: 'filePath'
+     scriptPath: ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/pythomation/controlApps/CT/buildXeno.py
+     arguments: --startXeno True
+     pythonInterpreter: python3.8
+   displayName: make and execute TB SW on HiL PC
+
+ - bash: |
+    source /opt/ros/noetic/setup.sh
+    python3 ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/pythomation/controlApps/CT/runCTTests.py
+   displayName: run all TCs
+   condition: ${{ eq(parameters.test_coverage, 'full_run') }}
+
+ - bash: |
+    set -e
+    
+    source /opt/ros/noetic/setup.bash
+    WORKSPACE_PATH="${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/fwIR2/lib/Ros/ROSPublisherSubscriber_bag_file"
+    (cd "$WORKSPACE_PATH" && catkin_make -DCMAKE_BUILD_TYPE=${{ parameters.build_type }}) || { echo "catkin_make failed"; exit 1; }
+    source "$WORKSPACE_PATH/devel/setup.bash" || { echo "setup.bash not found or error sourcing"; exit 1; }
+    echo "Running python script: python3 ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/pythomation/controlApps/CT/runCTTests.py -tcf ${{ parameters.testclassfilter }}"
+    python3 ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/pythomation/controlApps/CT/runCTTests.py -tcf ${{ parameters.testclassfilter }}
+   displayName: run TCs with testclass filter for [${{ parameters.testclassfilter }}]
+   condition: ${{ eq(parameters.test_coverage, 'testsuite_assist_run') }}
+
+ - bash: |
+    source /opt/ros/noetic/setup.sh
+    python3 ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/pythomation/controlApps/CT/runCTTests.py -tc ${{ parameters.testcase_name }}
+   displayName: run ${{ parameters.testcase_name }}
+   condition: ${{ eq(parameters.test_coverage, 'testcase_assist_run') }}
+
+ - task: PythonScript@0
+   inputs:
+     scriptSource: 'filePath'
+     scriptPath: ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/pythomation/controlApps/CT/createTestSummary.py
+     arguments: --zip --keepReports True
+     pythonInterpreter: python3.8
+   displayName: create and zip Testreport
+
+ - bash: |
+    echo "##vso[task.setvariable variable=spezi_test_summary;isOutput=true]SPEZI_test_summary.zip"
+    echo "##vso[task.setvariable variable=spezi_test_results;isOutput=true]results.csv"
+    echo "##vso[task.setvariable variable=spezi_artifactname;isOutput=true]Report-spezi-reports"
+   displayName: Create spezi output variables
+   name: SpeziReports
+
+ - publish: ${{ parameters.spezi_drive }}/${{ parameters.spezi_project }}/ReportSummary/
+   artifact: $(SpeziReports.spezi_artifactname)
+   displayName: Upload Spezi reports

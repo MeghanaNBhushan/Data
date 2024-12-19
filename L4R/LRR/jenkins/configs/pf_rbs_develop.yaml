@@ -1,0 +1,54 @@
+^INCLUDE:jenkins/configs/includes/properties.yaml<abortIfNotLatest=abortIfNotLatest: "soft">; # aborts the PR's current build if there is a newer one running
+
+uc1: FR5CU_DNNN1_NNN_N_XX_2_uC1
+uc2: FR5CU_DENN1_CEN_N_XX_2_uC2
+
+cmake_cfg_path: ad_radar_apl/tools/cmake/cfg
+
+hw: C0
+hw_C1: C1
+testHwU: fr5cu
+cantataBuildType : full
+testStU: 6501
+testStU_C1: 001f2
+user_id: cis9lr
+
+filter: "check_dsp_error_table;check_dsp_opmode;check_dsp_spu_status;check_daddy_error_information;check_dem_events;check_locations;check_trap_information;check_safe_state;check_Location_Interface;check_smu;swTest_checkSendInSpec;swTest_checkSendTemporaryState;swTest_checkPersistentstate"
+test_mode: ""
+
+<%
+int order = 0
+%>
+
+pipelines:
+- nodes: 
+  - label: ATR
+    nodeOfflineAfterBuild: ^Exec.*
+    executionOrder: 0
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM.yaml<execOrder=${order=0}>;
+    - ^INCLUDE:jenkins/configs/includes/FetchTags.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/GenerateHeader.yaml<execOrder=${++order}, user_id=^YAML:user_id;>;
+    - ^INCLUDE:jenkins/configs/includes/GenerateHeader_archive.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/GeneratePDM.yaml<execOrder=${++order}, build_variant=^YAML:uc2;>;
+    - ^INCLUDE:jenkins/configs/includes/Doxygen.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/FR5CUSpecGen.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/BuildSW.yaml<execOrder=${++order}, build_variant=^YAML:uc1;, cfg_path=^YAML:cmake_cfg_path;, variant=uc1, threshold=175>;
+    - ^INCLUDE:jenkins/configs/includes/BuildSW.yaml<execOrder=${++order}, build_variant=^YAML:uc2;, cfg_path=^YAML:cmake_cfg_path;, variant=uc2, threshold=193>;
+    - ^INCLUDE:jenkins/configs/includes/PlantContainer_PR.yaml<execOrder=${++order}, uc1=^YAML:uc1;, uc2=^YAML:uc2;>;
+
+  - label: L4_Prem_C0
+    executionOrder: 1
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM.yaml<execOrder=${order=0}>;
+    - ^INCLUDE:jenkins/configs/includes/Unstash.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/CheckoutRBS.yaml<execOrder=${++order}, hw=C0>;
+    - ^INCLUDE:jenkins/configs/includes/SoftIntTest.yaml<execOrder=${++order}, hw=^YAML:testHwU;, st = ^YAML:testStU;, filter=^YAML:filter;,tm=^YAML:test_mode;, ar=C0>;
+
+  - label: L4_Prem_C1
+    executionOrder: 1
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM.yaml<execOrder=${order=0}>;
+    - ^INCLUDE:jenkins/configs/includes/Unstash.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/CheckoutRBS.yaml<execOrder=${++order}, hw=C1>;
+    - ^INCLUDE:jenkins/configs/includes/SoftIntTestRBS.yaml<execOrder=${++order}, hw=^YAML:testHwU;, st = ^YAML:testStU_C1;, filter=^YAML:filter;,tm=^YAML:test_mode;, ar=C1>;

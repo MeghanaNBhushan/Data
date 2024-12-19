@@ -1,0 +1,24 @@
+{
+  "argparser": {
+    "root": {
+      "description": "Merges given reports (qacli-views) and add the sources were the violations were found."
+    }
+  },
+  "parameters": {
+    "UNIFY_REPORT_OUTPUT": {
+      "cli_option_short": "uro",
+      "description": "Absolute or relative path to the merged reports output file.",
+      "mandatory": true
+    },
+    "UNIFY_REPORT_TYPE": {
+      "cli_option_short": "urt",
+      "description": "Either 'qac' or 'coverity' defining which kind of reports shall be merged",
+      "mandatory": true
+    },
+    "UNIFY_REPORT_VARIANT_INPUT": {
+      "cli_option_short": "urvi",
+      "description": "List of absolute or relative paths to input reports files (qacli views), which shall be merged and their source information shall be added. Absolute or relative path of file cotaining a list of input report files.",
+      "mandatory": true
+    }
+  }
+}

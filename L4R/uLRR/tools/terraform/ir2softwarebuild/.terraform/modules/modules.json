@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"linux_vmss","Source":"./modules/linux_vmss","Dir":"modules/linux_vmss"},{"Key":"win_vmss","Source":"./modules/win_vmss","Dir":"modules/win_vmss"}]}

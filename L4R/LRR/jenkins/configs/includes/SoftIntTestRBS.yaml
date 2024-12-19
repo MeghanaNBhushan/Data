@@ -1,0 +1,21 @@
+    - name: Software Integration Tests ^TPL:hw;
+      executionOrder: ^TPL:execOrder;     
+      steps:
+      - cmd: ExecuteAutomatedTestsWithHwSelection.bat -hw ^TPL:hw; -st ^TPL:st; -filter "^TPL:filter;" "^TPL:tm;"
+        fromPath: ./ad_radar_apl/tools/AutomatedTests
+        name: SWTests_^TPL:hw;
+      archive:
+      - backend: share
+        fromPath: ./generatedFiles/smokeTests
+        includes: "*.*" 
+        afterFail: true
+        zip: true
+        zipName: SoftIntTest_^TPL:hw;_^TPL:ar;
+      postFail:
+      - cmd: python BuildStatusRBS.py -s "FAILED" -bn ^ENV:BUILD_NUMBER; -hw ^TPL:ar;
+        fromPath: ./jenkins/scripts
+        name: TransmitBuildStatus
+      postSuccess:
+      - cmd: python BuildStatusRBS.py -s "SUCCESSFUL" -bn ^ENV:BUILD_NUMBER; -hw ^TPL:ar;
+        fromPath: ./jenkins/scripts
+        name: TransmitBuildStatus

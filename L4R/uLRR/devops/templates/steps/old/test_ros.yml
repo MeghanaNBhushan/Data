@@ -1,0 +1,10 @@
+steps:
+  - task: PythonScript@0
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath:  $(Pipeline.Workspace)/s/devops/scripts/python/qemu-ros-test.py
+      arguments: $(Pipeline.Workspace)/s/software/zcu-102/ /petalinux/2021.2/
+      pythonInterpreter: /usr/bin/python3.8
+      #workingDirectory: # Optional
+      failOnStderr: true
+    displayName: QEMU test ROS

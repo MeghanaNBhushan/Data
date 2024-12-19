@@ -1,0 +1,8 @@
+project=aos
+os_type=neutrino
+target_type=armv8
+build_type=debug
+middleware_instance=te0950_neutrino
+suppress_warnings=false
+skip_unit_tests=false
+aos_version=default

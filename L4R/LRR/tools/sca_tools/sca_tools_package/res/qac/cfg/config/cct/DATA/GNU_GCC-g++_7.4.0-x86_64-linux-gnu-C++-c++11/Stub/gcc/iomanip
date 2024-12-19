@@ -1,0 +1,43 @@
+// iomanip
+//
+
+#ifndef INCLUDED_PRLGCC_IOMANIP
+#define INCLUDED_PRLGCC_IOMANIP
+
+#include <bits/prlgcc_c++config.h>
+
+#if defined (__PRL_GLIBCXX__)
+
+#  if (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 5)
+
+#    include <4.5/iomanip>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 6)
+
+#    include <4.6/iomanip>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 7)
+
+#    include <4.7/iomanip>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 8)
+
+#    include <4.8/iomanip>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 9)
+
+#    include <4.9/iomanip>
+
+#  else
+
+#    include_next <iomanip>
+
+#  endif
+
+#else
+
+#  include_next <iomanip>
+
+#endif
+
+#endif

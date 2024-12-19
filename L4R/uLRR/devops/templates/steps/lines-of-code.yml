@@ -1,0 +1,35 @@
+parameters:
+- name: component_dir
+  type: string
+  default: "aos build_utils business_logic"
+
+steps:
+  - bash: |
+      set -e
+
+      if [[ "${{ parameters.component_dir }}" == "aos build_utils business_logic" ]]; then
+        echo "Counting Lines of code for A-core....."
+      elif [[ "${{ parameters.component_dir }}" == "os" ]]; then
+        echo "Counting Lines of code for Debian......"
+      else
+        echo "Unsupported directory for CLOC...."
+      fi
+      cd devops/scripts/cloc
+      chmod a+x cloc.sh && ./cloc.sh ../../.. ${{ parameters.component_dir }}
+      if [[ -f "$(Build.SourcesDirectory)/TestResults/LinesofCode/TotalText_Report_Lang.txt" ]] && [[ -f "$(Build.SourcesDirectory)/TestResults/LinesofCode/TotalText_Report_File.txt" ]]; then
+        echo "##vso[task.setvariable variable=filepath;isOutput=true]$(Build.SourcesDirectory)/TestResults"
+        echo "##vso[task.setvariable variable=filename;isOutput=true]LinesofCode"
+        echo "##vso[task.setvariable variable=loc_artifactname;isOutput=true]Report-Lines-of-code-analysis"
+ 
+        echo "##vso[task.setvariable variable=loc_Reports_result]Succeeded"
+      else
+        echo "##vso[task.setvariable variable=loc_Reports_result]Failed"
+        echo "error: LOC Execution Failed, It did not generate expected artifact"
+      fi
+    name: LOCStep
+    displayName: Execution of CLOC
+
+  - publish: $(LOCStep.filepath)/$(LOCStep.filename)/
+    artifact: $(LOCStep.loc_artifactname)
+    displayName: Publish LOC reports (lang-based)
+    condition: eq(variables['loc_Reports_result'], 'Succeeded')	

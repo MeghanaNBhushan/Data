@@ -1,0 +1,110 @@
+{
+    "build_info": {
+        "reused_sw": {
+            "bootmanager": {
+                "description": "description",
+                "filename": "Bootmanager.pdf",
+                "link": "../../../supplier_docu/SW/",
+                "validation": "",
+                "value": "V8.1.2"
+            },
+            "dsp": {
+                "description": "description",
+                "filename": "Release_Note_for_PJRC-2205.4.pdf",
+                "link": "../../../supplier_docu/SW/",
+                "validation": "",
+                "value": "PJRC_2205.4"
+            },
+            "fbl": {
+                "description": "description",
+                "filename": "Generic_LRR_FBL_ReleaseNote_V1p1p0.pdf",
+                "link": "../../../supplier_docu/SW/",
+                "validation": "",
+                "value": "V1.1.0"
+            },
+            "hsm": {
+                "description": "description",
+                "filename": "Release_Note_for_PJIF_Foxtrot-15.pdf",
+                "link": "../../../supplier_docu/SW/",
+                "validation": "",
+                "value": "HSM_7_4_R1_VMS_2_0_1"
+            },
+            "pjif": {
+                "description": "description",
+                "filename": "Release_Note_for_PJIF_Foxtrot-15.pdf",
+                "link": "../../../supplier_docu/SW/",
+                "validation": "",
+                "value": "PJIF_Foxtrot-15_Radar"
+            },
+            "stil": {
+                "description": "description",
+                "filename": "not available",
+                "validation": "",
+                "value": null
+            }
+        },
+        "sw_build": {
+            "git_commit": {
+                "description": "description",
+                "link": "https://sourcecode01.de.bosch.com/projects/ARAS/repos/aras/commits/bfb43600ec02f6b39571f26b8035796688ec768a",
+                "validation": "",
+                "value": "bfb43600ec02f6b39571f26b8035796688ec768a"
+            },
+            "git_tag": {
+                "description": "description",
+                "validation": "",
+                "value": "LRR_LGU_PF_V9.0.0_rc1"
+            }
+        }
+    },
+    "general_info": {
+        "customer_release_category": {
+            "description": "description",
+            "validation": "",
+            "value": "N/A"
+        },
+        "homologation_table": {
+            "description": "description",
+            "link": "https://inside-share-hosted-apps.bosch.com/DMS/GetDocumentService/Document.svc/GetDocumentURL?documentID=P12S103859-1225618777-20642",
+            "validation": "",
+            "value": "homologation table"
+        },
+        "predecessor_baseline": {
+            "description": "description",
+            "link": " https://inside-share-hosted-apps.bosch.com/DMS/GetDocumentService/Document.svc/GetDocumentURL?documentID=P12S147629-1956972250-182[link]",
+            "validation": "",
+            "value": "LRR_LGU_PF_V8.0.0"
+        },
+        "product": {
+            "description": "description",
+            "validation": "",
+            "value": "FR5CU (Far Range Radar Gen5), LRR"
+        },
+        "project": {
+            "description": "description",
+            "validation": "",
+            "value": "FR5CU LGU Platform"
+        },
+        "release_baseline": {
+            "description": "description",
+            "link": " https://inside-share-hosted-apps.bosch.com/DMS/GetDocumentService/Document.svc/GetDocumentURL?documentID=P12S147629-1956972250-182[Link]",
+            "validation": "",
+            "value": "LRR_LGU_PF_V9.0.0"
+        },
+        "release_category": {
+            "description": "description",
+            "validation": "",
+            "value": "*Cat. 2*: Special use case a) for A to C samples delivered to customer and used on public streets / test tracks with safety measures ensured by customer to block sensor signals from vehicle bus."
+        },
+        "safety_level": {
+            "description": "description",
+            "validation": "",
+            "value": "QM "
+        },
+        "vehicle": {
+            "description": "description",
+            "validation": "",
+            "value": "Passenger car / truck to be defined by customer"
+        }
+    }
+}

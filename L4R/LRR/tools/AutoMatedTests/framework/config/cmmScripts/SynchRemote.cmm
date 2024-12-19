@@ -1,0 +1,47 @@
+PRINT "entered script '", OS.PPF()
+PRINT ""
+
+PRINT "SYNCH settings"
+
+LOCAL &portMasterGui &portSlaveGui &MyPort &ConnectToPort
+GLOBAL &IntercomMaster
+
+SYnch.RESet
+
+&portMasterGui=10005.
+&portSlaveGui=&portMasterGui+2
+
+;&MyPort=FORMAT.Decimal(1.,INTERCOM.PORT())
+&MyPort=INTERCOM.PORT()
+
+IF (&MyPort==&portMasterGui)
+(
+  &IntercomMaster=1.
+  PRINT "MasterGUI: " &portMasterGui
+  &ConnectToPort=&portSlaveGui
+)
+ELSE
+(
+  &IntercomMaster=0.
+  PRINT "SlaveGUI: " &portSlaveGui
+  &ConnectToPort=&portMasterGui
+)
+
+PRINT "MyPort: " &MyPort
+PRINT "connect to Port: " &ConnectToPort
+
+SYnch.Connect
+
+SYnch.ON
+;&ConnectToPort=FORMAT.Decimal(1.,&ConnectToPort)
+SYnch.Connect &ConnectToPort
+
+SYnch.MasterGo ON
+SYnch.MasterBreak ON
+SYnch.MasterStep ON
+SYnch.MasterSystemMode ON
+
+SYnch.SlaveGo ON
+SYnch.SlaveBreak ON
+SYnch.SlaveStep ON
+SYnch.SlaveSystemMode ON

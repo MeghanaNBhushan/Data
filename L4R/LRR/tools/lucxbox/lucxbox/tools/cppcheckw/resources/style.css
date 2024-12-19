@@ -1,0 +1,137 @@
+
+body {
+    font: 13px Arial, Verdana, Sans-Serif;
+    margin: 0;
+    width: auto;
+}
+
+h1 {
+    margin: 10px;
+}
+
+#footer > p {
+    margin: 4px;
+}
+
+
+.error {
+    background-color: #ffb7b7;
+}
+
+.error2 {
+    background-color: #faa;
+    border: 1px dotted black;
+    display: inline-block;
+    margin-left: 4px;
+}
+
+.inconclusive {
+    background-color: #B6B6B4;
+}
+
+.inconclusive2 {
+    background-color: #B6B6B4;
+    border: 1px dotted black;
+    display: inline-block;
+    margin-left: 4px;
+}
+
+div.verbose {
+    display: inline-block;
+    vertical-align: top;
+    cursor: help;
+}
+
+div.verbose div.content {
+    display: none;
+    position: absolute;
+    padding: 10px;
+    margin: 4px;
+    max-width: 40%;
+    white-space: pre-wrap;
+    border: 1px solid black;
+    background-color: #FFFFCC;
+    cursor: auto;
+}
+
+.highlight .hll {
+    padding: 1px;
+}
+
+#header {
+    border-bottom: thin solid #aaa;
+	position: fixed;
+	top: 0px;
+	z-index: 100;
+	width: 100%;
+	background-color:white;
+}
+
+#menu {
+    text-align: left;
+    max-width: 17%;
+	width: 17%;
+    overflow: auto;
+    z-index: 10;
+	position: fixed;
+	left: 0px;
+	bottom: 5px;
+	top: 0px;
+	margin-top: 60px;
+	margin-left:5px;
+	background-color: white;
+}
+
+#menu > a {
+    display: block;
+    margin-left: 10px;
+    font: 12px;
+    z-index: 10;
+}
+
+#filename  {
+    margin-left: 10px;
+    font: 12px;
+    z-index: 10;
+}
+
+.highlighttable {
+    background-color:white;
+    z-index: 1;
+    position: relative;
+    margin: -10 px;
+}
+
+.indextable {
+    table-layout: auto;
+    z-index: 1;
+}
+
+#content {
+    background-color: white;
+    box-sizing: content-box;
+    margin: 5px;
+    margin-left: 17%;
+    padding: 0 10px 10px 10px;
+    width: 90%;
+	margin-top: 60px;
+}
+
+.linenos {
+    border-right: thin solid #aaa;
+    color: lightgray;
+    padding-right: 6px;
+}
+
+#footer {
+    border-top: thin solid #aaa;
+    clear: both;
+    font-size: 90%;
+    margin-top: 5px;
+	margin-left:20%;
+}
+
+#footer ul {
+    list-style-type: none;
+    padding-left: 0;
+}

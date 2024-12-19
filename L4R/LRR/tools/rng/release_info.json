@@ -1,0 +1,113 @@
+{
+    "documents": {
+        "hw_release_note1": {
+            "description": "none",
+            "filename": "GEN5_21014_HWRelNote_FR5CU_C0_MT ",
+            "link": "../../../supplier_docu/HW/",
+            "validation": ""
+        },
+        "hw_release_note2": {
+            "description": "none",
+            "filename": "GEN5_21089_HWRelNote_FR5CU_C1_1.1",
+            "link": "../../../supplier_docu/HW/",
+            "validation": ""
+        },
+        "lgp_specification": {
+            "description": "description",
+            "filename": "Bosch_Location_Gateway_Protocol.pdf",
+            "link": "../../../documentation/radar_lgp_def/",
+            "validation": ""
+        },
+        "system_integration_guideline": {
+            "description": "description",
+            "filename": "FR5CU_LGU_Platform_Systemintegration_Guideline_LRR_LGU_PF_V9.0.0.pdf",
+            "link": "../../../documentation/",
+            "validation": ""
+        },
+        "test_summary_report": {
+            "description": " Name / Version / Date",
+            "filename": "ATR_Test_Summary_Report_v9.0.0.pdf",
+            "link": "../../../test_reports_manual/",
+            "validation": ""
+        },
+        "variant_handling": {
+            "description": "description",
+            "filename": "Bosch_Variant_Handling.pdf",
+            "link": "../../../documentation/radar_variant_handling/",
+            "validation": ""
+        },
+        "Customer_Diagnostic_Specification_Document": {
+            "description": "description",
+            "filename": "Customer_Diagnostic_Specification_Document.pdf",
+            "link": "../../../documentation/Customer_Diagnostic_Specification/",
+            "validation": ""
+        },
+        "DiaTesterTool_how_to": {
+            "description": "description",
+            "filename": "DiaTesterTool_how-to.pdf",
+            "link": "../../../documentation/DiaTesterTool_how-to/",
+            "validation": ""
+        }
+    },
+    "oss": {
+        "atr": {
+            "description": "description",
+            "link": "../../../oss",
+            "validation": ""
+        },
+        "pjif": {
+            "description": "description",
+            "link": "../../../oss",
+            "validation": ""
+        },
+        "pjrc": {
+            "description": "description",
+            "link": "../../../oss",
+            "validation": ""
+        },
+        "ros": {
+            "description": "description",
+            "link": "../../../oss",
+            "validation": ""
+        }
+    },
+    "other_items": {
+        "diatester_python": {
+            "description": "description",
+            "validation": "",
+            "value": "../../../tools/DiaTester"
+        },
+        "measurement_technique": {
+            "description": "description",
+            "validation": "",
+            "value": "../../../measurement/Canape"
+        },
+        "restbus": {
+            "description": "description",
+            "validation": "",
+            "value": "../../../measurement/Canoe"
+        },
+        "ros_decoder": {
+            "description": "description",
+            "validation": "",
+            "value": "../../../tools/ROS4LGP"
+        },
+        "vflash": {
+            "description": "description",
+            "validation": "",
+            "value": "../../../tools/VFlash"
+        }
+    },
+    "release_info": {
+        "sw_container_no": {
+            "description": "description",
+            "validation": "",
+            "value": "uc1:1037610176 / uc2: 1037610177 "
+        },
+        "sw_customer_version": {
+            "description": "description",
+            "validation": "",
+            "value": "same as System Release Version"
+        }
+    }
+}

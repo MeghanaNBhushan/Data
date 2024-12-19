@@ -1,0 +1,15 @@
+    - name: MergedHex_^TPL:hw;
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: python AutomatedMergedHex.py -uC1 Radar_^TPL:uc1; -uC2 Radar_^TPL:uc2;
+        fromPath: ./ad_radar_apl/tools/GenVirtualHexFileFBL/
+        name: MergedHex_^TPL:hw;
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\SW_build
+        fromPath: ./ad_radar_apl/tools/GenVirtualHexFileFBL/
+        includes: "*.crc, *.hex"
+        afterFail: false
+        zip: true
+        zipName: Merged_Hex
+

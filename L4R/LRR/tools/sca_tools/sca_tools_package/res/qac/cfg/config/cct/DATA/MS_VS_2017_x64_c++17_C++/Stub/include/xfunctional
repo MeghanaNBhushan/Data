@@ -1,0 +1,13 @@
+#ifndef RC_INVOKED
+#include <cstdlib>
+#include <xstring>
+#include <xstddef>
+#endif
+
+// undef _M_IX86 to prevent definitions with multiple calling conventions
+#pragma push_macro("_M_IX86")
+#undef _M_IX86
+
+#include_next <xfunctional>
+
+#pragma pop_macro("_M_IX86")

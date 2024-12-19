@@ -1,0 +1,65 @@
+    - name: QAC warning analysis
+      executionOrder: ^TPL:execOrder;
+      failAbortsPipeline: false
+      steps:
+      - cmd: qac.bat ^TPL:uc1; 1
+        fromPath: ad_radar_apl/tools/sca_tools/qac
+        name: QAC_Creat_uC1
+      - cmd: qac.bat ^TPL:uc2; 1
+        fromPath: ad_radar_apl/tools/sca_tools/qac
+        name: QAC_Creat_uC2
+        
+      - cmd: qac.bat ^TPL:uc1; 7
+        fromPath: ad_radar_apl/tools/sca_tools/qac
+        name: QAC_Analyse_uC1
+      - cmd: qac.bat ^TPL:uc2; 7
+        fromPath: ad_radar_apl/tools/sca_tools/qac
+        name: QAC_Analyse_uC2
+        
+      - cmd: qac.bat ^TPL:uc1; 3
+        fromPath: ad_radar_apl/tools/sca_tools/qac
+        name: QAC_State_uC1
+      - cmd: qac.bat ^TPL:uc2; 3
+        fromPath: ad_radar_apl/tools/sca_tools/qac
+        name: QAC_State_uC2
+
+      - cmd: qac.bat ^TPL:uc1; 8
+        fromPath: ad_radar_apl/tools/sca_tools/qac
+        name: QAC_Splunk_copy_uC1
+      - cmd: qac.bat ^TPL:uc2; 8
+        fromPath: ad_radar_apl/tools/sca_tools/qac
+        name: QAC_Splunk_copy_uC2
+      
+      - cmd: qac.bat Total_FR5CU 9
+        fromPath: ad_radar_apl/tools/sca_tools/qac
+        name: QAC_Total_FR5CU_Splunk_copy
+
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Quality_reports\QAC_reports\^TPL:uc1;
+        fromPath: generatedFiles\qac_report\^TPL:uc1;\sca_tools\export
+        includes: "qacli*.csv" 
+        afterFail: true
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Quality_reports\QAC_reports\^TPL:uc2;
+        fromPath: generatedFiles\qac_report\^TPL:uc2;\sca_tools\export
+        includes: "qacli*.csv" 
+        afterFail: true
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Quality_reports\QAC_reports\Total_FR5CU
+        fromPath: generatedFiles\qac_report\Total_FR5CU
+        includes: "qacli*.csv" 
+        afterFail: true
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\QAC_baseline\^TPL:uc1;
+        fromPath: generatedFiles\qac_report\^TPL:uc1;\sca_tools\export\baseline
+        includes: "files.sup" 
+        afterFail: true
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\QAC_baseline\^TPL:uc2;
+        fromPath: generatedFiles\qac_report\^TPL:uc2;\sca_tools\export\baseline
+        includes: "files.sup" 
+        afterFail: true
+
+
+

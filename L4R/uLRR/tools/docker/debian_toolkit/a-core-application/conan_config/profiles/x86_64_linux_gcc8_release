@@ -1,0 +1,4 @@
+include(x86_64_linux_gcc8_debug)
+
+[settings]
+build_type=Release

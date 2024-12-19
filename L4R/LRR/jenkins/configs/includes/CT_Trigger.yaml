@@ -1,0 +1,14 @@
+    - name: Trigger CT ^TPL:variant;
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - call: JobRunner.triggerJob
+        name: ATR/SYS_TEST/CT_full_pipeline
+        wait: true
+        stringParams:
+        - name: PR_PATH
+          value: ^ENV:LUCX_JOB_NAME_WINDOWS;\\^ENV:BUILD_NUMBER;
+        - name: HW_VARIANT
+          value: ^TPL:variant;_^TPL:hw;
+        boolParams:
+        - name: Release
+          value: ^TPL:release;

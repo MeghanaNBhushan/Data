@@ -1,0 +1,20 @@
+    - name: MT update ^TPL:variant;
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: gen_ini_^TPL:variant;.bat ^TPL:ROOT_DIR; ^TPL:VAR1; ^TPL:VAR2;
+        fromPath: ad_radar_apl/tools/scripts/MTUpdate
+        name: gen_ini_^TPL:variant;
+      - cmd: makeMyCNA_Jenkins.bat ^TPL:variant;
+        fromPath: ad_radar_apl/tools/scripts/MTUpdate
+        name: MT_update_^TPL:variant;
+      - cmd: copy_MT.bat ^TPL:variant;
+        fromPath: ad_radar_apl/tools/scripts/MTUpdate
+        name: MT_copy_^TPL:variant;
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\MT_Update
+        fromPath: athena_mt\RadarFC\^TPL:variant;\measurement
+        includes: "Canape/**, database/**"
+        afterFail: false
+        zip: true
+        zipName: MT_Update_^TPL:variant;

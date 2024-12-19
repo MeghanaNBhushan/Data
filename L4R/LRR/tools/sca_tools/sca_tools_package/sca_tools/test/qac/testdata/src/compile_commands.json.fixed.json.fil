@@ -1,0 +1,11 @@
+[
+    {
+        "command": "C:\PROGRA~2\MICROS~1.0\VC\bin\amd64\cl.exe  \nologo \TP   \DWIN32 \D_WINDOWS \W3 \GR \EHsc \MDd \Zi \Ob0 \Od \RTC1   \FoCMakeFiles\app.dir\fileA.obj \FdCMakeFiles\app.dir\ \FS -c D:\PRQA\prqa_qaf\prqa_qaf\3rdpartytools\qac_helper\test\testdata\src\fileA.cpp",
+        "directory": "D:\PRQA\prqa_qaf\prqa_qaf\3rdpartytools\qac_helper\test_src\build_commands",
+        "file": "D:\PRQA\prqa_qaf\prqa_qaf\3rdpartytools\qac_helper\test\testdata\src\fileA.cpp"
+    },
+    {
+        "directory": "D:\PRQA\prqa_qaf\prqa_qaf\3rdpartytools\qac_helper\test_src\build_commands",
+        "file": "D:\PRQA\prqa_qaf\prqa_qaf\3rdpartytools\qac_helper\test\testdata\src\fileB.cpp"
+    }
+]

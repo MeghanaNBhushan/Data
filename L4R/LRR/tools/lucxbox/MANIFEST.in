@@ -1,0 +1,8 @@
+include CHANGELOG.md
+include CODEOWNERS
+include LICENSE
+include README.md
+include lucxbox/tools/cppcheckw/standard_config.ini
+include lucxbox/tools/cantataw/schema/v0.1.json
+
+graft docs

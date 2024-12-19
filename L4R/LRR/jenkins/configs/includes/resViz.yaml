@@ -1,0 +1,22 @@
+    - executionOrder: ^TPL:execOrder;
+      skipIfOnlyFilesChanged:
+      - ^INCLUDE:jenkins/configs/includes/skipFilesChangedListAutomatedTest.yaml;
+      - ^INCLUDE:jenkins/configs/includes/skipFilesChangedListDoxygen.yaml;
+      name: resViz 
+      failAbortsPipeline: true
+      steps:
+      - name: resViz Radar_^TPL:uc1;
+        cmd : python ad_radar_apl\tools\resViz\resviz.py --mapfile "generatedFiles\Radar_^TPL:uc1;\Radar_^TPL:uc1;.map" --projectconfig ad_radar_apl\tools\resViz\uc1\config\UC1_project_cfg.json --memconfig ad_radar_apl\tools\resViz\uc1\config\UC1_mem_cfg.txt --output generatedFiles\resviz_test_uC1.xlsx --logfile generatedFiles\resviz_test_uC1.log --budgetviolationreport generatedFiles\resviz_test_bv_uC1.yml
+        fromPath: ./
+
+      - name: resViz Radar_^TPL:uc2;
+        cmd : python ad_radar_apl\tools\resViz\resviz.py --mapfile "generatedFiles\Radar_^TPL:uc2;\Radar_^TPL:uc2;.map" --projectconfig ad_radar_apl\tools\resViz\uc2\config\UC2_project_cfg.json --memconfig ad_radar_apl\tools\resViz\uc2\config\UC2_mem_cfg.txt --output generatedFiles\resviz_test_uC2.xlsx --logfile generatedFiles\resviz_test_uC2.log --budgetviolationreport generatedFiles\resviz_test_bv_uC2.yml
+        fromPath: ./
+
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\resViz
+        fromPath: ./generatedFiles/
+        includes: "resviz_test_uC1.xlsx, resviz_test_uC1.log, resviz_test_bv_uC1.yml, resviz_test_uC2.xlsx, resviz_test_uC2.log, resviz_test_bv_uC2.yml"
+        afterFail: true
+        zip: false

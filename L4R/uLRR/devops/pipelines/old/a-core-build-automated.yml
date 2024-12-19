@@ -1,0 +1,190 @@
+trigger: none
+   
+pr:
+  autoCancel: true
+  branches:
+    include:
+      - master
+      - develop
+  drafts: false
+
+variables:
+- name: BRANCH_NAME
+  value: $(System.PullRequest.SourceBranch)
+- name: COMMIT_ID 
+  value: $(system.pullRequest.sourceCommitId)
+
+
+stages:
+- stage: FileDifference
+  jobs:
+  - job: FileDifferenceCheck
+    pool: berlin-d2sv3-vmss
+    steps:
+    - checkout: self  
+      lfs: true
+    - bash: |
+          CHANGED_FILES=$(git diff origin/$(BRANCH_NAME) origin/master --name-only)
+          echo "###############################################################"
+          echo "##  Changed files found                                      ##"
+          echo "###############################################################"
+          printf '%s\n' "${CHANGED_FILES[@]}"
+          echo "###############################################################"
+          declare -a STAGES=("PETALINUXCONTAINER" "BASEIMAGE")
+          declare -a PETALINUXCONTAINER=(\
+                        "tools/docker/petalinux_toolkit/baseimage/Dockerfile" \
+                        "tools/devops/templates/steps/petalinux-container-build.yml")
+          declare -a BASEIMAGE=(\
+                        "software/zcu-102" \
+                        "tools/docker/petalinux_toolkit/application/Dockerfile" \
+                        "tools/devops/templates/steps/base-image-build.yml" \
+                        "tools/devops/templates/steps/apppackage-container-build.yml")
+
+          echo -e "\nStart search for matches:\n"
+          for STAGE in ${STAGES[@]}; do
+              declare -n POINTER=$STAGE  # now $POINTER is a pointer to a current stage varable
+              echo "Working on stage: $STAGE"
+              for PATH in ${POINTER[@]}; do
+                  echo "Search path is set to: '$PATH'"
+                  for FILE in $CHANGED_FILES; do
+                      if [[ $FILE =~ $PATH ]]; then
+                        echo "-> Found match '$FILE' has changed!"
+                        echo "Stage $STAGE will be executed in this pipeline run"
+                        echo "##vso[task.setvariable variable=$STAGE;isOutput=true]true"
+                      fi
+                  done
+              done
+          done
+      name: CheckingChangedFiles
+      displayName: Checking changed files
+- stage: PetalinuxContainer
+  condition: eq(dependencies.FileDifference.outputs['FileDifferenceCheck.CheckingChangedFiles.PETALINUXCONTAINER'],true)
+  variables:
+  - group: swbuildst-credentials
+  - group: artifactory-credentials
+  jobs:
+  - job: PetalinuxContainerBuild
+    pool: berlin-d2sv3-vmss 
+    timeoutInMinutes: 0 
+    cancelTimeoutInMinutes: 35790
+    steps:
+    - checkout: self  
+      lfs: true
+    - template: /devops/templates/steps/mount-storage-account.yml
+      parameters:
+        sa_user_name: $(swbuildst-user)
+        sa_user_password: $(swbuildst-password)
+        sa_uri: //swbuildst.file.core.windows.net/peta-transfer
+        mountdir: /mnt/peta-transfer
+    - template: /devops/templates/steps/docker-login.yml
+      parameters:
+        user: $(devops-artifactory-access-user)
+        token: $(devops-artifactory-access-token)
+    - template: /devops/templates/steps/petalinux-container-build.yml
+
+- stage: BaseImage
+  condition: |
+      or
+      (
+        in
+        (
+          dependencies.PetalinuxContainer.result, 'Succeeded'
+        ), 
+        and
+        (
+          in(dependencies.PetalinuxContainer.result, 'Skipped'), 
+          eq(dependencies.FileDifference.outputs['FileDifferenceCheck.CheckingChangedFiles.BASEIMAGE'],true)
+        )
+      )
+  variables:
+  - group: swbuildst-credentials
+  - group: artifactory-credentials
+  jobs:
+  - job: BaseImageBuild 
+    pool: munich-d16asv5-vmss
+    timeoutInMinutes: 0 
+    cancelTimeoutInMinutes: 35790
+    steps:
+    - checkout: self  
+      lfs: true
+    - template: /devops/templates/steps/mount-storage-account.yml
+      parameters:
+        sa_user_name: $(swbuildst-user)
+        sa_user_password: $(swbuildst-password)
+        sa_uri: //swbuildst.file.core.windows.net/sstate-cache-petalinux-2021dot2
+        mountdir: /mnt/sstate-cache-petalinux-2021dot2
+    - template: /devops/templates/steps/mount-storage-account.yml
+      parameters:
+        sa_user_name: $(swbuildst-user)
+        sa_user_password: $(swbuildst-password)
+        sa_uri: //swbuildst.file.core.windows.net/downloads-petalinux-2021dot2
+        mountdir: /mnt/downloads-petalinux-2021dot2
+    - template: /devops/templates/steps/docker-login.yml
+      parameters:
+        user: $(devops-artifactory-access-user)
+        token: $(devops-artifactory-access-token)
+    - template: /devops/templates/steps/base-image-build.yml
+    - template: /devops/templates/steps/apppackage-container-build.yml
+    - bash: |
+        echo "##vso[task.setvariable variable=EXECUTED;isOutput=true]true"
+      name: BaseImageStage
+      displayName: Saving execution state of base image stage
+- stage: Application
+  condition: in(dependencies.BaseImage.result, 'Skipped', 'Succeeded')
+  variables:
+  - group: artifactory-credentials
+  - name: PreviousStageExecuted
+    value: $[ stageDependencies.BaseImage.BaseImageBuild.outputs['BaseImageStage.EXECUTED'] ]
+  jobs:
+  - job: RCoreBuild
+    pool: seattle-d2sv3-vmss
+    steps:
+      - template: /devops/templates/steps/r-core-build.yml
+
+  - job: ApplicationBuild
+    dependsOn: RCoreBuild
+    pool: munich-d16asv5-vmss
+    timeoutInMinutes: 0 
+    cancelTimeoutInMinutes: 35790 
+    steps:
+    - checkout: self  
+      lfs: true
+    - template: /devops/templates/steps/docker-login.yml
+      parameters:
+        user: $(devops-artifactory-access-user)
+        token: $(devops-artifactory-access-token)
+    - template: /devops/templates/steps/apppackage-fusion.yml
+  - job: UnitTesting
+    pool: berlin-d2sv3-vmss 
+    timeoutInMinutes: 0 
+    cancelTimeoutInMinutes: 35790
+    steps:
+    - checkout: self  
+      lfs: true
+    - template: /devops/templates/steps/docker-login.yml
+      parameters:
+        user: $(devops-artifactory-access-user)
+        token: $(devops-artifactory-access-token)
+    - template: /devops/templates/steps/gtest-on-host.yml
+    - template: /devops/templates/steps/lines-of-code.yml
+
+# - stage: Flash
+#   condition: in(dependencies.Application.result, 'Succeeded')
+#   jobs:
+#     - template: /devops/templates/jobs/flash.yml
+#       parameters:
+#         pool: local-test-benches
+#         agent: LR-Z6021
+
+# - stage: DebianAppInstall
+#   condition: in(dependencies.Flash.result, 'Succeeded')
+#   jobs:
+#   - job: AD_RADARSensorApp_DebInstall 
+#     timeoutInMinutes: 0 
+#     cancelTimeoutInMinutes: 35790 
+#     pool: 
+#       name: local-test-benches
+#       demands:
+#         - Agent.name -equals LR-Z6021
+#     steps:
+#     - template: /devops/templates/steps/ad-radar-sensor-app-deb-install.yml

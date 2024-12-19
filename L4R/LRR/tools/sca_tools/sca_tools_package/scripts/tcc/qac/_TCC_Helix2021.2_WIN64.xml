@@ -1,0 +1,17 @@
+<ToolCollection>
+  <ToolCollectionName>helix</ToolCollectionName>
+  <Responsible>CC-ADPJ-DoitSoftwareQualityTeam@bcn.bosch.com</Responsible>
+  <Version>2021.2</Version>
+  <Date>2021-07-15</Date>
+  <!-- optional field to define where to search zip files for a tool. relative to ito. Nothing will be unzipped if this value is missing -->
+  <ZipDirectory>TCC\ZippedTools</ZipDirectory>
+  <!-- directory where to create the indicator files-->
+  <IndicatorDirectory>TCC</IndicatorDirectory>
+  <Tools>
+    <Tool>
+      <ToolName>helix_qac</ToolName>
+      <SourcePath>TCC\Tools\helix_qac\2021.2_WIN64</SourcePath>
+      <Mirror>No</Mirror>
+    </Tool>
+  </Tools>
+</ToolCollection>

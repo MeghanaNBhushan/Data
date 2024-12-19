@@ -1,0 +1,14 @@
+    - name: LOC Check 
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: cLoc.bat
+        fromPath: ad_radar_apl/tools/scripts/LinesofCode
+        name: LOC_Radar
+      archive:
+      - backend: share
+        fromPath: ./generatedFiles/SWQualityReports/CountLinesofCode_report
+        includes: "*.*"
+        afterFail: false
+        zip: true
+        zipName: Linesofcode
+

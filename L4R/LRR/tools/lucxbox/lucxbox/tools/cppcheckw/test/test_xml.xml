@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<results version="2">
+    <cppcheck version="1.88"/>
+
+    <errors>
+        <error id="arrayIndexOutOfBounds" severity="error" msg="Array &apos;arr[5]&apos; accessed at index 10, which is out of bounds."
+               verbose="Array &apos;arr[5]&apos; accessed at index 10, which is out of bounds." cwe="788">
+            <location file0="cppExample.c" file="cppExample.c" line="39" info="Array index out of bounds"/>
+        </error>
+
+        <error id="nullPointerRedundantCheck" severity="warning"
+               msg="Either the condition &apos;if(p)&apos; is redundant or there is possible null pointer dereference: p."
+               verbose="Either the condition &apos;if(p)&apos; is redundant or there is possible null pointer dereference: p." cwe="476">
+            <location file0="cppExample.c" file="cppExample.c" line="4" info="Null pointer dereference"/>
+            <location file0="cppExample.c" file="cppExample.c" line="5" info="Assuming that condition &apos;if(p)&apos; is not redundant"/>
+            <symbol>p</symbol>
+        </error>
+
+        <error id="nullPointer" severity="warning" msg="Possible null pointer dereference: p" verbose="Possible null pointer dereference: p"
+               cwe="476">
+            <location file0="cppExample.c" file="cppExample.c" line="23" info="Null pointer dereference"/>
+            <location file0="cppExample.c" file="cppExample.c" line="11" info="Assignment &apos;p=NULL&apos;, assigned value is 0"/>
+            <symbol>p</symbol>
+        </error>
+
+        <error id="nullPointer" severity="warning" msg="Possible null pointer dereference: p" verbose="Possible null pointer dereference: p"
+               cwe="476">
+            <location file0="cppExample.c" file="cppExample.c" line="33" info="Null pointer dereference"/>
+            <location file0="cppExample.c" file="cppExample.c" line="28" info="Assignment &apos;p=NULL&apos;, assigned value is 0"/>
+            <symbol>p</symbol>
+        </error>
+
+        <error id="unreadVariable" severity="style" msg="Variable &apos;arr[10]&apos; is assigned a value that is never used."
+               verbose="Variable &apos;arr[10]&apos; is assigned a value that is never used." cwe="563">
+            <location file0="cppExample.c" file="cppExample.c" line="39"/>
+            <symbol>arr[10]</symbol>
+        </error>
+
+        <error id="unreadVariable" severity="style" msg="Variable &apos;ok&apos; is assigned a value that is never used."
+               verbose="Variable &apos;ok&apos; is assigned a value that is never used." cwe="563">
+            <location file0="cppExample.c" file="cppExample.c" line="42"/>
+            <symbol>ok</symbol>
+        </error>
+
+        <error id="unusedFunction" severity="style" msg="The function &apos;f1&apos; is never used."
+               verbose="The function &apos;f1&apos; is never used." cwe="561">
+            <location file="cppExample.c" line="1"/>
+            <symbol>f1</symbol>
+        </error>
+
+        <error id="unusedFunction" severity="style" msg="The function &apos;f2&apos; is never used."
+               verbose="The function &apos;f2&apos; is never used." cwe="561">
+            <location file="cppExample.c" line="9"/>
+            <symbol>f2</symbol>
+        </error>
+
+        <error id="unusedFunction" severity="style" msg="The function &apos;f3&apos; is never used."
+               verbose="The function &apos;f3&apos; is never used." cwe="561">
+            <location file="cppExample.c" line="26"/>
+            <symbol>f3</symbol>
+        </error>
+
+        <error id="unusedFunction" severity="style" msg="The function &apos;f4&apos; is never used."
+               verbose="The function &apos;f4&apos; is never used." cwe="561">
+            <location file="cppExample.c" line="36"/>
+            <symbol>f4</symbol>
+        </error>
+
+    </errors>
+</results>

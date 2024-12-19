@@ -1,0 +1,72 @@
+# This is a comment.
+# Each line is a file pattern followed by one or more owners.
+# See the documentation for more information:
+# https://help.github.com/articles/about-codeowners/
+
+# Only additional reviewers for specific files/folders, not codeowners
+*.cop @yah3kor
+ad_radar_apl/cubas @gmb5kor @yah3kor
+ad_radar_apl/arch @gmb5kor @yah3kor @scb6kor
+
+# Codeowners
+Jenkinsfile  @yah3kor @gmb5kor
+jenkins/  @yah3kor @gmb5kor
+ip_if/ @gmb5kor @drn1cob @yah3kor @scb6kor
+rc_fw/ @gmb5kor @drn1cob @yah3kor @scb6kor
+ip_dc/ @gmb5kor @drn1cob @yah3kor @scb6kor
+athena_mt/ @yah3kor @gmb5kor @mvk2kor @ktt7kor @nbi2kor @kep6kor
+plant_container_tools/ @@yah3kor @gmb5kor
+ad_radar_apl/tools/ @yah3kor @gmb5kor
+ad_radar_apl/tools/resViz @scb6kor
+athena_fw/ @scb6kor
+ad_radar_apl/ToBeCleanUp/ @scb6kor
+ad_radar_apl/cfg/ @gmb5kor @yah3kor
+
+ad_radar_apl/component/doc/ @scb6kor
+ad_radar_apl/component/EgoVehDataIF/ @kep6kor
+ad_radar_apl/component/LocDataIF/ @nbi2kor @kep6kor
+ad_radar_apl/component/MntPosMgmt/ @kep6kor
+ad_radar_apl/component/net/ @nbi2kor @kep6kor
+ad_radar_apl/component/nvm/ @ktt7kor
+ad_radar_apl/component/pda/ @scb6kor
+ad_radar_apl/component/rbSysEvM/ @mvk2kor @ktt7kor
+ad_radar_apl/component/sdm/ @mvk2kor @ktt7kor
+ad_radar_apl/component/diag/ @mvk2kor @ktt7kor
+ad_radar_apl/component/inputhandler/ @nbi2kor @kep6kor
+ad_radar_apl/component/measurement_program/ @kep6kor
+ad_radar_apl/component/memprot/ @scb6kor
+ad_radar_apl/component/net_x/ @nbi2kor @kep6kor
+ad_radar_apl/component/outputhandler/ @nbi2kor @kep6kor
+ad_radar_apl/component/rbHsmPrepare/ @scb6kor
+ad_radar_apl/component/rbPdm/ @mvk2kor @ktt7kor
+ad_radar_apl/component/rte/ @scb6kor @yah3kor
+ad_radar_apl/component/traptest/ @scb6kor
+ad_radar_apl/component/ECUConfig/ @scb6kor
+ad_radar_apl/component/smu/ @mvk2kor @ktt7kor
+ad_radar_apl/component/Hotfix/rba/CUBAS/Diagnosis/ @mvk2kor @ktt7kor
+ad_radar_apl/component/Hotfix/rba/CUBAS/EthStack/ @nbi2kor @kep6kor
+ad_radar_apl/component/Hotfix/rbDia/ @mvk2kor @ktt7kor
+
+ad_radar_apl/tools/AutoMatedTests/ @yah3kor
+ad_radar_apl/tools/AutoMatedTests/framework/ @scb6kor
+ad_radar_apl/tools/AutoMatedTests/doc/ @scb6kor
+ad_radar_apl/tools/AutoMatedTests/testcases/sdm/ @mvk2kor @ktt7kor
+ad_radar_apl/tools/AutoMatedTests/testcases/rbSysEvM/ @mvk2kor @ktt7kor
+ad_radar_apl/tools/AutoMatedTests/testcases/outputhandler/ @nbi2kor @kep6kor
+ad_radar_apl/tools/AutoMatedTests/testcases/int/ @yah3kor
+ad_radar_apl/tools/AutoMatedTests/testcases/diag/ @mvk2kor @ktt7kor
+
+ad_radar_apl/doc/radar_diagnostic_specification @mvk2kor @ktt7kor
+ad_radar_apl/doc/radar_variant_handling @cnn4kor
+ad_radar_apl/doc/radar_lgp_def @cnn4kor
+ad_radar_apl/doc/asciidoc_styles @cnn4kor @ktt7kor
+
+
+ad_radar_apl/cubas/cfg/COMA/ @nbi2kor
+ad_radar_apl/cubas/cfg/Diagnosis/ @mvk2kor @ktt7kor
+ad_radar_apl/cubas/cfg/DIMA/ @mvk2kor @ktt7kor
+ad_radar_apl/cubas/cfg/E2EServices/ @kep6kor 
+ad_radar_apl/cubas/cfg/Mem/ @scb6kor
+ad_radar_apl/cubas/cfg/SEDM/ @kep6kor
+ad_radar_apl/cubas/cfg/SESM/ @scb6kor
+ad_radar_apl/cubas/cfg/Xcp/ @kep6kor

@@ -1,0 +1,15 @@
+<ToolCollection>
+  <ToolCollectionName>git</ToolCollectionName>
+  <ToolResponsible>CC-ADPJ-DoitSoftwareQualityTeam@bcn.bosch.com</ToolResponsible>
+  <Version>2.19.2</Version>
+  <Date>2020-03-04</Date>
+  <ZipDirectory>TCC\ZippedTools</ZipDirectory>
+  <IndicatorDirectory>TCC</IndicatorDirectory>
+  <Tools>
+    <Tool>
+      <ToolName>cmake</ToolName>
+      <SourcePath>TCC/Tools/git/2.19.2</SourcePath>
+      <Mirror>No</Mirror>
+    </Tool>
+  </Tools>
+</ToolCollection>

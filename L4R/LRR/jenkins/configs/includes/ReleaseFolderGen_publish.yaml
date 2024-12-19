@@ -1,0 +1,6 @@
+    - name: Release folder publish
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: python BuildReleaseFolder_publish.py ^TPL:publish;
+        fromPath: ad_radar_apl/tools/scripts/ReleaseFolderGen
+        name: Release_folder_publish

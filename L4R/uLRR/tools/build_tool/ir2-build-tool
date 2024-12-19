@@ -1,0 +1,233 @@
+#!/bin/bash
+set -e
+
+# Script Name: ir2-build-tool.sh
+# Author: C3 Team
+# Description: This script is the main entry point for the ir2-build-tool.
+
+SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+cd $SCRIPTPATH
+
+# "Including" scripts
+source auxiliar/getcwd.sh
+source auxiliar/print_colored_message.sh
+source auxiliar/checkrequest.sh
+source auxiliar/checkoption.sh
+source functions/config.sh
+source functions/install.sh
+source functions/build.sh
+source functions/package.sh
+source functions/unit-test.sh
+source functions/deploy.sh
+
+# Script variables
+project_root_folder=""
+
+# Updated script variables related to paths
+getcwd
+
+#--------------------------------------------------------------------------------------------------------
+# Functions definitions
+# Usage info
+# Function to display usage
+function display_usage() {
+    print_colored_message "Usage: $0 <command> [options]" "$YELLOW"
+    print_colored_message "Commands:" "$YELLOW"
+    print_colored_message "  config <bl|aos> --target-type <armv8|x86-64> --build-type <debug|release> [--middleware-instance <tec0204_linux|te0950_linux|te0950_neutrino|car_pc|testing>] [--aos-version <x.yy.x>] [--suppress-warnings <true|false>] [--skip-tests <true|false>] [--a-core-sw-variant <variant>] [--a-core-version-major <major>] [--a-core-version-minor <minor>] [--a-core-version-patch <patch>] [--a-core-commit-hash <hash>]" "$YELLOW"
+    print_colored_message "  install <bl|aos>" "$YELLOW"
+    print_colored_message "  build <bl|aos>" "$YELLOW"
+    print_colored_message "  package <bl|aos> --package-type <conan|deb>" "$YELLOW"
+    print_colored_message "  unit-test <bl|aos> --base-image-file <path-to-file>" "$YELLOW"
+    print_colored_message "  deploy <bl|aos> --base-image-file <path-to-file> [--fpga-bit-file] [--mmic-libraries] --aos-runnables <path-to-file>" "$YELLOW"
+}
+
+# Parse command line options
+OPTIONS=$(getopt -o "" --long "help,skip-tests:,suppress-warnings:,middleware-instance:,aos-version:,package-type:,target-type:,build-type:,base-image-file:,fpga-bit-file,mmic-libraries,aos-runnables:,output-folder:,a-core-sw-variant:,a-core-version-major:,a-core-version-minor:,a-core-version-patch:,a-core-commit-hash:" -- "$@")
+
+# Check for getopt errors
+if [ $? -ne 0 ]; then
+    print_colored_message "Error: Invalid option" "$RED"
+    display_usage
+fi
+
+# Apply the result of getopt to the positional parameters
+eval set -- "$OPTIONS"
+
+# Default values
+skip_unit_tests="-"
+suppress_warnings="-"
+middleware_instance="-"
+aos_version="-"
+package_type="-"
+target_type="-"
+build_type="-"
+base_image_file="-"
+fpga_bit_file=false
+mmic_libraries=false
+aos_runnables="-"
+output_folder="-"
+a_core_sw_variant="-"
+a_core_version_major="-"
+a_core_version_minor="-"
+a_core_version_patch="-"
+a_core_commit_hash="-"
+
+# Process options
+while true; do
+    case "$1" in
+        --skip-tests)
+            skip_unit_tests="$2"
+            shift 2
+            ;;
+        --suppress-warnings)
+            suppress_warnings="$2"
+            shift 2
+            ;;
+        --middleware-instance)
+            middleware_instance="$2"
+            shift 2
+            ;;
+        --aos-version)
+            aos_version="$2"
+            shift 2
+            ;;
+        --package-type)
+            package_type="$2"
+            shift 2
+            ;;
+        --target-type)
+            target_type="$2"
+            shift 2
+            ;;
+        --build-type)
+            build_type="$2"
+            shift 2
+            ;;
+        --base-image-file)
+            base_image_file="$2"
+            shift 2
+            ;;
+        --fpga-bit-file)
+            fpga_bit_file=true
+            shift
+            ;;
+        --mmic-libraries)
+            mmic_libraries=true
+            shift
+            ;;
+        --aos-runnables)
+            aos_runnables="$2"
+            shift 2
+            ;;
+        --output-folder)
+            output_folder="$2"
+            shift 2
+            ;;
+        --a-core-sw-variant)
+            a_core_sw_variant="$2"
+            shift 2
+            ;;
+        --a-core-version-major)
+            a_core_version_major="$2"
+            shift 2
+            ;;
+        --a-core-version-minor)
+            a_core_version_minor="$2"
+            shift 2
+            ;;
+        --a-core-version-patch)
+            a_core_version_patch="$2"
+            shift 2
+            ;;
+        --a-core-commit-hash)
+            a_core_commit_hash="$2"
+            shift 2
+            ;;
+        --help)
+            display_usage
+            exit 0
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            print_colored_message "Error: Invalid option" "$RED"
+            display_usage
+            ;;
+    esac
+done
+
+#TODO: Make the check of arguments more robust
+# Check the number of arguments
+if [ $# -lt 1 ]; then
+    print_colored_message "Error: Insufficient arguments" "$RED"
+    display_usage
+    exit 1
+fi
+
+# Parse the command and project
+command="$1"
+project="$2"
+
+# Handle different commands
+case "$command" in
+    config)
+        print_colored_message "Initializing build tool" "$GREEN"
+        print_colored_message "Project $project" "$BLUE"
+        print_colored_message "Target type: $target_type" "$BLUE"
+        print_colored_message "Build type: $build_type" "$BLUE"
+        print_colored_message "Middleware instance: $middleware_instance" "$BLUE"
+        print_colored_message "A-core SW variant: $a_core_sw_variant" "$BLUE"
+        print_colored_message "A-core version major: $a_core_version_major" "$BLUE"
+        print_colored_message "A-core version minor: $a_core_version_minor" "$BLUE"
+        print_colored_message "A-core version patch: $a_core_version_patch" "$BLUE"
+        print_colored_message "A-core commit hash: $a_core_commit_hash" "$BLUE"
+        print_colored_message "AOS version: $aos_version" "$BLUE"
+        print_colored_message "Suppress warnings: $suppress_warnings" "$BLUE"
+        print_colored_message "Skip Tests: $skip_unit_tests" "$BLUE"        
+
+        config $project $target_type $build_type $middleware_instance $suppress_warnings $skip_unit_tests $aos_version $a_core_sw_variant $a_core_version_major $a_core_version_minor $a_core_version_patch $a_core_commit_hash
+        ;;
+    install)
+        print_colored_message "Installing" "$CYAN"
+        print_colored_message "Project $project" "$BLUE"
+        install $project
+        ;;
+    build)
+        print_colored_message "Building" "$CYAN"
+        print_colored_message "Project $project" "$BLUE"
+        build $project
+        ;;
+    package)
+        print_colored_message "Packaging" "$CYAN"
+        print_colored_message "Project $project" "$BLUE"
+        print_colored_message "Package type: $package_type" "$BLUE"
+
+        package $project $package_type
+        ;;
+    unit-test)
+        print_colored_message "Running unit tests" "$CYAN"
+        print_colored_message "Project $project" "$BLUE"
+        print_colored_message "Base Image File: $base_image_file" "$BLUE"
+
+        unit-test $project $base_image_file
+        ;;
+    deploy)
+        print_colored_message "Deploying" "$CYAN"
+        print_colored_message "Base Image File: $base_image_file" "$BLUE"
+        print_colored_message "FPGA Bit File: $fpga_bit_file" "$BLUE"
+        print_colored_message "MMIC libraries: $mmic_libraries" "$BLUE"
+        print_colored_message "AOS runnables: $aos_runnables" "$BLUE"
+        
+        deploy $project $base_image_file $fpga_bit_file $mmic_libraries $aos_runnables
+        ;;
+    *)
+        print_colored_message "Error: Unknown command $command" "$RED"
+        display_usage
+        ;;
+esac
+
+# End of script
+echo ""
+print_colored_message "ir2-build-tool completed successfully." "$GREEN"

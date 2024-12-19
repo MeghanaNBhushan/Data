@@ -1,0 +1,14 @@
+parameters:
+- name: trigger_sensor
+  type: string
+
+steps:
+  - task: PythonScript@0
+    condition: succeededOrFailed()
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath:  $(Pipeline.Workspace)/s/tools/testbench_toolkit/toellner_control_scrpts/controlSensor.py
+      arguments: --${{ parameters.trigger_sensor }}
+      pythonInterpreter: /bin/python3
+      failOnStderr: true
+    displayName: ${{ parameters.trigger_sensor }} sensor

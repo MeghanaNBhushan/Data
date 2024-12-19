@@ -1,0 +1,102 @@
+^INCLUDE:jenkins/configs/includes/properties.yaml<abortIfNotLatest=abortIfNotLatest: "soft">; # aborts the PR's current build if there is a newer one running
+
+uc1: FR5CU_DNNN1_NNN_N_XX_2_uC1
+uc2: FR5CU_DENN1_CEN_N_XX_2_uC2
+hw: C0
+
+cmake_cfg_path: ad_radar_apl/tools/cmake/cfg
+
+IntTest_ROOT_DIR: C:\ws\aras@1\repo\
+
+a2l_build_env: jenkins
+cantataBuildType : full
+
+testHwU: fr5cu
+
+variant_FR5CU: FR5CU
+
+cov_uC1: 1
+cov_uC2: 2
+
+testStU: 6501
+testStU_C1: 001f2
+user_id: cis9lr
+
+filter: "check_dsp_error_table;check_dsp_opmode;check_dsp_spu_status;check_daddy_error_information;check_dem_events;check_locations;check_trap_information;check_safe_state;check_Location_Interface;check_smu;swTest_checkSendInSpec;swTest_checkSendTemporaryState;swTest_checkPersistentstate"
+filter_unstable: "*"
+
+test_mode: ""
+
+<%
+int order = 0
+%>
+
+
+pipelines:
+- nodes: 
+  - label: ATR
+    executionOrder: 0
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM.yaml<execOrder=${order=0}>;
+    - ^INCLUDE:jenkins/configs/includes/FetchTags.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/CreateTag.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/GeneratePDM.yaml<execOrder=${++order}, build_variant=^YAML:uc2;>;
+    - ^INCLUDE:jenkins/configs/includes/CheckFluxErrors.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/CheckFluxDetails.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/Doxygen.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/FR5CUSpecGen.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/GenerateHeader.yaml<execOrder=${++order}, user_id=^YAML:user_id;>;
+    - ^INCLUDE:jenkins/configs/includes/GenerateHeader_archive.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/BuildSW.yaml<execOrder=${++order}, build_variant=^YAML:uc1;, cfg_path=^YAML:cmake_cfg_path;, variant=uc1, threshold=175>;
+    - ^INCLUDE:jenkins/configs/includes/BuildSW.yaml<execOrder=${++order}, build_variant=^YAML:uc2;, cfg_path=^YAML:cmake_cfg_path;, variant=uc2, threshold=193>;
+    - ^INCLUDE:jenkins/configs/includes/BuildInfo.yaml<execOrder=${++order}, variant=^YAML:variant_FR5CU;>;
+    - ^INCLUDE:jenkins/configs/includes/CantataHost.yaml<execOrder=${++order}, uc1=^YAML:uc1;, uc2=^YAML:uc2;, buildType=^YAML:cantataBuildType;>;
+    - ^INCLUDE:jenkins/configs/includes/CoveragePerComp.yaml<execOrder=${++order}, uc1=^YAML:uc1;, uc2=^YAML:uc2;, hw=^YAML:hw;>;
+    - ^INCLUDE:jenkins/configs/includes/PlantContainer_Nightly.yaml<execOrder=${++order}, uc1=^YAML:uc1;, uc2=^YAML:uc2;>;
+    - ^INCLUDE:jenkins/configs/includes/resViz.yaml<execOrder=${++order}, uc1=^YAML:uc1;, uc2=^YAML:uc2;>;
+    - ^INCLUDE:jenkins/configs/includes/LinesofCode.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/FOSS.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/StoreArtifacts.yaml<execOrder=${++order}, uc1=^YAML:uc1;, uc2=^YAML:uc2;>;
+    - ^INCLUDE:jenkins/configs/includes/SplunkExporterCantataHost.yaml<execOrder=${++order}, uc2=^YAML:uc2;>;
+    - ^INCLUDE:jenkins/configs/includes/SplunkExporterCompilerWarnings.yaml<execOrder=${++order}, uc1=^YAML:uc1;, uc2=^YAML:uc2;>;
+    - ^INCLUDE:jenkins/configs/includes/SplunkExporterCompilerWarningsTotal.yaml<execOrder=${++order}, uc1=^YAML:uc1;, uc2=^YAML:uc2;>;
+
+  - label: Canape_license
+    executionOrder: 1
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM.yaml<execOrder=${order=0}>;
+    - ^INCLUDE:jenkins/configs/includes/Unstash.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/A2LUpdate.yaml<execOrder=${++order}, a2l_build_env=^YAML:a2l_build_env;, variant=^YAML:variant_FR5CU;>;
+    - ^INCLUDE:jenkins/configs/includes/MTUpdate.yaml<execOrder=${++order}, variant=^YAML:variant_FR5CU;, ROOT_DIR=^YAML:IntTest_ROOT_DIR;, VAR1=^YAML:uc1;, VAR2=^YAML:uc2;>;
+    - ^INCLUDE:jenkins/configs/includes/CT_Trigger.yaml<execOrder=${++order}, variant=^YAML:variant_FR5CU;, hw=^YAML:hw;, release=false>;
+  - label: L4_Prem_C0
+    executionOrder: 1
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM.yaml<execOrder=${order=0}>;
+    - ^INCLUDE:jenkins/configs/includes/Unstash.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/MergedHex.yaml<execOrder=${++order}, hw=C0, uc1=^YAML:uc1;, uc2=^YAML:uc2;>;
+    - ^INCLUDE:jenkins/configs/includes/SoftIntTest.yaml<execOrder=${++order}, hw=^YAML:testHwU;, st = ^YAML:testStU;, tm=^YAML:test_mode;, filter=^YAML:filter;, ar=C0>;
+    - ^INCLUDE:jenkins/configs/includes/SoftIntTest_unstable.yaml<execOrder=${++order}, hw=^YAML:testHwU;, st = ^YAML:testStU;, filter=^YAML:filter_unstable;, tm=^YAML:test_mode;, ar=C0>;
+
+  - label: L4_Prem_C1
+    executionOrder: 1
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM.yaml<execOrder=${order=0}>;
+    - ^INCLUDE:jenkins/configs/includes/Unstash.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/MergedHex.yaml<execOrder=${++order}, hw=C1, uc1=^YAML:uc1;, uc2=^YAML:uc2;>;
+    - ^INCLUDE:jenkins/configs/includes/SoftIntTest.yaml<execOrder=${++order}, hw=^YAML:testHwU;, st = ^YAML:testStU_C1;, filter=^YAML:filter;, tm=^YAML:test_mode;, ar=C1>;
+    - ^INCLUDE:jenkins/configs/includes/SoftIntTest_unstable.yaml<execOrder=${++order}, hw=^YAML:testHwU;, st = ^YAML:testStU_C1;, filter=^YAML:filter_unstable;, tm=^YAML:test_mode;, ar=C1>;
+
+  - label: ATR
+    executionOrder: 0
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM.yaml<execOrder=${order=0}>;
+    - ^INCLUDE:jenkins/configs/includes/FetchTags.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/GenerateHeader.yaml<execOrder=${++order}, user_id=^YAML:user_id;>;
+    - ^INCLUDE:jenkins/configs/includes/GeneratePDM.yaml<execOrder=${++order}, build_variant=^YAML:uc2;>;
+    - ^INCLUDE:jenkins/configs/includes/scom.yaml<execOrder=${++order}, uc2=^YAML:uc2;>;
+    - ^INCLUDE:jenkins/configs/includes/QAC.yaml<execOrder=${++order}, uc1=^YAML:uc1;, uc2=^YAML:uc2;>;
+    - ^INCLUDE:jenkins/configs/includes/Coverity.yaml<execOrder=${++order}, cov_uC1=^YAML:cov_uC1;, cov_uC2=^YAML:cov_uC2;>;
+    - ^INCLUDE:jenkins/configs/includes/SplunkExporterQACWarnings.yaml<execOrder=${++order}, uc1=^YAML:uc1;, uc2=^YAML:uc2;>;
+
+    

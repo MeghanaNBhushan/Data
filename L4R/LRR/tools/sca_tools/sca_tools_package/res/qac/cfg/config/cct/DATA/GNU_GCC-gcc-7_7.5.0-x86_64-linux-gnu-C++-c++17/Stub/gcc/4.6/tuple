@@ -1,0 +1,16 @@
+#ifndef _PRL_GLIBCXX_TUPLE
+#define _PRL_GLIBCXX_TUPLE
+
+#if defined (PRL_GCC_01)
+#define _Swallow_assign_ignore _ignore_paren
+#define ignore ignore = { } _Swallow_assign_ignore
+#endif
+
+#include_next <tuple>
+
+#if defined (PRL_GCC_01)
+#undef _Swallow_assign_ignore
+#undef ignore
+#endif
+
+#endif

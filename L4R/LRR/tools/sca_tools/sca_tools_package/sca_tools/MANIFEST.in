@@ -1,0 +1,2 @@
+recursive-include swq *_params.json
+include swq/common/report/templates/report.html

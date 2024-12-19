@@ -1,0 +1,17 @@
+    - name: Software Integration Tests ^TPL:hw; unstable
+      executionOrder: ^TPL:execOrder;     
+      failAbortsPipeline: false
+      steps:
+      - cmd: python ATF_clean_ws.py
+        fromPath: ./jenkins/scripts/
+        name: clean_ATF_ws
+      - cmd: ExecuteAutomatedTestsWithHwSelection.bat -hw ^TPL:hw; -st ^TPL:st; -filter "^TPL:filter;"  "^TPL:tm;"
+        fromPath: ./ad_radar_apl/tools/AutomatedTests
+        name: SWTests_^TPL:hw;_unstable_^TPL:ar;
+      archive:
+      - backend: share
+        fromPath: ./generatedFiles/smokeTests
+        includes: "*.*" 
+        afterFail: true
+        zip: true
+        zipName: SoftIntTest_^TPL:hw;_unstable_^TPL:ar;

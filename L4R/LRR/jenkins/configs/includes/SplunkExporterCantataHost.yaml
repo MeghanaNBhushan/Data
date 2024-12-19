@@ -1,0 +1,10 @@
+    - name: SplunkExport CantataHost
+      executionOrder: ^TPL:execOrder;
+      failAbortsPipeline: false
+      steps:
+      - cmd: python CantataHostToSplunk.py --HW_Variant ^TPL:uc2;
+        fromPath: ./ad_radar_apl/tools/scripts/SplunkExporter/
+        name: Cantata_Host_splunk_generate_^TPL:uc2;
+      - cmd: ssh  -l cis9lr -p 51121 rb-jmaas.de.bosch.com build Splunk_Prod/AthenaRadar_Remote -v -f -p "FileLink=\\\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\Splunk\Cantata\Cantata_Host_^TPL:uc2;.csv" -p "Variant=^TPL:uc2;" -p "MicroController=" -p "OEM=" -p "type=NETWORK"  -p "source=Cantata"  
+        name: Cantata_Host_splunk_export_^TPL:uc2;
+

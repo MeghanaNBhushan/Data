@@ -1,0 +1,79 @@
+parameters:
+  - name: targetImageVersion
+    displayName: New image version (eq. 1.0.0)
+    default: 1.0.1
+
+variables:
+  - name: stageRgName
+    value: cs00056-we-ir2imagebuilderstage-rg
+  - name: cgRgName
+    value: cs00056-we-ir2softwarebuild-rg   
+  - name: systemName
+    value: ib-staging
+  - name: vmName
+    value: $(systemName)-vm
+  - name: cgName
+    value: ir2cg
+  - name: imageName
+    value: windows-software-build-image
+
+
+trigger: none
+pr: none
+
+pool:
+  name: azure-virtual-machines
+  demands: 
+    - Agent.Name -equals terraform-builder-vm
+
+jobs:
+  - job: build
+    displayName: Build custom vm image
+    steps:
+      - task: AzureCLI@2
+        displayName: Create vm from template
+        inputs:
+          azureSubscription: 'CICD-ADO-Zugspitze-Cloudspace-Connection'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            az deployment group create \
+              --resource-group $(stageRgName) \
+              --template-file $(Pipeline.Workspace)/s/tools/azure_image_builder/staging_win_vm.json \
+              --parameters adminPassword=$(ADMINPASSWORD) systemName=$(systemName)
+
+      - task: AzureCLI@2
+        displayName: Customize vm
+        inputs:
+          azureSubscription: 'CICD-ADO-Zugspitze-Cloudspace-Connection'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            cd $(Pipeline.Workspace)/s/tools/azure_image_builder
+            az vm run-command invoke --resource-group $(stageRgName) --name $(vmName) --command-id RunPowerShellScript --scripts "@custom.ps1"
+
+      - task: AzureCLI@2
+        displayName: Create image from vm
+        inputs:
+          azureSubscription: 'CICD-ADO-Zugspitze-Cloudspace-Connection'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            az vm run-command invoke --resource-group $(stageRgName) --name $(vmName) --command-id RunPowerShellScript --scripts "C:\Windows\System32\sysprep\sysprep.exe /generalize /oobe /shutdown"
+            az vm deallocate --resource-group $(stageRgName) --name $(vmName)
+            az vm generalize --resource-group $(stageRgName) --name $(vmName)
+            az sig image-version create --resource-group $(cgRgName) \
+              --gallery-name $(cgName) \
+              --gallery-image-definition $(imageName) \
+              --gallery-image-version ${{ parameters.targetImageVersion }} \
+              --virtual-machine /subscriptions/8d4b9996-bcab-47fc-ab9d-e88c4e461700/resourceGroups/$(stageRgName)/providers/Microsoft.Compute/virtualMachines/$(vmName)
+
+
+      - task: AzureCLI@2
+        displayName: Clean up
+        inputs:
+          azureSubscription: 'CICD-ADO-Zugspitze-Cloudspace-Connection'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            az vm delete --resource-group $(stageRgName) --name $(vmName) --yes --no-wait

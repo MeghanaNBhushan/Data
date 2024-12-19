@@ -1,0 +1,365 @@
+parameters:
+- name: build_target
+  type: string
+  default: tec0204
+- name: build_atf
+  type: boolean
+  default: true
+- name: build_fsbl
+  type: boolean
+  default: true
+- name: build_pmu_fw
+  type: boolean
+  default: true
+- name: build_u_boot
+  type: boolean
+  default: true
+- name: cleanup
+  type: boolean
+  default: true
+- name: update_cache
+  type: boolean
+  default: true
+- name: vitis_version
+  type: string
+  default: 2021.2
+- name: path_to_dtb_file
+  type: string
+  default: ""
+
+steps:
+  - template: /devops/templates/steps/mount-storage-account.yml
+    parameters:
+      sa_user_name: $(swbuildir2st-user)
+      sa_user_password: $(swbuildir2st-key)
+      sa_uri: //swbuildir2st.file.core.windows.net/debian-build
+      mountdir: /mnt/debian-build
+
+  - template: /devops/templates/steps/docker-login.yml
+    parameters:
+      user: $(ir2acr-pull-user)
+      token: $(ir2acr-pull-password)
+      host: ir2acr.azurecr.io
+
+
+
+  - template: /devops/templates/steps/prepare_generic_infrastructure.yml
+    parameters:
+      build_target: ${{ parameters.build_target }}
+
+  - bash: |
+      set -e
+
+      echo "Target:"
+      echo " - TARGET: ${{ parameters.build_target }}"
+      echo "##vso[task.setvariable variable=TARGET]${{ parameters.build_target }}"
+
+      echo "Deploy artifact:"
+      echo " - UPDATE_CACHE: ${{ parameters.update_cache }}"
+      echo "##vso[task.setvariable variable=UPDATE_CACHE]${{ parameters.update_cache }}"
+
+      echo "Vitis version:"
+      echo " - VITIS_VERSION: ${{ parameters.vitis_version }}"
+      echo "##vso[task.setvariable variable=VITIS_VERSION]${{ parameters.vitis_version }}"
+
+      echo "Path to DTB file:"
+      echo " - PATH_TO_DTB_FILE: ${{ parameters.path_to_dtb_file }}"
+      echo "##vso[task.setvariable variable=PATH_TO_DTB_FILE]${{ parameters.path_to_dtb_file }}"
+
+      echo "###############################################################"
+      echo "Load target settings: "
+      echo "..............................................................."
+      echo source $(Build.SourcesDirectory)/devops/scripts/targets/${{ parameters.build_target }}.sh ${DOCKCON_ARTIFACTS_DIR}
+      source $(Build.SourcesDirectory)/devops/scripts/targets/${{ parameters.build_target }}.sh ${DOCKCON_ARTIFACTS_DIR}
+
+      echo "###############################################################"
+      echo "Getting the artifacts: "
+      echo "..............................................................."
+      sudo rsync -ah --progress ${MOUNT_DIR}/${TARGET_SETTINGS["PATH_U_BOOT_ST"]} ${ARTIFACTS_DIR}/
+
+      echo "###############################################################"
+      echo "Additional ENV path configured: "
+      echo "..............................................................."
+
+      echo "Artifacts: "
+      echo " - PATH_BITSTREAM: ${TARGET_SETTINGS["PATH_BITSTREAM"]}"
+      echo " - PATH_U_BOOT: ${TARGET_SETTINGS["PATH_U_BOOT"]}"
+      echo " - PATH_R5_FW: ${TARGET_SETTINGS["PATH_R5_FW"]}"
+
+      echo "##vso[task.setvariable variable=PATH_BITSTREAM]${TARGET_SETTINGS["PATH_BITSTREAM"]}"
+      echo "##vso[task.setvariable variable=PATH_U_BOOT]${TARGET_SETTINGS["PATH_U_BOOT"]}"
+      echo "##vso[task.setvariable variable=PATH_R5_FW]${TARGET_SETTINGS["PATH_R5_FW"]}"
+
+
+    displayName: 1.1 - Prepare infrastructure (target specific)
+    condition: or(
+                eq('${{ parameters.build_target }}', 'zcu102'),
+                eq('${{ parameters.build_target }}', 'tec0204')
+                )
+
+  - bash: |
+      set -e
+
+      docker run -td --rm -v $(Build.SourcesDirectory):/ws --name a-core-debian-base-image-container ir2acr.azurecr.io/a-core-debian-base-image:latest /bin/bash
+    displayName: 2.1 - Launching docker container
+
+  - bash: |
+      set -e
+
+      echo "Download pre-built DTB..."
+
+      if [ -d "$PATH_TO_DTB_FILE" ]; then
+        echo "Using DTB from Storage account..."
+        sudo rsync -ah --progress ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/dtb/system.dtb ${OUT_DIR}
+      else
+        echo "Using DTB from the current pipeline run..."
+        sudo rsync -ah --progress ${PATH_TO_DTB_FILE} ${OUT_DIR}
+      fi
+
+      echo "Finished download pre-built DTB."
+    displayName: 3.1 - Download pre-built DTB
+
+  - bash: |
+      set -e
+
+      echo "Checking if dtb is available..."
+
+      if [ -f "${OUT_DIR}/system.dtb" ]; then
+        echo "${OUT_DIR}/system.dtb was found."
+        echo "##vso[task.setvariable variable=create_dtb_result]Succeeded"
+      else
+        echo "${OUT_DIR}/system.dtb not found."
+        echo "##vso[task.setvariable variable=create_dtb_result]Failed"
+      fi
+    displayName: 3.2 - Checking if dtb is available...
+
+  - bash: |
+      set -e
+
+      echo "Starting build of components HW..."
+
+      if [[ "${{ parameters.build_atf }}" == "True" ]]; then
+          GENERATE_HW_OPTIONS+="-a "
+      fi
+      if [[ "${{ parameters.build_fsbl }}" == "True" ]]; then
+          GENERATE_HW_OPTIONS+="-f "
+      fi
+      if [[ "${{ parameters.build_pmu_fw }}" == "True" ]]; then
+          GENERATE_HW_OPTIONS+="-p "
+      fi
+      GENERATE_HW_OPTIONS+="-c $(TARGET)"
+
+      echo "Requested options: $GENERATE_HW_OPTIONS"
+      
+      docker exec -t -e GENERATE_HW_OPTIONS="$GENERATE_HW_OPTIONS" a-core-debian-base-image-container bash -c "\
+        cd /ws; \
+        git config --global --add safe.directory /ws; \
+        source /opt/Xilinx/Vitis/2021.2/settings64.sh; \
+        echo /ws/software/os/debian/components/hw/generate_hw.sh $GENERATE_HW_OPTIONS; \
+        /ws/software/os/debian/components/hw/generate_hw.sh $GENERATE_HW_OPTIONS" || exit 1
+
+      if [[ "${{ parameters.build_atf }}" == "True" ]]; then
+        if [[ -f "$(Build.SourcesDirectory)/software/os/debian/components/hw/build/bin/${TARGET}_bl31.elf" ]] && [[ -f "$(Build.SourcesDirectory)/software/os/debian/components/hw/build/bin/${TARGET}_bl31.bin" ]]; then
+          cp $(Build.SourcesDirectory)/software/os/debian/components/hw/build/bin/${TARGET}_bl31.elf ${OUT_DIR}
+          cp $(Build.SourcesDirectory)/software/os/debian/components/hw/build/bin/${TARGET}_bl31.bin ${OUT_DIR}
+        fi
+      fi
+
+      if [[ "${{ parameters.build_fsbl }}" == "True" ]]; then
+        if [[ -f "$(Build.SourcesDirectory)/software/os/debian/components/hw/build/bin/${TARGET}_fsbl.elf" ]]; then
+          cp $(Build.SourcesDirectory)/software/os/debian/components/hw/build/bin/${TARGET}_fsbl.elf ${OUT_DIR}
+        fi
+      fi
+
+      if [[ "${{ parameters.build_pmu_fw }}" == "True" ]]; then
+        if [[ -f "$(Build.SourcesDirectory)/software/os/debian/components/hw/build/bin/${TARGET}_pmufw.elf" ]]; then
+          cp $(Build.SourcesDirectory)/software/os/debian/components/hw/build/bin/${TARGET}_pmufw.elf ${OUT_DIR}
+        fi
+      fi
+
+      echo "Finished build of components HW."
+    displayName: 4.1 - Build of components HW
+    condition: |
+                or(
+                    eq('${{ parameters.build_atf }}', 'true'),
+                    eq('${{ parameters.build_fsbl }}', 'true'),
+                    eq('${{ parameters.build_pmu_fw }}', 'true')
+                  )
+
+  - bash: |
+      set -e
+
+      echo "Checking if fsbl is available..."
+
+      if [[ -f "${OUT_DIR}/${TARGET}_fsbl.elf" ]]; then
+        echo "${OUT_DIR}/${TARGET}_fsbl.elf was created."
+        echo "##vso[task.setvariable variable=build_fsbl_result]Succeeded"
+      else
+        echo "##vso[task.setvariable variable=build_fsbl_result]Failed"
+        echo "error: Build FSBL requested, but didn't generate expected artifact"
+      fi
+
+    displayName: 4.2 - Checking if fsbl is available...
+
+  - publish: $(Build.SourcesDirectory)/build/out/$(TARGET)_fsbl.elf
+    artifact: $(Agent.JobName)-$(TARGET)-sw-debian-build-components-hw-fsbl-$(System.StageAttempt)-$(System.JobAttempt)
+    displayName: 4.3 - Publish FSBL
+    condition: eq(variables['build_fsbl_result'], 'Succeeded')
+
+  - bash: |
+      set -e
+
+      echo "Checking if atf is available..."
+
+      if [[ -f "${OUT_DIR}/${TARGET}_bl31.elf" ]] && [[ -f "${OUT_DIR}/${TARGET}_bl31.bin" ]]; then
+        echo "${OUT_DIR}/${TARGET}_bl31.elf and ${OUT_DIR}/${TARGET}_bl31.bin was created."
+        echo "##vso[task.setvariable variable=build_atf_result]Succeeded"
+      else
+        echo "##vso[task.setvariable variable=build_atf_result]Failed"
+        echo "error: Build ATF requested, but didn't generate expected artifact"
+      fi
+
+    displayName: 4.4 - Checking if atf is available...
+
+  - publish: $(Build.SourcesDirectory)/build/out/$(TARGET)_bl31.elf
+    artifact: $(Agent.JobName)-$(TARGET)-sw-debian-build-components-hw-atf-elf-$(System.StageAttempt)-$(System.JobAttempt)
+    displayName: 4.5 - Publish ATF (*.elf)
+    condition: eq(variables['build_atf_result'], 'Succeeded')
+
+  - publish: $(Build.SourcesDirectory)/build/out/$(TARGET)_bl31.bin
+    artifact: $(Agent.JobName)-$(TARGET)-sw-debian-build-components-hw-atf-bin-$(System.StageAttempt)-$(System.JobAttempt)
+    displayName: 4.5 - Publish ATF (*.bin)
+    condition: eq(variables['build_atf_result'], 'Succeeded')
+
+  - bash: |
+      set -e
+
+      echo "Checking if pmu-fw is available..."
+
+      if [[ -f "${OUT_DIR}/${TARGET}_pmufw.elf" ]]; then
+        echo "${OUT_DIR}/${TARGET}_pmufw.elf was created."
+        echo "##vso[task.setvariable variable=build_pmu_fw_result]Succeeded"
+      else
+        echo "##vso[task.setvariable variable=build_pmu_fw_result]Failed"
+        echo "error: Build PMU-FW requested, but didn't generate expected artifact"
+      fi
+
+    displayName: 4.6 - Checking if pmu-fw is available...
+
+  - publish: $(Build.SourcesDirectory)/build/out/$(TARGET)_pmufw.elf
+    artifact: $(Agent.JobName)-$(TARGET)-sw-debian-build-components-hw-pmufw-$(System.StageAttempt)-$(System.JobAttempt)
+    displayName: 4.7 - Publish PMU-FW
+    condition: eq(variables['build_pmu_fw_result'], 'Succeeded')
+
+  - bash: |
+      set -e
+
+      echo "Starting build of u-boot..."
+
+      docker exec -t -e TARGET="${TARGET}" -e PATH_U_BOOT="${PATH_U_BOOT}" -e DOCKCON_OUT_DIR="${DOCKCON_OUT_DIR}" a-core-debian-base-image-container bash -c "\
+        source /opt/Xilinx/Vitis/2021.2/settings64.sh; \
+        echo /ws/software/os/debian/u-boot/build_u-boot.sh -t ${TARGET} -z ${PATH_U_BOOT} -a ${DOCKCON_OUT_DIR}/${TARGET}_bl31.elf -d ${DOCKCON_OUT_DIR}/system.dtb -o ${DOCKCON_OUT_DIR}; \
+        /ws/software/os/debian/u-boot/build_u-boot.sh -t ${TARGET} -z ${PATH_U_BOOT} -a ${DOCKCON_OUT_DIR}/${TARGET}_bl31.elf -d ${DOCKCON_OUT_DIR}/system.dtb -o ${DOCKCON_OUT_DIR}" || exit 1
+
+      sudo chmod -R a+r ${OUT_DIR}/$TARGET
+      
+      echo "Finished build of u-boot."
+    displayName: 5.1 - Build u-boot
+    condition: |
+                and(
+                    ne(variables['PATH_U_BOOT'], ''), 
+                    eq('${{ parameters.build_u_boot }}', 'true'),
+                    eq(variables['create_dtb_result'], 'Succeeded'),
+                    eq(variables['build_atf_result'], 'Succeeded')
+                  )
+
+  - bash: |
+      set -e
+
+      echo "Checking if u-boot is available..."
+
+      if [[ -f "${OUT_DIR}/${TARGET}/u-boot.elf" ]] && [[ -f "${OUT_DIR}/${TARGET}/uboot.env" ]]; then
+        echo "${OUT_DIR}/${TARGET}/u-boot.elf and ${OUT_DIR}/${TARGET}/uboot.env were created."
+        echo "##vso[task.setvariable variable=build_u_boot_result]Succeeded"
+      else
+        echo "##vso[task.setvariable variable=build_u_boot_result]Failed"
+        echo "error: Build U-BOOT requested, but didn't generate expected artifact"
+      fi
+
+    displayName: 5.2 - Checking if u-boot is available...
+
+  - publish: $(Build.SourcesDirectory)/build/out/$(TARGET)/u-boot.elf
+    artifact: $(Agent.JobName)-$(TARGET)-sw-debian-build-u-boot-elf-$(System.StageAttempt)-$(System.JobAttempt)
+    displayName: 5.3 - Publish U-BOOT (*.elf)
+    condition: eq(variables['build_u_boot_result'], 'Succeeded')
+
+  - publish: $(Build.SourcesDirectory)/build/out/$(TARGET)/uboot.env
+    artifact: $(Agent.JobName)-$(TARGET)-sw-debian-build-uboot-env-$(System.StageAttempt)-$(System.JobAttempt)
+    displayName: 5.4 - Publish U-BOOT (*.env)
+    condition: eq(variables['build_u_boot_result'], 'Succeeded')
+
+  - bash: |
+      set -e
+
+      echo "Starting build of boot.bin..."
+
+      docker exec -t -e TARGET="${TARGET}" -e PATH_BITSTREAM="${PATH_BITSTREAM}" -e PATH_R5_FW="${PATH_R5_FW}" -e DOCKCON_OUT_DIR="${DOCKCON_OUT_DIR}" a-core-debian-base-image-container bash -c "\
+        source /opt/Xilinx/Vitis/2021.2/settings64.sh; \
+        echo /ws/software/os/debian/boot_bin/build_boot_bin.sh -t ${TARGET} -b ${PATH_BITSTREAM} -f ${DOCKCON_OUT_DIR}/${TARGET}_fsbl.elf -p ${DOCKCON_OUT_DIR}/${TARGET}_pmufw.elf -a ${DOCKCON_OUT_DIR}/${TARGET}_bl31.elf -d ${DOCKCON_OUT_DIR}/system.dtb -u ${DOCKCON_OUT_DIR}/${TARGET}/u-boot.elf -r ${PATH_R5_FW} -o ${DOCKCON_OUT_DIR}; \
+        /ws/software/os/debian/boot_bin/build_boot_bin.sh -t ${TARGET} -b ${PATH_BITSTREAM} -f ${DOCKCON_OUT_DIR}/${TARGET}_fsbl.elf -p ${DOCKCON_OUT_DIR}/${TARGET}_pmufw.elf -a ${DOCKCON_OUT_DIR}/${TARGET}_bl31.elf -d ${DOCKCON_OUT_DIR}/system.dtb -u ${DOCKCON_OUT_DIR}/${TARGET}/u-boot.elf -r ${PATH_R5_FW} -o ${DOCKCON_OUT_DIR}" || exit 1
+
+      echo "Finished build of boot.bin."
+    displayName: 6.1 - Build boot.bin
+    condition: |
+                and(
+                    ne(variables['PATH_BITSTREAM'], ''), 
+                    eq(variables['build_fsbl_result'], 'Succeeded'),
+                    eq(variables['build_atf_result'], 'Succeeded'),
+                    eq(variables['build_pmu_fw_result'], 'Succeeded'),
+                    eq(variables['create_dtb_result'], 'Succeeded'),
+                    eq(variables['build_u_boot_result'], 'Succeeded'),
+                    ne(variables['PATH_R5_FW'], '')
+                  )
+
+  - bash: |
+      set -e
+
+      echo "Checking if boot.bin is available..."
+
+      if [[ -f "${OUT_DIR}/boot.bin" ]]; then
+        echo "${OUT_DIR}/boot.bin was created."
+        echo "##vso[task.setvariable variable=bootbin_filename;isOutput=true]boot.bin"
+        echo "##vso[task.setvariable variable=bootbin_artifactname;isOutput=true]$(Agent.JobName)-$(TARGET)-sw-debian-build-boot-bin-$(System.StageAttempt)-$(System.JobAttempt)"
+        echo "##vso[task.setvariable variable=build_boot_bin_result]Succeeded"
+
+        if [[ "${UPDATE_CACHE}" == "True" ]]; then
+          sudo mkdir -p ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/boot_bin/
+          sudo rsync -ah --progress ${OUT_DIR}/boot.bin ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/boot_bin/
+        fi
+      else
+        echo "##vso[task.setvariable variable=build_boot_bin_result]Failed"
+        echo "error: Build boot.bin requested, but didn't generate expected artifact"
+      fi
+    name: BootBinStep
+    displayName: 6.2 - Checking if boot.bin is available...
+
+  - publish: $(Build.SourcesDirectory)/build/out/$(BootBinStep.bootbin_filename)
+    artifact: $(BootBinStep.bootbin_artifactname)
+    displayName: 6.3 - Publish boot.bin
+    condition: eq(variables['build_boot_bin_result'], 'Succeeded')
+
+  - bash: |
+      set -e
+
+      echo "Stopping launched container..."
+      docker stop a-core-debian-base-image-container
+      echo "Stopped launched container..."
+      echo "Clean Enabled: ${{ parameters.cleanup }}"
+      if [[ "${{ parameters.cleanup }}" == "True" ]]; then
+        echo "Cleaning-up..."
+        sudo rm -rf $(Build.SourcesDirectory)/software/os/debian
+        sudo rm -rf $(OUT_DIR)
+      else
+        echo "Cleanup is disabled. Skipping..."
+      fi   
+    displayName: 7.1 - Cleaning-up

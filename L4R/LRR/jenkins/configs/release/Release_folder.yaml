@@ -1,0 +1,24 @@
+^INCLUDE:jenkins/configs/includes/properties.yaml<abortIfNotLatest=abortIfNotLatest: "soft">; # aborts the PR's current build if there is a newer one running
+
+LUCX_JOB_NAME_WINDOWS_RELEASE: ^PARAM:LUCX_JOB_NAME_WINDOWS_RELEASE;
+BUILD_NUMBER_RELEASE: ^PARAM:BUILD_NUMBER_RELEASE;
+uc1: FR5CU_DNNN1_NNN_N_XX_2_uC1
+uc2: FR5CU_DENN1_CEN_N_XX_2_uC2
+
+publish: ^PARAM:PUBLISH_RELEASE_FOLDER;
+
+<%
+int order = 0
+%>
+<%
+int nodeOrder = 0
+%>
+
+pipelines:
+- nodes: 
+  - label: L4_Prem_C1
+    executionOrder: ${nodeOrder=0}
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM.yaml<execOrder=${order=0}>;
+    - ^INCLUDE:jenkins/configs/includes/ReleaseFolderGen_initial.yaml<execOrder=${++order}, bn = ^YAML:BUILD_NUMBER_RELEASE;, jn = ^YAML:LUCX_JOB_NAME_WINDOWS_RELEASE;, uc1=^YAML:uc1;, uc2=^YAML:uc2;>;
+    - ^INCLUDE:jenkins/configs/includes/ReleaseFolderGen_publish.yaml<execOrder=${++order}, publish = ^YAML:publish;>;

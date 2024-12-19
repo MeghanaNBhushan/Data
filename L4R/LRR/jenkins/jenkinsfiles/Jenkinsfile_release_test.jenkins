@@ -1,0 +1,24 @@
+@Library("LUCxBau@21.5.6") _
+
+env.LUCX_COMMIT_HASH = env.LUCX_COMMIT_HASH.trim()
+
+if (env.SELECT_HARDWARE == 'C0'){
+	
+		env.node_label = 'L4_Prem_C0'
+		env.setup = '6501'
+
+}
+
+if (env.SELECT_HARDWARE == 'C1'){
+	
+		env.node_label = 'L4_Prem_C1'
+		env.setup = '001f2'
+
+}
+
+if (env.LUCX_COMMIT_HASH.length()!= 40){
+    error("CommitId must have 40 characters")
+}
+lucx.bau(configsDirs:["jenkins/configs/"],
+         config: 'jenkins/configs/release/Release_test.yaml',
+         isPath: true)

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<acf xmlversion="2.0.0">
+  <components>
+    <component name="qacpp" target="C++" version="5.0.0"></component>
+    <component name="qac" target="C" version="10.0.0"></component>
+    <component name="rcma" target="C_CPP" version="3.0.0"></component>
+    <component name="ascm" target="C++" version="3.0.0"></component>
+  </components>
+  <component_settings>
+    <input_to component="rcma" target="C_CPP" version="3.0.0">
+      <option argument="pal2::keep_ixx-" name="-prodoption "></option>
+    </input_to>
+    <input_to component="ascm" target="C++" version="3.0.0">
+      <option argument="extension::header=['', 'h','hpp','hxx','inl']" name="-po "></option>
+    </input_to>
+    <input_to component="qacpp" target="C++" version="5.0.0">
+      <!-- tool parameters -->
+      <option argument="+" name="-preproccppkeywords"></option>
+      <option argument="+" name="-c++11nosizeddeallocation"></option>
+      <option argument="+" name="-c++14exceptionspecification"></option>
+      <option argument="+" name="-c++14trigraphs"></option>
+      <option argument="-" name="-c++11autodeduction"></option>
+      <option argument="-" name="-duc99dilt"></option>
+      <option argument="utf-8" name="-encoding "/>
+      <!-- dataflow parameters -->
+      <option argument="+" name="-enabledataflow"></option>
+      <option argument="1024" name="-mrtnd "></option>
+      <option argument="-" name="-metfile"></option>
+      <option argument="+" name="-ppf"></option>
+      <option argument="+" name="-ppl"></option>
+      <option argument="df::analyse_header_functions=intra" name="-po "></option>
+      <option argument="df::function_timeout=10000" name="-po "></option>
+      <option argument="df::inter=3" name="-po "></option>
+      <option argument="df::query_timeout=5000" name="-po "></option>
+      <option argument="df::query_timeout_message+" name="-po "></option>
+      <option argument="df::struct_last_array_member_size_1+" name="-po "></option>
+      <option argument="digit_separator::binary_group=4" name="-po "></option>
+      <option argument="digit_separator::decimal_group=3" name="-po "></option>
+      <option argument="digit_separator::floating_group=3" name="-po "></option>
+      <option argument="digit_separator::fractional_group=3" name="-po "></option>
+      <option argument="digit_separator::hex_group=2" name="-po "></option>
+      <option argument="digit_separator::octal_group=2" name="-po "></option>
+      <option argument="line::max_length=200" name="-po "></option>
+      <option argument="pass_by_value::max_size=8" name="-po "></option>
+      <option argument="switch::min_cases=2" name="-po "></option>
+      <option argument="4" name="-tabstop "></option>
+      <!-- preprocessor defines from compiler-->
+      <!-- preprocessor defines from build tool chain-->
+      <option argument="RB_BUILD_SCA()=true" name="-d"></option>
+      <option argument="RB_BUILD_SCA_HELIX()=true" name="-d"></option>
+    </input_to>
+  </component_settings>
+</acf>

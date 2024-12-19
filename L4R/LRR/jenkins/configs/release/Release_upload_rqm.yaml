@@ -1,0 +1,21 @@
+^INCLUDE:jenkins/configs/includes/properties.yaml<abortIfNotLatest=abortIfNotLatest: "soft">; # aborts the PR's current build if there is a newer one running
+
+
+test_plan_id_C0: ^PARAM:TEST_PLAN_ID_C0;
+test_plan_id_C1: ^PARAM:TEST_PLAN_ID_C1;
+
+iteration_name : ^PARAM:ITERNATION_NAME;
+
+<%
+int order = 0
+%>
+
+pipelines:
+- nodes: 
+  - label: ATR
+    executionOrder: 1
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM.yaml<execOrder=${order=0}>;
+    - ^INCLUDE:jenkins/configs/includes/UpdateRQM.yaml<execOrder=${++order}, test_plan_id=^YAML:test_plan_id_C0;, hw=C0, iteration_name=^YAML:iteration_name;>;
+    - ^INCLUDE:jenkins/configs/includes/UpdateRQM.yaml<execOrder=${++order}, test_plan_id=^YAML:test_plan_id_C1;, hw=C1, iteration_name=^YAML:iteration_name;>;
+

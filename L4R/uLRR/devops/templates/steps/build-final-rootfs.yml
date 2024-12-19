@@ -1,0 +1,376 @@
+parameters:
+- name: build_target
+  type: string
+  default: tec0204
+- name: build_arch
+  type: string
+  default: aarch64
+- name: version
+  type: string
+  default: ""
+- name: cleanup
+  type: boolean
+  default: true
+- name: update_cache
+  type: boolean
+  default: true
+- name: vitis_version
+  type: string
+  default: 2021.2
+- name: path_to_kernel_file
+  type: string
+  default: ""
+- name: path_to_rootfs_file
+  type: string
+  default: ""
+- name: path_to_ulrrcfg_file
+  type: string
+  default: ""
+
+steps:
+  - template: /devops/templates/steps/mount-storage-account.yml
+    parameters:
+      sa_user_name: $(swbuildir2st-user)
+      sa_user_password: $(swbuildir2st-key)
+      sa_uri: //swbuildir2st.file.core.windows.net/debian-build
+      mountdir: /mnt/debian-build
+
+  - template: /devops/templates/steps/docker-login.yml
+    parameters:
+      user: $(ir2acr-pull-user)
+      token: $(ir2acr-pull-password)
+      host: ir2acr.azurecr.io
+
+
+
+  - template: /devops/templates/steps/prepare_generic_infrastructure.yml
+    parameters:
+      build_target: ${{ parameters.build_target }}
+
+  - bash: |
+      set -e
+
+      echo "Target:"
+      echo " - TARGET: ${{ parameters.build_target }}"
+      echo "##vso[task.setvariable variable=TARGET]${{ parameters.build_target }}"
+
+      echo "Version:"
+      echo " - VERSION: ${{ parameters.version }}"
+      echo "##vso[task.setvariable variable=VERSION]${{ parameters.version }}"
+
+      echo "Build type:"
+      echo " - UPDATE_CACHE: ${{ parameters.update_cache }}"
+      echo "##vso[task.setvariable variable=UPDATE_CACHE]${{ parameters.update_cache }}"
+      
+      echo "Vitis version:"
+      echo " - VITIS_VERSION: ${{ parameters.vitis_version }}"
+      echo "##vso[task.setvariable variable=VITIS_VERSION]${{ parameters.vitis_version }}"
+      
+      echo "Path to Kernel file:"
+      echo " - PATH_TO_KERNEL_FILE: ${{ parameters.path_to_kernel_file }}"
+      echo "##vso[task.setvariable variable=PATH_TO_KERNEL_FILE]${{ parameters.path_to_kernel_file }}"
+
+      echo "Path to RootFS file:"
+      echo " - PATH_TO_ROOTFS_FILE: ${{ parameters.path_to_rootfs_file }}"
+      echo "##vso[task.setvariable variable=PATH_TO_ROOTFS_FILE]${{ parameters.path_to_rootfs_file }}"
+
+      echo "Path to ULRR Cfg file:"
+      echo " - PATH_TO_ULRRCFG_FILE: ${{ parameters.path_to_ulrrcfg_file }}"
+      echo "##vso[task.setvariable variable=PATH_TO_ULRRCFG_FILE]${{ parameters.path_to_ulrrcfg_file }}"
+
+    displayName: 1 - Prepare infrastructure
+
+  - bash: |
+      set -e
+
+      docker run -td --rm \
+            --privileged \
+            -v $(Build.SourcesDirectory):/ws \
+            --env=USERNAME=$USER \
+            --env=USERID=$UID \
+            --env=GNAME=$(id -gn) \
+            --env=GID=$(id -g) \
+            --env=USERHOME=$HOME \
+            --env=DISPLAY=unix$DISPLAY \
+            --env=VERSION=$(VERSION) \
+            --name a-core-debian-base-image-container ir2acr.azurecr.io/a-core-debian-base-image:latest \
+            /bin/bash
+
+    displayName: Launching docker container
+
+  - bash: |
+      set -e
+
+      docker exec -t a-core-debian-base-image-container bash -c "\
+            update-binfmts --display | grep ${{ parameters.build_arch }}; \
+            update-binfmts --enable qemu-${{ parameters.build_arch }}; \
+            update-binfmts --display | grep ${{ parameters.build_arch }}" || exit 1
+    displayName: 2 - Checking QEMU availability
+    
+  - bash: |
+      set -e
+
+      echo "Download pre-built rootfs..."
+
+      if [ -d "$PATH_TO_ROOTFS_FILE" ]; then
+        echo "Using RootFS from Storage account..."
+
+        cd ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/sysroot/
+
+        if [[ "${TARGET}" == "zcu102" ]] || [[ "${TARGET}" == "tec0204" ]]; then
+          rootfs_filename=$(find * -type f -name 'rootfs_$(TARGET)_bullseye*ext4.gz');
+        elif [[ "${TARGET}" == "systemroot" ]]; then
+          rootfs_filename=$(find * -type f -name 'ulrr-aarch64-sysroot-bullseye*deb');
+        fi
+        echo "$rootfs_filename was found."      
+
+        if [ ! -z "$rootfs_filename" ]; then
+          echo "##vso[task.setvariable variable=rootfs_file_found]Succeeded"
+          echo "##vso[task.setvariable variable=rootfs_file;isOutput=true]${OUT_DIR}/$rootfs_filename"
+
+          sudo rsync -ah --progress ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/sysroot/$rootfs_filename ${OUT_DIR}
+        fi
+      else
+        echo "Using RootFS from the current pipeline run..."
+
+        rootfs_filename=$(basename -- "${PATH_TO_ROOTFS_FILE}")
+        echo "$rootfs_filename was found." 
+
+        echo "##vso[task.setvariable variable=rootfs_file_found]Succeeded"
+        echo "##vso[task.setvariable variable=rootfs_file;isOutput=true]${OUT_DIR}/$rootfs_filename"
+        
+        sudo rsync -ah --progress ${PATH_TO_ROOTFS_FILE} ${OUT_DIR}
+      fi
+
+      echo "Finished download pre-built rootfs."
+    name: DownloadPreBuiltRootFsStep
+    displayName: 3 - Download pre-built rootfs
+
+  - bash: |
+      set -e
+
+      echo "Download pre-built ulrr_cfg..."
+
+      if [ -d "$PATH_TO_ULRRCFG_FILE" ]; then
+        echo "Using ulrr cfg. from Storage account..."
+
+        cd ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/ulrr_cfg/
+
+        ulrr_cfg_filename=$(find * -type f -name 'ulrr_cfg-*arm64.deb');
+        echo "$ulrr_cfg_filename was found."
+
+        if [ ! -z "$ulrr_cfg_filename" ]; then
+          echo "##vso[task.setvariable variable=ulrr_cfg_found]Succeeded"
+          echo "##vso[task.setvariable variable=ulrr_cfg_file;isOutput=true]$ulrr_cfg_filename"
+
+          sudo rsync -ah --progress ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/ulrr_cfg/$ulrr_cfg_filename ${TMP_DIR}
+        fi
+      else
+        echo "Using ulrr cfg. from the current pipeline run..."
+
+        ulrr_cfg_filename=$(basename -- "${PATH_TO_ULRRCFG_FILE}")
+        echo "$ulrr_cfg_filename was found."
+
+        echo "##vso[task.setvariable variable=ulrr_cfg_found]Succeeded"
+        echo "##vso[task.setvariable variable=ulrr_cfg_file;isOutput=true]$ulrr_cfg_filename"
+
+        sudo rsync -ah --progress ${PATH_TO_ULRRCFG_FILE} ${TMP_DIR}
+      fi
+
+      echo "Finished download pre-built ulrr_cfg."
+    name: DownloadPreBuiltUlrrCfgStep
+    displayName: 4 - Download pre-built ulrr_cfg
+
+  - bash: |
+      set -e
+
+      echo "Download pre-built kernel..."
+
+      if [ -d "$PATH_TO_KERNEL_FILE" ]; then
+        echo "Using kernel from Storage account..."
+
+        cd ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/kernel/
+
+        kernel_filename=$(find * -type f -name 'linux-itb-*');
+        echo "$kernel_filename was found."
+
+        if [ ! -z "$kernel_filename" ]; then
+          echo "##vso[task.setvariable variable=kernel_found]Succeeded"
+          echo "##vso[task.setvariable variable=kernel_file;isOutput=true]$kernel_filename"
+
+          sudo rsync -ah --progress ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/kernel/$kernel_filename ${TMP_DIR}
+        fi
+      else
+        echo "Using kernel from the current pipeline run..."
+
+        kernel_filename=$(basename -- "${PATH_TO_KERNEL_FILE}")
+        echo "$kernel_filename was found."
+
+        echo "##vso[task.setvariable variable=kernel_found]Succeeded"
+        echo "##vso[task.setvariable variable=kernel_file;isOutput=true]$kernel_filename"
+
+        sudo rsync -ah --progress ${PATH_TO_KERNEL_FILE} ${TMP_DIR}
+      fi
+
+      echo "Store Kernel ID for smoketests"
+      kernel_id=$(dpkg-deb -f ${TMP_DIR}/$kernel_filename Version)
+      echo $kernel_id
+      echo "##vso[task.setvariable variable=kernel_id;isOutput=true]$kernel_id"
+
+
+      echo "Finished download pre-built kernel."
+    name: DownloadPreBuiltKernelStep
+    displayName: 5 - Download pre-built kernel
+
+  - bash: |
+      set -e
+
+      echo "Uncompressing rootfs archive..."
+
+      cd ${OUT_DIR}
+      rootfs_file_uncompressed=("rootfs_${TARGET}_bullseye_arm64_latest.ext4")
+      echo "Rootfs file: ${OUT_DIR}/$rootfs_file_uncompressed"
+
+      gunzip -k "$(DownloadPreBuiltRootFsStep.rootfs_file)" -c > $rootfs_file_uncompressed
+      echo "Uncompressed rootfs archive..."
+
+    displayName: 6 - Prepare rootfs image for qemu
+    condition: eq(variables['rootfs_file_found'], 'Succeeded')
+
+  - bash: |
+      set -e
+
+      echo "Mounting rootfs archive..."
+
+      docker exec -t -e TARGET="${TARGET}" -e DOCKCON_OUT_DIR="${DOCKCON_OUT_DIR}" a-core-debian-base-image-container bash -c "\
+        mkdir -p mnt; \
+        sudo mount --verbose ${DOCKCON_OUT_DIR}/rootfs_${TARGET}_bullseye_arm64_latest.ext4 mnt -o loop" || exit 1
+
+      echo "Mounted rootfs archive..."
+    displayName: 7 - Mount rootfs
+    condition: eq(variables['rootfs_file_found'], 'Succeeded')
+
+  - bash: |
+      set -e
+
+      echo "Creating installation script..."
+      echo "Creating folder..."
+      cd $(Build.SourcesDirectory)/software/os
+
+      echo "Creating empty file..."
+      sudo touch ${TMP_DIR}/install.sh
+
+      echo "Writing to file..."
+      sudo tee -a ${TMP_DIR}/install.sh << 'EOF'
+      #!/bin/bash
+      set -e
+
+      echo "Mounting proc and dev/pts..."
+      mount -t proc proc /proc
+      mount -t devpts devpts /dev/pts
+
+      echo "Installing deb. packages..."
+      EOF
+      
+      echo "Changing permissions..."
+      sudo chmod +x ${TMP_DIR}/install.sh
+
+      echo "Prepare installation of ulrr_cfg..."
+      if [ -e ${TMP_DIR}/$(DownloadPreBuiltUlrrCfgStep.ulrr_cfg_file) ]; then
+          echo "Adding $(DownloadPreBuiltUlrrCfgStep.ulrr_cfg_file) to the list of packages to be installed."            
+          echo -e "dpkg -i /tmp/$(DownloadPreBuiltUlrrCfgStep.ulrr_cfg_file)" | sudo tee -a ${TMP_DIR}/install.sh
+      else
+          echo "Skipping installation of ulrr_cfg into rootfs."
+      fi 
+
+      echo "Prepare installation of kernel"
+      if [ -e ${TMP_DIR}/$(DownloadPreBuiltKernelStep.kernel_file) ]; then
+          echo "Adding $(DownloadPreBuiltKernelStep.kernel_file) to the list of packages to be installed."            
+          echo -e "dpkg -i /tmp/$(DownloadPreBuiltKernelStep.kernel_file)"  | sudo tee -a ${TMP_DIR}/install.sh
+      else
+          echo "Skipping installation of linux itb and kernel modules into rootfs."
+      fi 
+
+      echo "Writing to file..."
+      sudo tee -a ${TMP_DIR}/install.sh << 'EOF'
+      sync
+
+      echo "Unmount..."
+      umount /proc
+      umount /dev/pts
+
+      EOF
+
+      echo "Printing final state of the installation file..."
+      cat ${TMP_DIR}/install.sh
+    displayName: 8 - Creating installation script
+    condition: and(eq(variables['ulrr_cfg_found'], 'Succeeded'), eq(variables['kernel_found'], 'Succeeded'))
+
+  - bash: |
+      set -e
+
+      echo "Installing components..."
+
+      docker exec -t -e DOCKCON_OUT_DIR="${DOCKCON_OUT_DIR}" a-core-debian-base-image-container bash -c "\
+        echo 'Creating tmp directory...'; \
+        sudo mkdir -p mnt/tmp; \
+        echo 'Uploading contents for installation...'; \
+        cp -a ${DOCKCON_TMP_DIR}/. mnt/tmp/
+        echo 'Checking if contents were copied'
+        ls mnt/tmp/
+        echo 'Trying to access the install script...'; \
+        cat mnt/tmp/install.sh; \
+        echo 'Chrooting...'; \
+        sudo chroot mnt/ /bin/bash -c "/tmp/install.sh"; \
+        echo 'Clean up...'; \
+        sudo rm -rf mnt/tmp/*; \
+        echo 'Unmount...'; \
+        sudo umount mnt; \
+        ls mnt/" || exit 1
+
+    displayName: 9 - Install Kernel and Cfg into rootfs
+
+  - bash: |
+      set -e
+
+      echo "Compressing final rootfs archive..."
+
+      cd ${OUT_DIR}
+      rootfs_file_uncompressed=("rootfs_${TARGET}_bullseye_arm64_latest.ext4")
+      echo "Rootfs file: ${OUT_DIR}/$rootfs_file_uncompressed"
+
+      gzip ${OUT_DIR}/$rootfs_file_uncompressed -c > ${OUT_DIR}/rootfs_${TARGET}_bullseye_final_arm64_latest.ext4.gz
+      echo "Compressed rootfs archive..."
+      echo "##vso[task.setvariable variable=create_final_rootfs_result]Succeeded"
+      echo "##vso[task.setvariable variable=final_rootfs_filename;isOutput=true]rootfs_${TARGET}_bullseye_final_arm64_latest.ext4.gz"
+      echo "##vso[task.setvariable variable=final_rootfs_artifactname;isOutput=true]$(Agent.JobName)-$(TARGET)-sw-debian-build-final-rootfs-$(System.StageAttempt)-$(System.JobAttempt)"
+
+      if [[ "${UPDATE_CACHE}" == "True" ]]; then
+        sudo mkdir -p ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/final_rootfs/
+        sudo rsync -ah --progress ${OUT_DIR}/rootfs_${TARGET}_bullseye_final_arm64_latest.ext4.gz ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/final_rootfs/
+      fi
+    name: FinalSysRootStep
+    displayName: 10 - Compressing and cache final rootfs archive
+
+  - publish: $(OUT_DIR)/$(FinalSysRootStep.final_rootfs_filename)
+    artifact: $(FinalSysRootStep.final_rootfs_artifactname)
+    displayName: 11 - Publish final rootfs file
+    condition: eq(variables['create_final_rootfs_result'], 'Succeeded')
+
+  - bash: |
+      set -e
+
+      echo "Stopping launched container..."
+      docker stop a-core-debian-base-image-container
+      echo "Stopped launched container..."
+      echo "Clean Enabled: ${{ parameters.cleanup }}"
+      if [[ "${{ parameters.cleanup }}" == "True" ]]; then   
+        echo "Cleaning-up..."
+        sudo rm -rf $(Build.SourcesDirectory)/software/os/debian
+        sudo rm -rf $(OUT_DIR)
+        sudo rm -rf $(TMP_DIR)
+        sudo rm -rf software/os/mnt
+      else
+        echo "Cleanup is disabled. Skipping..."
+      fi
+    displayName: 12 - Cleaning-up

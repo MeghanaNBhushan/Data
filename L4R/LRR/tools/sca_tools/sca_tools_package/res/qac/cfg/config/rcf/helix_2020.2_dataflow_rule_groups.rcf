@@ -1,0 +1,1487 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rcf name="qac-qacpp-rcma-mta-namecheck" version="1.0">
+  <rulegroup name="QAC Dataflow">
+    <rule active="yes" help="" id="qac_dataflow_0">
+      <text>Information</text>
+      <enforcement>
+        <rule active="yes" help="" id="qac_dataflow_0.1">
+          <text>Information Messages</text>
+          <enforcement>
+            <message component="qac" id="0050" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_0.2">
+          <text>Annotations</text>
+          <enforcement>
+            <message component="qac" id="4810" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4811" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4812" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4813" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4814" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4815" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4816" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4817" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4820" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4821" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4822" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4823" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4824" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4825" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4826" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4827" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4828" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4829" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4830" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4831" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4832" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4833" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4834" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4835" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_0.3">
+          <text>CMA information</text>
+          <enforcement></enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_0.4">
+          <text>Parsing recovery</text>
+          <enforcement>
+            <message component="qac" id="0901" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0902" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0903" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0908" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0911" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0913" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0920" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_0.5">
+          <text>Dataflow recovery</text>
+          <enforcement>
+            <message component="qac" id="0097" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2750" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2751" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2752" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2753" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2754" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2755" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2756" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2757" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2758" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_0.6">
+          <text>Sub-Messages</text>
+          <enforcement>
+            <message component="qac" id="1564" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1565" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1566" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1568" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1569" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1570" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1571" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1572" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1573" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1574" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1575" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1576" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1577" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1578" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1579" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1580" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1581" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1582" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1585" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1586" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1590" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1592" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1593" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1594" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1598" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1599" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="3390" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+      </enforcement>
+    </rule>
+    <rule active="yes" help="" id="qac_dataflow_5">
+      <text>Dataflow Analysis</text>
+      <enforcement>
+        <rule active="yes" help="" id="qac_dataflow_5.1">
+          <text>Conversion to signed</text>
+          <enforcement>
+            <message component="qac" id="2850" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2851" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2852" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2853" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2854" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2855" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2856" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2857" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2858" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2859" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2940" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2941" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2942" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2943" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2944" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2945" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2946" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2947" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2948" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2949" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_5.2">
+          <text>Conversion to unsigned</text>
+          <enforcement>
+            <message component="qac" id="2890" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2891" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2892" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2893" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2894" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2895" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2896" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2897" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2898" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2899" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2900" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2901" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2902" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2903" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2904" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2905" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2906" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2907" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2908" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2909" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_5.3">
+          <text>Conversion to floating point</text>
+          <enforcement>
+            <message component="qac" id="2925" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2926" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_5.4">
+          <text>Shift operations</text>
+          <enforcement>
+            <message component="qac" id="2790" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2791" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2792" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2793" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2794" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2860" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2861" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2862" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2863" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2864" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2920" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2921" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2922" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2923" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2924" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_5.5">
+          <text>Overflow and wraparound</text>
+          <enforcement>
+            <message component="qac" id="2671" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2674" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2676" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2678" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2796" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2797" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2798" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2799" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2800" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2801" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2802" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2803" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2804" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2806" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2807" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2808" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2809" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2816" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2817" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2818" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2819" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2830" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2831" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2832" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2833" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2834" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2910" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2911" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2912" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2913" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2914" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2956" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2959" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4781" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4782" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4783" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4784" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4841" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4842" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4843" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4844" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4846" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4847" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4848" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4849" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4851" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4852" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4853" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4856" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4857" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4858" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4859" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4861" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4862" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4863" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4864" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4886" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4887" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4888" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4906" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4907" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4908" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4916" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4917" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4918" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4919" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4921" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4922" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4923" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4924" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_5.6">
+          <text>Arrays</text>
+          <enforcement>
+            <message component="qac" id="2835" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2836" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2839" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2840" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2841" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2842" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2843" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2844" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2845" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2846" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2847" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2848" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2849" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2930" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2931" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2932" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2933" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2934" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2935" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2936" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2937" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2938" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2939" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2950" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2951" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2952" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2953" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2954" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_5.7">
+          <text>Pointers</text>
+          <enforcement>
+            <message component="qac" id="2668" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2669" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2761" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2762" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2763" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2766" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2767" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2768" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2771" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2772" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2773" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2776" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2777" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2778" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2781" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2782" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2783" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2784" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2785" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2786" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2789" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2826" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2827" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2828" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2916" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2917" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2918" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2919" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4726" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4727" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4728" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4729" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4751" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4752" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4753" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4876" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4877" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4878" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4879" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4880" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4881" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4882" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4883" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4884" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4911" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4912" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4913" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4914" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4941" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4942" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4943" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4955" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4956" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4957" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_5.8">
+          <text>NULL pointers</text>
+          <enforcement>
+            <message component="qac" id="2810" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2811" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2812" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2813" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2814" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2820" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2821" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2822" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2823" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2824" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_5.9">
+          <text>Unset data</text>
+          <enforcement>
+            <message component="qac" id="2961" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2962" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2963" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2966" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2967" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2968" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2971" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2972" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2973" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2976" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2977" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2978" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_5.10">
+          <text>Redundancy</text>
+          <enforcement>
+            <message component="qac" id="2865" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2866" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2867" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2868" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2869" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2980" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2981" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2982" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2983" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2984" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2985" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2986" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2987" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_5.11">
+          <text>Resources</text>
+          <enforcement>
+            <message component="qac" id="2681" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2682" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2683" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2686" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2687" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2688" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2691" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2692" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2693" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2696" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2697" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2698" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2701" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2702" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2703" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2706" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2707" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2708" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2711" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2712" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2713" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2716" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2717" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2718" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2719" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2721" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2722" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2723" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2724" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2726" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2727" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2728" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2731" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2732" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2733" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2736" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2737" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2738" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2746" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2747" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2748" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4711" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4712" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4713" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4716" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4717" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4718" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4866" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4867" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4868" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4869" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4871" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4872" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4873" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4874" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4891" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4892" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4893" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4894" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4895" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4896" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4897" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4898" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4899" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4901" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4902" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4903" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4904" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4991" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4992" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4993" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_5.12">
+          <text>Invariant operations</text>
+          <enforcement>
+            <message component="qac" id="2740" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2741" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2742" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2743" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2744" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2990" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2991" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2992" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2993" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2994" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2995" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2996" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2997" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2998" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_5.13">
+          <text>Control flow</text>
+          <enforcement>
+            <message component="qac" id="2870" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2871" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2872" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2877" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2880" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2881" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2882" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2883" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2886" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2887" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2888" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="2889" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_5.14">
+          <text>Serious Threading Issues</text>
+          <enforcement>
+            <message component="qac" id="4926" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4927" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4928" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4931" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4932" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4936" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4937" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4946" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4947" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4951" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4952" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4961" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4962" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4966" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4967" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4971" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4972" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4976" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4977" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4981" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4982" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4986" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4987" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4995" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4996" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4997" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="4998" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_5.15">
+          <text>Serious Resource Issues</text>
+          <enforcement></enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_5.16">
+          <text>Cross Module Threading Issues</text>
+          <enforcement></enforcement>
+        </rule>
+      </enforcement>
+    </rule>
+    <rule active="yes" help="" id="qac_dataflow_9">
+      <text>Errors</text>
+      <enforcement>
+        <rule active="yes" help="" id="qac_dataflow_9.1">
+          <text>QAC configuration</text>
+          <enforcement>
+            <message component="qac" id="0010" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0040" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0041" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0042" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0159" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0473" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0808" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0818" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0819" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0822" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0869" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0918" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0970" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qac_dataflow_9.2">
+          <text>Syntax errors</text>
+          <enforcement>
+            <message component="qac" id="0231" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0234" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0250" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0258" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0268" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0434" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0637" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0648" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0666" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0670" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0805" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0817" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0820" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0823" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0824" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0825" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0826" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0827" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0829" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0833" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0846" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0849" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0852" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0863" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0876" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0879" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0886" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0896" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0897" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0898" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0904" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0907" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0917" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0925" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0926" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0927" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="0928" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1004" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1005" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1009" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1010" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1013" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1095" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="1138" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="3104" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="3105" mapped="yes" version="9.10.0"></message>
+            <message component="qac" id="3107" mapped="yes" version="9.10.0"></message>
+          </enforcement>
+        </rule>
+      </enforcement>
+    </rule>
+  </rulegroup>
+  <rulegroup name="QAC++ Dataflow">
+    <rule active="yes" help="" id="qacpp_dataflow_0">
+      <text>Information</text>
+      <enforcement>
+        <rule active="yes" help="" id="qacpp_dataflow_0.1">
+          <text>Information Messages</text>
+          <enforcement>
+            <message component="qacpp" id="0634" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0999" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_0.2">
+          <text>Context Messages</text>
+          <enforcement>
+            <message component="qacpp" id="0109" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0110" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0111" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0112" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0113" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0130" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0422" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0700" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0701" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0702" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0703" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0704" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0705" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0706" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0707" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0900" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0901" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0902" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0903" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0904" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0905" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0906" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0907" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0908" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0909" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0910" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0911" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0912" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0913" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0915" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0916" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0918" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0919" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0920" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0921" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0922" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0923" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0924" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0925" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0926" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0927" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0928" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0929" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0930" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0931" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0932" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0933" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0934" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0935" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0936" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0937" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0938" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0939" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0940" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0941" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0942" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0943" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0950" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0951" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0952" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0953" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1490" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1491" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1492" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1564" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1565" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1566" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1567" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1568" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1570" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1571" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1572" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1573" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1574" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1575" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1576" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1577" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1578" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1579" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1580" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1581" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1582" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1583" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1584" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1585" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1586" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1587" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1588" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1589" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1590" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1591" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1592" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1593" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1594" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1595" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1596" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1597" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1598" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1599" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4690" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_0.3">
+          <text>CMA information</text>
+          <enforcement></enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_0.4">
+          <text>Annotations</text>
+          <enforcement>
+            <message component="qacpp" id="4810" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4811" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4812" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4813" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4814" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4815" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4816" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4817" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4820" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4821" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4822" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4823" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4824" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4825" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4826" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4827" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4828" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4829" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4830" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4831" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4832" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4833" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4834" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4835" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_0.5">
+          <text>Dataflow recovery</text>
+          <enforcement>
+            <message component="qacpp" id="2750" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2751" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2752" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2755" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2756" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2757" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2758" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+      </enforcement>
+    </rule>
+    <rule active="yes" help="" id="qacpp_dataflow_5">
+      <text>Dataflow Analysis</text>
+      <enforcement>
+        <rule active="yes" help="" id="qacpp_dataflow_5.1">
+          <text>Conversion to signed</text>
+          <enforcement>
+            <message component="qacpp" id="2850" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2851" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2852" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2853" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2854" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2855" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2856" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2857" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2858" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2859" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2940" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2941" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2942" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2943" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2944" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2945" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2946" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2947" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2948" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2949" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_5.2">
+          <text>Conversion to unsigned</text>
+          <enforcement>
+            <message component="qacpp" id="2890" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2891" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2892" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2893" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2894" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2895" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2896" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2897" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2898" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2899" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2900" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2901" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2902" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2903" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2904" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2905" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2906" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2907" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2908" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2909" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_5.3">
+          <text>Conversion to floating point</text>
+          <enforcement>
+            <message component="qacpp" id="2925" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2926" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_5.4">
+          <text>Shift operations</text>
+          <enforcement>
+            <message component="qacpp" id="2791" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2792" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2793" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2794" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2860" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2861" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2862" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2863" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2864" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2920" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2921" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2922" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2923" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2924" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_5.5">
+          <text>Overflow and wraparound</text>
+          <enforcement>
+            <message component="qacpp" id="2671" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2674" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2676" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2678" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2796" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2797" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2798" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2799" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2800" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2801" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2802" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2803" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2804" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2806" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2807" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2808" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2809" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2816" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2817" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2818" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2819" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2831" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2832" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2833" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2834" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2910" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2911" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2912" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2913" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2914" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2956" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2959" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4781" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4782" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4783" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4784" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4841" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4842" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4843" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4844" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4846" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4847" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4848" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4849" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4851" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4852" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4853" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4856" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4857" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4858" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4859" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4861" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4862" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4863" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4864" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4886" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4887" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4888" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4906" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4907" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4908" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4916" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4917" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4918" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4919" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4921" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4922" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4923" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4924" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_5.6">
+          <text>Arrays</text>
+          <enforcement>
+            <message component="qacpp" id="2835" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2836" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2839" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2840" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2841" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2842" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2843" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2844" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2845" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2846" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2847" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2848" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2849" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2930" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2931" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2932" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2933" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2934" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2935" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2936" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2937" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2938" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2939" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2950" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2951" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2952" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2953" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2954" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_5.7">
+          <text>Pointers</text>
+          <enforcement>
+            <message component="qacpp" id="2668" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2669" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2761" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2762" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2763" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2766" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2767" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2768" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2771" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2772" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2773" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2776" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2777" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2778" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2785" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2786" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2789" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2826" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2827" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2828" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2916" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2917" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2918" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2919" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="3526" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="3527" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="3528" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="3529" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="3531" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="3532" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="3533" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="3534" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4706" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4707" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4708" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4721" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4722" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4723" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4726" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4727" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4728" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4729" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4731" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4732" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4733" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4734" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4736" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4737" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4738" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4739" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4741" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4742" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4743" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4746" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4747" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4748" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4749" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4751" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4752" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4753" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4876" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4877" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4878" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4879" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4880" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4881" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4882" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4883" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4884" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4911" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4912" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4913" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4914" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4941" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4942" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4943" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4955" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4956" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4957" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_5.8">
+          <text>Unset data</text>
+          <enforcement>
+            <message component="qacpp" id="2961" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2962" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2963" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2966" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2967" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2968" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2971" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2972" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2973" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2976" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2977" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2978" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4701" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4702" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4703" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_5.9">
+          <text>NULL pointers</text>
+          <enforcement>
+            <message component="qacpp" id="2810" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2811" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2812" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2813" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2814" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2820" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2821" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2822" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2823" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2824" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4770" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4771" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4772" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4773" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4774" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_5.10">
+          <text>Redundancy</text>
+          <enforcement>
+            <message component="qacpp" id="2865" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2866" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2867" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2868" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2869" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2980" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2981" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2982" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2983" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2984" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2985" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2986" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2987" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_5.11">
+          <text>Resources</text>
+          <enforcement>
+            <message component="qacpp" id="2681" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2682" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2683" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2686" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2687" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2688" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2691" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2692" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2693" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2696" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2697" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2698" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2701" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2702" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2703" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2706" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2707" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2708" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2711" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2712" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2713" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2716" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2717" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2718" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2719" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2721" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2722" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2723" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2724" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2726" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2727" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2728" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2731" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2732" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2733" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2736" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2737" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2738" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2746" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2747" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2748" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4711" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4712" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4713" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4716" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4717" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4718" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4756" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4757" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4758" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4761" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4762" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4766" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4767" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4786" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4787" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4788" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4866" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4867" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4868" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4869" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4871" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4872" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4873" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4874" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4891" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4892" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4893" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4894" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4895" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4896" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4897" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4898" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4899" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4901" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4902" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4903" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4904" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4991" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4992" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4993" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_5.12">
+          <text>Control flow</text>
+          <enforcement>
+            <message component="qacpp" id="2870" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2871" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2872" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2877" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2880" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2881" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2882" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2883" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2886" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2887" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2888" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2889" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4776" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4777" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4778" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4779" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_5.13">
+          <text>Invariant operations</text>
+          <enforcement>
+            <message component="qacpp" id="2743" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2990" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2991" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2992" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2993" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2994" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2995" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2996" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2997" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="2998" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_5.14">
+          <text>Serious Threading Issues</text>
+          <enforcement>
+            <message component="qacpp" id="4926" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4927" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4928" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4931" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4932" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4936" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4937" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4946" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4947" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4951" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4952" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4961" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4962" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4966" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4967" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4971" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4972" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4976" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4977" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4981" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4982" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4986" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4987" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4995" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4996" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4997" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="4998" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+      </enforcement>
+    </rule>
+    <rule active="yes" help="" id="qacpp_dataflow_9">
+      <text>Errors</text>
+      <enforcement>
+        <rule active="yes" help="" id="qacpp_dataflow_9.1">
+          <text>Semantic Errors</text>
+          <enforcement>
+            <message component="qacpp" id="0101" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0133" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0150" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0155" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0156" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0158" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0163" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0164" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0165" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0170" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0173" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0174" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0175" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0176" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0177" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0200" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0201" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0207" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0208" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0217" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0231" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0236" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0246" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0248" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0251" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0257" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0271" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0276" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0278" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0279" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0282" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0306" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0307" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0313" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0320" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0321" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0322" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0323" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0324" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0325" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0326" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0333" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0334" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0335" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0336" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0339" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0350" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0351" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0352" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0353" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0354" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0355" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0356" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0400" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0401" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0403" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0404" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0405" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0415" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0424" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0429" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0439" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0440" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0441" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0445" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0448" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0453" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0454" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0455" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0456" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0457" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0458" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0459" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0469" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0481" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0482" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0483" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0484" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0491" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0492" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0493" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0494" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0496" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0497" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0498" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0627" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_9.2">
+          <text>Syntax Errors</text>
+          <enforcement>
+            <message component="qacpp" id="0016" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0028" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0034" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0045" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0046" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0052" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0053" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0054" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0058" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0059" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0075" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0097" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0284" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0285" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0286" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0287" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0600" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0602" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0616" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0617" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0619" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0620" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0621" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0631" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0632" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0642" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0643" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_9.3">
+          <text>Configuration Errors</text>
+          <enforcement>
+            <message component="qacpp" id="0019" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0020" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0224" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1950" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1951" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1962" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1963" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1964" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1965" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1966" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1967" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1968" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1969" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1970" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1971" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1972" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1973" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1974" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1975" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1976" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1977" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1978" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1979" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1980" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1982" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1984" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1985" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1986" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1987" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1989" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1990" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="1991" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="3104" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+        <rule active="yes" help="" id="qacpp_dataflow_9.4">
+          <text>Unrecoverable Errors</text>
+          <enforcement>
+            <message component="qacpp" id="0014" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0015" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0021" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0022" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0039" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0043" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0050" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0061" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0063" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0079" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0083" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0253" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0255" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0450" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0611" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+      </enforcement>
+    </rule>
+    <rule active="yes" help="" id="qacpp_dataflow_99">
+      <text>Fatal Errors</text>
+      <enforcement>
+        <rule active="yes" help="" id="qacpp_dataflow_99.1">
+          <text>Fatal Errors</text>
+          <enforcement>
+            <message component="qacpp" id="0010" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0011" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0031" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0035" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0036" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0800" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0801" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0802" mapped="yes" version="4.8.0"></message>
+            <message component="qacpp" id="0996" mapped="yes" version="4.8.0"></message>
+          </enforcement>
+        </rule>
+      </enforcement>
+    </rule>
+  </rulegroup>
+</rcf>

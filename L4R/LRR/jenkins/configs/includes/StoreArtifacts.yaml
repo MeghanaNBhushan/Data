@@ -1,0 +1,98 @@
+    - name: Store artifacts
+      executionOrder: ^TPL:execOrder;
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Tools
+        fromPath: ./athena_mt\tools\DiaTester
+        includes: "*.exe, *.py, *.xlsx, *.docx, *.pdf"
+        afterFail: false
+        zip: true
+        zipName: DiaTester
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Tools
+        fromPath: ./athena_mt/tools/VFlash
+        includes: "FR5CU/**"
+        afterFail: false
+        zip: true
+        zipName: VFlash
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Tools
+        fromPath: ./athena_mt/pf_rbs/
+        includes: "canoe/**"
+        afterFail: false
+        zip: true
+        zipName: Canoe
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\
+        fromPath: ./ad_radar_apl/tools
+        includes: "supplements/**"
+        afterFail: false
+        zip: true
+        zipName: Supplements
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Documentation
+        fromPath: ./ad_radar_apl/cubas/gen/FR5CU_WENN1_CEN_N_XX_2_uC2/
+        includes: "Dem_Cfg_EventId.h, Dem_DDL.csv"
+        afterFail: false
+        zip: true
+        zipName: DemEvents_fr5cu
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Documentation
+        fromPath: ./rc_fw/dsp/SW/src/dsp/interface/_variant/FR5yU
+        includes: "dsp_FaultEventId.hpp"
+        afterFail: false
+        zip: true
+        zipName: dsp_FaultEventId_fr5cu
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\SW_build_config
+        fromPath: ./
+        includes: "cmake_build.bat, cmake_gen.bat, tcc_toolversion_uC.txt"
+        afterFail: false
+        zip: false
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\SW_build_config
+        fromPath: ./ad_radar_apl/arch
+        includes: "system.flux, variations.flux"
+        afterFail: false
+        zip: false
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\SW_build_config
+        fromPath: ./ad_radar_apl/tools/cmake/cfg
+        includes: "Radar_C0.cmake, Radar_^TPL:uc1;.cmake, Radar_^TPL:uc2;.cmake, scom_config_uC2.cmake, uC1_Premium_LayoutLinker.cmake, uC2_Premium_LayoutLinker.cmake"
+        afterFail: false
+        zip: false
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\SW_build_config
+        fromPath: ./ip_if/arch/uC/build_options/
+        includes: "development_settings.cmake"
+        afterFail: false
+        zip: false
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\SW_build_config\jenkins
+        fromPath: ./jenkins/configs
+        includes: "includes/**, release/**"
+        afterFail: false
+        zip: false   
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\cfg
+        fromPath: ./ad_radar_apl/cfg/
+        includes: "rbBuild_Version_Cfg.h"
+        afterFail: false
+        zip: false    
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Documentation
+        fromPath: ./ad_radar_apl/doc
+        includes: "*.pdf"
+        afterFail: false
+        zip: true        
+        zipName: FR5CU_Specification_Document
+        
+      
+        
+        
+        
+        
+        
+        
+        
+        

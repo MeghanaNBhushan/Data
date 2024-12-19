@@ -1,0 +1,28 @@
+parameters:
+  - name: image
+    type: string
+    default: ir2acr.azurecr.io/a-core-debian-base-image
+  - name: tag
+    type: string
+    default: latest
+
+
+steps:
+  - task: Cache@2
+    displayName: Cache task
+    inputs:
+      key: 'docker | "$(Agent.OS)" | cache'
+      path: $(Pipeline.Workspace)/docker
+      cacheHitVar: CACHE_RESTORED                #Variable to set to 'true' when the cache is restored
+    
+  - script: |
+      docker load -i $(Pipeline.Workspace)/docker/cache.tar
+    displayName: Docker restore
+    condition: and(not(canceled()), eq(variables.CACHE_RESTORED, 'true'))
+
+  - script: |
+      mkdir -p $(Pipeline.Workspace)/docker
+      docker pull ${{ parameters.image }}:${{ parameters.tag }}
+      docker save -o $(Pipeline.Workspace)/docker/cache.tar ${{ parameters.image }}:${{ parameters.tag }}
+    displayName: Docker save
+    condition: and(not(canceled()), not(failed()), ne(variables.CACHE_RESTORED, 'true'))

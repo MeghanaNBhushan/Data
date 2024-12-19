@@ -1,0 +1,134 @@
+#schedules:
+#- cron: '0 0 * * *'
+#  displayName: Daily midnight build
+#  branches:
+#   include:
+#    - master
+#  always: true
+
+  
+trigger: none
+
+pr: none
+
+variables:
+- name: BRANCH_NAME
+  value: $(Build.SourceBranchName)
+- name: COMMIT_ID
+  value: $(Build.SourceVersion)
+
+stages:
+- stage: PetalinuxContainer
+  variables:
+  - group: swbuildst-credentials
+  - group: artifactory-credentials
+  jobs:
+  - job: PetalinuxContainerBuild
+    pool: berlin-d2sv3-vmss 
+    timeoutInMinutes: 0 
+    cancelTimeoutInMinutes: 35790
+    steps:
+    - checkout: self  
+      lfs: true
+    - template: /devops/templates/steps/mount-storage-account.yml
+      parameters:
+        sa_user_name: $(swbuildst-user)
+        sa_user_password: $(swbuildst-password)
+        sa_uri: //swbuildst.file.core.windows.net/peta-transfer
+        mountdir: /mnt/peta-transfer
+    - template: /devops/templates/steps/docker-login.yml
+      parameters:
+        user: $(devops-artifactory-access-user)
+        token: $(devops-artifactory-access-token)
+    - template: /devops/templates/steps/petalinux-container-build.yml
+
+- stage: BaseImage
+  variables:
+  - group: swbuildst-credentials
+  - group: artifactory-credentials
+  jobs:
+  - job: BaseImageBuild 
+    pool: munich-d16asv5-vmss
+    timeoutInMinutes: 0 
+    cancelTimeoutInMinutes: 35790
+    steps:
+    - checkout: self  
+      lfs: true
+    - template: /devops/templates/steps/mount-storage-account.yml
+      parameters:
+        sa_user_name: $(swbuildst-user)
+        sa_user_password: $(swbuildst-password)
+        sa_uri: //swbuildst.file.core.windows.net/sstate-cache-petalinux-2021dot2
+        mountdir: /mnt/sstate-cache-petalinux-2021dot2
+    - template: /devops/templates/steps/mount-storage-account.yml
+      parameters:
+        sa_user_name: $(swbuildst-user)
+        sa_user_password: $(swbuildst-password)
+        sa_uri: //swbuildst.file.core.windows.net/downloads-petalinux-2021dot2
+        mountdir: /mnt/downloads-petalinux-2021dot2
+    - template: /devops/templates/steps/docker-login.yml
+      parameters:
+        user: $(devops-artifactory-access-user)
+        token: $(devops-artifactory-access-token)
+    - template: /devops/templates/steps/base-image-build.yml
+    - template: /devops/templates/steps/apppackage-container-build.yml
+    - bash: |
+        echo "##vso[task.setvariable variable=EXECUTED;isOutput=true]true"
+      name: BaseImageStage
+      displayName: Saving execution state of base image stage
+
+- stage: Application
+  variables:
+  - group: artifactory-credentials
+  - group: vrte-credentials
+  - name: PreviousStageExecuted
+    value: $[ stageDependencies.BaseImage.BaseImageBuild.outputs['BaseImageStage.EXECUTED'] ]
+  jobs:
+  - job: RCoreBuild
+    pool: seattle-d2sv3-vmss
+    steps:
+      - template: /devops/templates/steps/r-core-build.yml
+  - job: ApplicationBuild
+    dependsOn: RCoreBuild
+    pool: munich-d16asv5-vmss
+    timeoutInMinutes: 0 
+    cancelTimeoutInMinutes: 35790 
+    steps:
+    - checkout: self  
+      lfs: true
+    - template: /devops/templates/steps/docker-login.yml
+      parameters:
+        user: $(devops-artifactory-access-user)
+        token: $(devops-artifactory-access-token)
+    - template: /devops/templates/steps/apppackage-fusion.yml
+    - template: /devops/templates/steps/sca-container-build.yml
+    - template: /devops/templates/steps/vrte-build.yml
+    
+  - job: UnitTesting
+    pool: berlin-d2sv3-vmss 
+    timeoutInMinutes: 0 
+    cancelTimeoutInMinutes: 35790
+    steps:
+    - checkout: self  
+      lfs: true
+    - template: /devops/templates/steps/docker-login.yml
+      parameters:
+        user: $(devops-artifactory-access-user)
+        token: $(devops-artifactory-access-token)
+    - template: /devops/templates/steps/gtest-on-host.yml
+    - template: /devops/templates/steps/lines-of-code.yml
+
+- stage: Testing
+  condition: in(dependencies.Application.result, 'Succeeded')
+  jobs:
+  - job: ContinuousTesting
+    pool: 
+      name: local-test-benches
+      demands:
+        - Agent.name -equals LR-Z6021
+    steps:
+    - checkout: self
+    - template: /devops/templates/steps/flash.yml
+    - template: /devops/templates/steps/continuousTesting.yml
+    - template: /devops/templates/steps/ad-radar-sensor-app-deb-install.yml
+    

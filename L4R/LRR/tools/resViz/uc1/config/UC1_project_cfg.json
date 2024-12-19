@@ -1,0 +1,113 @@
+{
+  "Domains": [
+    {
+      "name": "Infrastructure",
+      "ram": 1167246,
+      "rom": 1239112,	  
+      "libs": [
+        "libcubas.a",
+        "libdaddy.a",
+        "libdsp.a",
+        "libnet_x.a",
+        "libnvm_x.a",
+        "libRA_spi.a",
+        "libRA5_apl_cubas.a",
+        "libRA5_apl_EcuCybSec.a",
+        "libRA5_apl_main.a",
+        "libRA5_apl_memprot.a",
+        "libRA5_apl_traptest.a",
+        "librba_cubas.a",
+        "librbAdc.a",
+        "librbAdcPhy.a",
+        "librbAlarmHandler.a",
+        "librbBist.a",
+        "librbCS520.a",
+        "librbEru.a",
+        "librbExtClk.a",
+        "librbHsct.a",
+        "librbHsmPrepare.a",
+        "librbHsmPrepare_Cfg.a",
+        "librbHsmService.a",
+        "librbHssl.a",
+        "librbHwCfgCheck.a",
+        "librbHwCrc.a",
+        "librbIfController.a",
+        "librbInterruptHandler.a",
+        "librbLifeCycle.a",
+        "librbLinkerPL.a",
+        "librbMcu.a",
+        "librbMemProt.a",
+        "librbMemstack.a",
+        "librbMonReact.a",
+        "librbMpuSRIBusConfig.a",
+        "librbMpuSRIBusConfig_Radar.a",
+        "librbNetScheduler.a",
+        "librbNetXcp.a",
+        "librbOsSetup.a",
+        "librbPda.a",
+        "librbPFlashIntegrity.a",
+        "librbsbst.a",
+        "librbSftMon.a",
+        "librbSftMonRadar.a",
+        "librbStartReason.a",
+        "librbStartup.a",
+        "librbSysEvmAdapt.a",
+        "librbSysLog.a",
+        "librbSysLogPL.a",
+        "librbSysMode.a",
+        "librbTaskAliveCheck.a",
+        "librbTime.a",
+        "librbTrapHandler.a",
+        "librbTrustedBoot.a",
+        "libvx1100.a",
+        "RTAOS.a",
+        "XcpSeedKey.a"
+      ],
+      "objs": [
+        "spu_sbst.o",
+        "CPU_SBST.o"
+      ],
+      "scom": [
+        "g_dsp_dspMain_uC1__4scom",
+        "*g_dsp_dspWorker1_uC1*",
+        "*g_dsp_dspWorker2_uC1_*",
+        "*g_dsp_dspWorker3_uC1*"
+      ]
+    },
+    {
+      "name": "COMPILER",		
+      "ram": 2000,
+      "rom": 10000,	  
+      "libs": [
+        "libsys.a",
+        "libarch.a",
+        "libansi.a",
+        "libcpp11thnoe.a",
+        "libsedgnoe.a",
+        "libind_sd.a",
+        "libmath_sd.a",
+        "libstartup.a",
+        "libfmalloc.a"
+      ]
+    }
+  ],
+  "Global": {
+    "LINKER": {
+      "name": "_LinkerSymbols_",
+      "ram": 100,
+      "rom": 1024
+    },
+    "NODOMAIN": {
+      "name": "_NO_DOMAIN_",
+      "ram": 0,
+      "rom": 0
+    },
+    "ram": 1849904, 
+    "rom": 5685248,  
+    "scom_config": {
+      "objectfile": [
+        "libRA5_apl_main.a(scom.o)"
+      ]
+    }
+  }
+}

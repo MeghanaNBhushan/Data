@@ -1,0 +1,14 @@
+# Release dependencies
+-r requirements.txt
+# Dev-only dependencies
+coverage==5.4
+pycodestyle==2.6.0
+pylint==2.6.0
+unittest-xml-reporting==3.0.4
+behave==1.2.6
+pyhamcrest==2.0.2
+beautifulsoup4==4.9.3
+nox==2020.12.31
+xlrd==1.2.0
+build==0.7.0
+twine==3.8.0

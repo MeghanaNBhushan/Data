@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<prqaproject xmlversion="3.0.0" qafversion="2.3.0">
+ <!-- Config file information... -->
+ <configurations>
+  <cosmetic_name name="qaf"/>
+  <languageFamily name="C/C++"/>
+  <processMonitor>
+   <includeOptionSyntax>
+    <option string="-I"/>
+    <option string="/I"/>
+   </includeOptionSyntax>
+   <defineOptionSyntax>
+    <option string="-D"/>
+    <option string="/D"/>
+   </defineOptionSyntax>
+   <settingsOptionSyntax>
+    <option compiler="Visual Studio" string="@" quotes_escaped="yes" extension=".rsp"/>
+    <option compiler="Windriver" string=" -@" quotes_escaped="yes" extension=""/>
+    <option compiler="Greenhills" string="--Via" quotes_escaped="yes" extension="__i"/>
+   </settingsOptionSyntax>
+   <excludeStrings/>
+   <fileFilterStrings>
+    <option string="/opt"/>
+    <option string="/usr"/>
+   </fileFilterStrings>
+  </processMonitor>
+  <suppressIncludes active="no"/>
+  <root_paths>
+   <root_path path="/source" name="SOURCE_ROOT"/>
+  </root_paths>
+  <default_config name="Initial"/>
+  <!-- Individual Configs... -->
+  <config name="Initial">
+   <baselinedSourceRoot baseline="OFF"/>
+   <baselineSnapshot id="" name="" date=""/>
+   <acf name="project.acf"/>
+   <rcf name="project.rcf"/>
+   <ccts>
+    <cct target="C" active="yes" name="GNU_GCC-gcc_5.4-x86_64-generic-linux-C-c11.cct"/>
+    <cct target="C++" active="yes" name="GNU_GCC-g++_5.4-x86_64-generic-linux-C++-c++11.cct"/>
+   </ccts>
+   <vcf name="project.vcf"/>
+   <messages name="/home/ert2fr/Dokumente/prqa_qaf/user_library/user_messages/messages.xml"/>
+  </config>
+ </configurations>
+ <!-- Mapping of extension to target_language... -->
+ <file_extensions>
+  <language target="C">
+   <extension ext=".c"/>
+  </language>
+  <language target="C++">
+   <extension ext=".cpp"/>
+  </language>
+  <language target="C++">
+   <extension ext=".cxx"/>
+  </language>
+  <language target="C++">
+   <extension ext=".cc"/>
+  </language>
+  <language target="C++">
+   <extension ext=".C"/>
+  </language>
+  <language target="C++">
+   <extension ext=".cp"/>
+  </language>
+  <language target="C++">
+   <extension ext=".c++"/>
+  </language>
+ </file_extensions>
+ <!-- Files in project... -->
+ <files>
+  <!-- Explicit files... -->
+ </files>
+</prqaproject>

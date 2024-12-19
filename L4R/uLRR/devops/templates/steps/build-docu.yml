@@ -1,0 +1,312 @@
+parameters:
+- name: build_html
+  type: string
+  default: yes
+- name: build_needs
+  type: string
+  default: yes
+- name: build_latexpdf
+  type: string
+  default: yes
+- name: publish_azure_webserver
+  type: string
+  default: yes
+- name: publish_artifactory_develop
+  type: string
+  default: yes
+- name: publish_artifactory_master
+  type: string
+  default: yes
+- name: publish_artifactory_feature
+  type: string
+  default: no
+- name: builddir 
+  type: string
+  default: _build
+- name: docker_registry 
+  type: string
+  default: artifactory.boschdevcloud.com
+- name: docker_registry_path 
+  type: string
+  default: zugspitze-series-docker-local/ad-radar-sensor-docker-doc-as-code
+- name: image_name 
+  type: string
+  default: sphinxneeds-toolkit
+- name: image_tag 
+  type: string
+  default: '2.0.0'
+- name: zip_name
+  type: string
+  default: documentation-build-all
+- name: time_stamp
+  type: string
+
+steps:
+  # Checkout repository
+  # For every build required, no condition
+  - checkout: self
+    lfs: true
+    fetchTags: true
+
+    # Job Info
+    # - Add a timestamp to the file name next to the commit ID to see the chronological build sequence of the files.
+  - script: |
+      echo "Build.Reason: $(Build.Reason)"
+
+      echo "***** Show Parameters"
+      echo "build_html: ${{ parameters.build_html }}"
+      echo "build_needs: ${{ parameters.build_needs }}"
+      echo "build_latexpdf: ${{ parameters.build_latexpdf }}"
+      echo "publish_azure_webserver: ${{ parameters.publish_azure_webserver }}"
+      echo "publish_artifactory_develop: ${{ parameters.publish_artifactory_develop }}"
+      echo "publish_artifactory_master: ${{ parameters.publish_artifactory_master }}"
+      echo "publish_artifactory_feature: ${{ parameters.publish_artifactory_feature }}"
+
+      echo "builddir: ${{ parameters.builddir }}"
+      echo "##vso[task.setvariable variable=BUILDDIR]${{ parameters.builddir }}"
+
+      echo "docker_registry: ${{ parameters.docker_registry }}"
+      echo "##vso[task.setvariable variable=DOCKER_REGISTRY]${{ parameters.docker_registry }}"
+
+      echo "docker_registry_path: ${{ parameters.docker_registry_path }}"
+      echo "##vso[task.setvariable variable=DOCKER_REGISTRY_PATH]${{ parameters.docker_registry_path }}"
+
+      echo "image_name: ${{ parameters.image_name }}"
+      echo "##vso[task.setvariable variable=IMAGE_NAME]${{ parameters.image_name }}"
+
+      echo "image_tag: ${{ parameters.image_tag }}"
+      echo "##vso[task.setvariable variable=IMAGE_TAG]${{ parameters.image_tag }}"
+
+      echo "time_stamp: ${{ parameters.time_stamp }}"
+      echo "##vso[task.setvariable variable=TIME_STAMP]${{ parameters.time_stamp }}"
+      
+      echo "zip_name: ${{ parameters.zip_name }}"
+      echo "##vso[task.setvariable variable=ZIP_NAME]${{ parameters.zip_name }}"
+
+      echo "***** Show Variables"
+      commit_id=$(Build.SourceVersion)
+      echo "commit_id: $commit_id"
+      echo "##vso[task.setvariable variable=COMMIT_ID]$commit_id"
+
+      short_commit_id=${commit_id:0:8}
+      echo "short_commit_id: $short_commit_id"
+      echo "##vso[task.setvariable variable=SHORT_COMMIT_ID]$short_commit_id"
+
+      branch_name=$(Build.SourceBranch)
+      echo "branch_name: $branch_name"
+      echo "##vso[task.setvariable variable=BRANCH_NAME]$branch_name"
+
+      branch_type='none'
+      if [[ $branch_name == *"refs/heads/develop"* ]]; then
+        branch_type='develop'
+      fi
+
+      if [[ $branch_name == *"refs/heads/feature"* ]]; then
+        branch_type='feature'
+      fi
+
+      if [[ $branch_name == *"refs/heads/master"* ]]; then
+        branch_type='master'
+      fi
+
+      echo "branch_type: $branch_type"
+      echo "##vso[task.setvariable variable=BRANCH_TYPE]$branch_type"
+
+      zip_name_timestamp_commitid="${{ parameters.zip_name }}-${{ parameters.time_stamp }}-$short_commit_id.zip"
+      echo "zip_name_timestamp_commitid : $zip_name_timestamp_commitid"
+      echo "##vso[task.setvariable variable=ZIP_NAME_TIMESTAMP_COMMITID]$zip_name_timestamp_commitid"
+    name: jobInfo
+    displayName: Job Info
+
+  # Login to artifactory
+  # For every build required, no condition
+  - template: /devops/templates/steps/docker-login.yml
+    parameters:
+      user: $(docs4radar-artifactory-id)
+      token: $(docs4radar-artifactory-token)
+
+  # Download docker image form artifactory
+  # For every build required, no condition
+  - bash: |
+      set -x
+      docker pull $(DOCKER_REGISTRY)/$(DOCKER_REGISTRY_PATH)/$(IMAGE_NAME):$(IMAGE_TAG)
+      set +x
+    displayName: Download docker image form artifactory
+
+  # Build sphinxneeds html
+  # condition required
+  - bash: |
+      cd $(Build.SourcesDirectory)/
+      pwd
+      ls -l -a
+      set -x
+      docker run --rm \
+      --mount type=bind,source=$(Build.SourcesDirectory)/.git,target=/.git \
+      --mount type=bind,source=$(Build.SourcesDirectory)/documentation,target=/documentation \
+      --mount type=bind,source=$(Build.SourcesDirectory)/software,target=/software \
+      --mount type=bind,source=$(Build.SourcesDirectory)/tools/sphinxneeds_toolkit/.gitconfig,target=/home/dockeruser/.gitconfig \
+      --workdir=/documentation \
+      --env GITBRANCHNAME=$(BRANCH_NAME) \
+      $(DOCKER_REGISTRY)/$(DOCKER_REGISTRY_PATH)/$(IMAGE_NAME):$(IMAGE_TAG) make html
+      set +x
+      cd $(Build.SourcesDirectory)/documentation/$(BUILDDIR)/html
+      pwd
+      ls -a
+    displayName: Build sphinxneeds html
+    condition: eq('${{ parameters.build_html }}', 'yes')
+
+  # Build sphinxneeds needs
+  # condition required
+  - bash: |
+      cd $(Build.SourcesDirectory)/
+      pwd
+      ls -l -a
+      set -x
+      docker run --rm \
+      --mount type=bind,source=$(Build.SourcesDirectory)/.git,target=/.git \
+      --mount type=bind,source=$(Build.SourcesDirectory)/documentation,target=/documentation \
+      --mount type=bind,source=$(Build.SourcesDirectory)/software,target=/software \
+      --mount type=bind,source=$(Build.SourcesDirectory)/tools/sphinxneeds_toolkit/.gitconfig,target=/home/dockeruser/.gitconfig \
+      --workdir=/documentation \
+      --env GITBRANCHNAME=$(BRANCH_NAME) \
+      $(DOCKER_REGISTRY)/$(DOCKER_REGISTRY_PATH)/$(IMAGE_NAME):$(IMAGE_TAG) make needs
+      set +x
+      cd $(Build.SourcesDirectory)/documentation/$(BUILDDIR)/needs
+      pwd
+      ls -a
+    displayName: Build sphinxneeds needs
+    condition: eq('${{ parameters.build_needs }}', 'yes')
+
+  # Build sphinxneeds latexpdf
+  # condition required
+  - bash: |
+      cd $(Build.SourcesDirectory)/
+      pwd
+      ls -l -a
+      set -x
+      docker run --rm \
+      --mount type=bind,source=$(Build.SourcesDirectory)/.git,target=/.git \
+      --mount type=bind,source=$(Build.SourcesDirectory)/documentation,target=/documentation \
+      --mount type=bind,source=$(Build.SourcesDirectory)/software,target=/software \
+      --mount type=bind,source=$(Build.SourcesDirectory)/tools/sphinxneeds_toolkit/.gitconfig,target=/home/dockeruser/.gitconfig \
+      --workdir=/documentation \
+      --env GITBRANCHNAME=$(BRANCH_NAME) \
+      $(DOCKER_REGISTRY)/$(DOCKER_REGISTRY_PATH)/$(IMAGE_NAME):$(IMAGE_TAG) make latexpdf VARIANT='-t IR2Plus'
+      set +x
+      cd $(Build.SourcesDirectory)/documentation/$(BUILDDIR)/latex
+      pwd
+      ls -a
+    displayName: Build sphinxneeds latexpdf
+    condition: eq('${{ parameters.build_latexpdf }}', 'yes')
+
+  # Check sphinx needs warning logs
+  # For every build required, no condition
+  - task: PythonScript@0
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath: $(Build.SourcesDirectory)/documentation/check_sphinx_needs_warnings.py
+      pythonInterpreter: python3.8
+      failOnStderr: true
+    displayName: Check sphinx needs warning logs
+
+  # Create validation report (html and markdown)
+  # condition required
+  - bash: |
+      cd $(Build.SourcesDirectory)/
+      pwd
+      ls -l -a
+      set -x
+      docker run --rm \
+      --mount type=bind,source=$(Build.SourcesDirectory)/.git,target=/.git \
+      --mount type=bind,source=$(Build.SourcesDirectory)/documentation,target=/documentation \
+      --mount type=bind,source=$(Build.SourcesDirectory)/software,target=/software \
+      --mount type=bind,source=$(Build.SourcesDirectory)/tools/sphinxneeds_toolkit/.gitconfig,target=/home/dockeruser/.gitconfig \
+      --workdir=/documentation \
+      --env GITBRANCHNAME=$(BRANCH_NAME) \
+      $(DOCKER_REGISTRY)/$(DOCKER_REGISTRY_PATH)/$(IMAGE_NAME):$(IMAGE_TAG) validation_report -o _build/metamodel/ -t markdown _build/metamodel/report.ttl
+      docker run --rm \
+      --mount type=bind,source=$(Build.SourcesDirectory)/.git,target=/.git \
+      --mount type=bind,source=$(Build.SourcesDirectory)/documentation,target=/documentation \
+      --mount type=bind,source=$(Build.SourcesDirectory)/software,target=/software \
+      --mount type=bind,source=$(Build.SourcesDirectory)/tools/sphinxneeds_toolkit/.gitconfig,target=/home/dockeruser/.gitconfig \
+      --workdir=/documentation \
+      --env GITBRANCHNAME=$(BRANCH_NAME) \
+      $(DOCKER_REGISTRY)/$(DOCKER_REGISTRY_PATH)/$(IMAGE_NAME):$(IMAGE_TAG) validation_report -o _build/metamodel/ -t html _build/metamodel/report.ttl
+      cd $(Build.SourcesDirectory)/documentation/$(BUILDDIR)/
+      pwd
+      ls -a
+      set +x
+    displayName: Create validation report
+    condition: or(
+                  eq('${{ parameters.build_html }}', 'yes'),
+                  eq('${{ parameters.build_needs }}', 'yes')
+                  )
+
+  # Pack (zip) build output
+  # For every build required, no condition
+  - bash: |
+      cd $(Build.SourcesDirectory)/documentation/$(BUILDDIR)/
+      pwd
+      set -x
+      zip -qr $(ZIP_NAME_TIMESTAMP_COMMITID) . --include "/html/*" "/metamodel/*" "/needs/*" "/latex/*.pdf" "*.tag" "*.log"
+      echo -e "**/*\n!*.zip" > .artifactignore
+      ls -a
+      set +x
+    displayName: Pack (zip) build output
+
+  # Publish to azure devops
+  # For every build required, no condition
+  - publish: $(Build.SourcesDirectory)/documentation/$(BUILDDIR)
+    artifact: REPORT-all-build-output-$(System.StageAttempt)-$(System.JobAttempt)
+    displayName: Publish to azure devops
+
+  # Publish to azure webserver
+  - bash: |
+      # remove prefix refs/heads/ from branch name
+      full_branch=$(Build.SourceBranch)
+      branch=${full_branch#refs/heads/}
+      
+      echo "Publish file to to https://docs4radar.azurewebsites.net/${branch}/"
+      azcopy sync "$(Build.SourcesDirectory)/documentation/$(BUILDDIR)" "https://docs4radarst.blob.core.windows.net/web/${branch}/?$(docs4radarst-web)" --compare-hash MD5 --delete-destination true --include-regex "^html/.*$;^.*/html/.*$;^.*/.*\.json$;^.*/.*\.pdf$;^metamodel/.*$;^[^/]*\.zip$"
+
+    displayName: Publish to azure webserver
+    condition: eq('${{ parameters.publish_azure_webserver }}', 'yes')
+
+  # Publish to artifactory (BDC)
+  # - develop and master on pull-request, feature branch is optional.
+  # - Splunk folder for latest develop or master build. This is the output to splunk.
+  # - Step is skipped due to condition evaluation "false".
+  - task: ArtifactoryGenericUpload@2
+    inputs:
+      artifactoryService: 'sc-ado-artifactory'
+      specSource: 'taskConfiguration'
+      fileSpec: |
+        {
+          "files": [
+            {
+              "pattern": "$(Build.SourcesDirectory)/documentation/$(BUILDDIR)/$(ZIP_NAME_TIMESTAMP_COMMITID)",
+              "target": "zugspitze-series-generic-local/product-engineering-documentation/$(BRANCH_TYPE)/$(ZIP_NAME_TIMESTAMP_COMMITID)"
+            },
+            {
+              "pattern": "$(Build.SourcesDirectory)/documentation/$(BUILDDIR)/needs/needs.json",
+              "target": "zugspitze-series-generic-local/product-engineering-documentation/$(BRANCH_TYPE)/splunk/needs.json"
+            }
+          ]
+        }
+      failNoOp: true
+    displayName: Publish to artifactory (BDC)
+    condition: | 
+          or(
+              and(
+                  eq(variables['BRANCH_TYPE'], 'develop'),
+                  eq('${{ parameters.publish_artifactory_develop }}', 'yes')
+                  ),
+              and(
+                  eq(variables['BRANCH_TYPE'], 'master'),
+                  eq('${{ parameters.publish_artifactory_master }}', 'yes')
+                  ),
+              and(
+                  eq(variables['BRANCH_TYPE'], 'feature'),
+                  eq('${{ parameters.publish_artifactory_feature }}', 'yes')
+                  )
+            )

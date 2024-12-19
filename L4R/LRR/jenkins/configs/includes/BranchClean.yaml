@@ -1,0 +1,6 @@
+    - name: Branch Cleaner
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: branch_cleaner.bat  
+        fromPath: ./ad_radar_apl/tools/branch_cleaner
+        name: Old Branch reminder

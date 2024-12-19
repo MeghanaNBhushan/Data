@@ -1,0 +1,4 @@
+include(x86_64_qnx71_qcc83_debug_build)
+
+[settings]
+build_type=Release

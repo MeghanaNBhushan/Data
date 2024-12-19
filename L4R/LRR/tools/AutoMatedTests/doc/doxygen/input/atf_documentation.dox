@@ -1,0 +1,904 @@
+/*!
+\page atf_documentation Automated Test Framework - Documentation
+
+
+\section atf_sec_coarse_idea Implementation Description 
+
+This section describes the idea of the Automated Test Framework (ATF). 
+ 
+The ATF is mainly divided into two domains:
+- \b Framework - Includes all the environment for the execution of the test cases.   
+	- T32 Interface: Almost all functionalities available in the T32 GUI can be accessed via interface
+	- CANoe Interface: Provides access to canoe signals, buttons in panels, environment, system variables etc
+- \b Test \b cases - All test cases which are executed by the framework.  
+
+
+\subsection aft_sub_sec_implementation_additional_feature Additional Feature
+
+\subsubsection atf_sub_sub_additional_feature_filterMechanism Filter Mechanism
+
+The filter mechanism enables the framework to executed only test cases which are defined by the user. Currently a simple filter is implemented according 
+the following pattern (activity diagram \ref atf_sub_sub_activityDiagram_getFilteredTestCaseDictionary):
+ - "*" -> all tests are executed, e.g. for nightly builds
+ - Component based execution, e.g. \e "int, sdm, rbSysEvM". Only the test cases for the defined component will be executed. 
+   Components are separated ",". If a single component is defined, the "," has to be added, too, e.g. \e "outputhandler,". The names have to match the 
+   name defined in testrunner.CTestRunner.getComponentName() of the \e testrunner.py interface.
+ - Test case filter by string, e.g. \e "InSpec; check_trap_information; check_smu; check_daddy_error_information". Specific test case(s) are executed 
+   based on sub-strings or list of them. Multiple strings have to be separated by ";". The the sub-string is case sensitive.
+
+The mechanism uses the Python built-in function \e dir() which returns a list of names in the module namespace. The resulting list is sorted alphabetically,
+which means, that the test case execution order can't be guaranteed. Based on the retrieved list and applied filter, the test cases function is executed. 
+To disable some test cases, it is not enough to comment the test case out, an test case activation list of custom filter has to be provided. Based on this 
+activation list the corresponding test cases are executed. The activation list is provided to testsuite.CTestSuite.executeFilteredFunctionUser(). If all      
+test cases of the component have to be executed testsuite.CTestSuite.executeFilteredFunction() should be used.
+
+
+
+\section atf_sec_design Detailed Design
+
+\subsection atf_sub_sec_component_interfaces Component Interfaces
+@startuml
+
+[ATF] -down- CANoe_api : <<realize>>
+[ATF] -up- Logger_api : <<realize>>
+[ATF] -right- Relay_api : <<realize>>
+[ATF] -left- Trace32_api : <<realize>>
+
+@enduml
+
+
+\subsection atf_sub_sec_component_design Component Design
+
+\subsubsection atf_sub_sub_sec_component_design_overview Overview
+
+@startuml
+
+package "atf" {
+
+frame "framework" {
+	[config]
+	[helper]	
+	[main]
+	[scheduling]
+	[interface]
+}
+
+frame "testcases" {
+	[sdm]
+	[rbSysEvM]
+	[diag]
+	[int]
+	[outputhandler]
+    [lodm]
+}
+
+}
+
+@enduml
+
+
+\subsubsection atf_sub_sub_sec_component_design_interfaces Interfaces
+
+@startuml
+
+frame "framework" {
+	[helper]	
+	[interface]
+}
+	
+	interface -down- CANoe_api : <<realize>>
+	interface -down- Logger_api : <<realize>>
+	interface -up- Relay_api : <<realize>>
+	interface -up- Trace32_api : <<realize>>
+	interface -right- Assert_api : <<realize>>
+	
+	helper -up- CANoeDiag_api : <<realize>>
+	helper -down- Lauterbach_api : <<realize>>
+	helper -left- InputFunction_api : <<realize>>	
+
+@enduml
+
+
+\subsection atf_sub_sec_classes Class Overview
+
+\subsubsection atf_sub_sub_sec_classes_interfaces Interfaces
+
+@startuml
+
+class Logger {
+ + __init__()
+ + del_logger(logger)
+ + get_logger(name)
+ + create_report(report_dir, logger, hw)
+}
+
+class Relay {
+ + control(behaviour)
+}
+
+class CANoe {
+ + __init__(cfgFile)
+ + startMeasurement()
+ + stopMeasurement()
+ + setupCANoeEnvironment(tollnerPort)
+ + setSysVar(namespace, variable, variableValue)
+ + setSysVarMemberValue(namespace, variable, member, variableValue)
+ + getSysVar(namespace, variable,member)
+ + isSignalOnline(bus, channel, namespace, signalName) 
+ + deactivateBus(busName)
+ + activateBus(busName)
+ + getSignalVal(bus, channel, namespace, signalName)
+ + setEnvVar(EnVar, EnVarValue)
+ + getEnvVar(EnVar)
+ + EnvVarButton(button)
+ + EnableNode(node)
+ + DisableNode(node)
+ + connectPowerSupply()
+ + enableSwitchButton(button)
+ + disableSwitchButton(button) 
+}
+
+class Trace32MultiApi {
+ + __init__(logger_api, trace32_config_file, dev_id, startup_script_file, host) 
+ + __read_trace32_config__()
+ + __start_power_view__()
+ + __connect_power_view_instance__()
+ + execute_t32_command(command)
+ + disconnect_power_view()    
+ + close_power_view()
+ + execute_t32_script(script_name)
+ + flash_hex_and_load_sym(elf_file, hex_file)
+ + synch_off()
+ + synch_on()  
+ + flash_hex(hex_file)
+ + load_elf(elf_file)    
+ + reset(mode, behaviour)
+ + get_variable_info(variable)
+ + get_variable_value(variable)
+ + get_variable_value_unsigned(variable)
+ + set_variable_value(variable, value, valueh)        
+ + get_state() 
+ 
+ + channel
+ + api
+ + logger 
+}
+
+class Trace32Api {
+ + __init__(logger_api, trace32_config_file, dev_id, startup_script_file, host)
+ + __read_trace32_config__()
+ + __start_power_view__()
+ + __connect_power_view__()
+ + disconnect_power_view()
+ + close_power_view()
+ + execute_t32_command(command)
+ + execute_t32_script(script_name)
+ + flash_hex_and_load_sym(elf_file, hex_file)
+ + flash_hex(hex_file)
+ + load_elf(elf_file)
+ + reset(mode, behavior)
+ + get_variable_info(variable)
+ + get_variable_value(variable)
+ + set_variable_value(variable, value, valueh)
+ + get_variable_value_as_string(variable)
+ + set_variable_value_as_string(variable, value)
+ + get_state()
+
+ + api
+ + api_dll_path
+ + inst_path
+ + trace32_config_file
+ + startup_script_file
+ + host
+ + port
+ + dev_id
+ + power_view_instance
+ + packet_length
+ + rcl
+ + logger
+}
+
+class Input {
+ + __init__(parser, logger)
+ + get_filename(pattern)   
+ + get_args()
+}
+
+class TestExecution {
+ + __init__(report_dir, logger_api, canoe_api, t32_api, relay_api, hw, tollnerPS_port, args)
+ + __del__()
+ + run_tests()
+ + run_tests_uC1()       
+ + run_tests_uC2()
+}
+
+Trace32Api <|-- Trace32MultiApi
+
+class CExecutionTime {
+ + __init__()
+ + startMeasurement()
+ + stopMeasurement()
+ + getElapsedTime()
+ + measureFunctionTime()
+ 
+ + startTimer: default_timer
+ + endTimer: default_timer
+}
+
+@enduml
+
+
+\subsubsection atf_sub_sub_sec_classes_test Test Classes
+
+@startuml
+
+class TestSuiteResult {
+ + numberTests
+ + numberFailedTests
+
+ + __init__(numberTests, numberFailedTests):        
+ + __iadd__(other)
+}
+
+class CTestCaseResult {
+ + numberTests
+ + numberPassedTests
+ + numberFailedTests
+
+ + __init__(numberTests, numberFailedTests):        
+}
+
+class CTestSuite {
+ + __init__(canoe_api , t32_api, relay_api, hw, globalTestcaseFilter)
+ + createTestCaseDictionary()          
+ + getFilteredTestCaseDictionary(dictFilter, inputDict)        
+ + executeDictionaryFunction(dictionary, t32_api)
+ + executeFilteredFunction(t32_api)
+ + executeFilteredFunctionUser(t32_api, userFilter) 
+
+ + logger : Logger
+ + canoe_api : CANoe
+ + relay_api : Relay
+ + t32_api : Trace32MultiApi
+ + hw
+ + dir_path
+ + rqm
+ + number_of_test
+ + globalTestcaseFilter
+}
+
+class CTestSuiteDiagBasic {
+ + __init__(logger_api, canoe_api, t32_api, relay_api, hw, globalTestcaseFilter)
+ + executeFr5CuTestsUC1()
+ + executeFr5CuTestsUC2()
+ + getComponentName()             
+ + runAllDiagBasicTests(t32_api)  
+
+ + swTest_measurement_cycle_sync_DIDWriteRead_MCSselector_from_diag()
+ + swTest_measurement_cycle_sync_DIDWriteRead_MCSselector_pdu()
+ + swTest_measurement_cycle_sync_DIDWrite_requestoutofrange()
+ + swTest_mounting_position_DIDWriteRead( )
+ + swTest_mounting_position_DIDWrite_requestoutofrange()
+ + swTest_check_identification_DIDs()
+ + swTest_check_BoschFailureMemory_DID()
+ + swTest_check_BoschSwVersion_DIDs()
+ + swTest_DiagSessionCntrl()
+ + swTest_checkClearDTC()
+ + swTest_checkReadDTC()
+ + swTest_TesterPresent()
+ + check_measurement_program_data_DIDRead_DefaultValue()
+ + check_measurement_program_data_DIDUpdate_DefaultValue_afterReset()
+ + check_measurement_program_data_DIDWriteRead_DMP00()
+ + check_measurement_program_data_DIDWriteRead_DMP01()
+ + check_measurement_program_data_DIDWriteRead_DMP03Invalid()
+ + check_measurement_program_data_DIDWriteRead_inDMP02()
+ + check_measurement_program_data_DIDWriteRead_invalid_DMPindex()
+ + check_measurement_program_data_DIDWriteRead_invalid_DMPselector()
+ + check_measurement_program_data_DIDWriteRead_invalid_velocityrange1_DMP00()
+ + check_measurement_program_data_DIDWriteRead_invalid_velocityrange2_DMP00()
+ + check_measurement_program_data_DIDWriteRead_invalid_velocityrange_DMP00()
+ + check_measurement_program_data_DIDWriteRead_invalid_velocityrange1_DMP05()
+ + check_measurement_program_data_DIDWriteRead_invalid_velocityrange2_DMP05()
+ + check_measurement_program_data_DIDWriteRead_invalid_velocityrange_DMP05()
+ + check_measurement_program_data_DIDWriteRead_invalid_velocityrange1_DMPFFFF()
+ + check_measurement_program_data_DIDWriteRead_invalid_velocityrange2_DMPFFFF()
+ + check_measurement_program_data_DIDWriteRead_invalid_velocityrange_DMPFFFF()
+ + check_measurement_program_data_DIDWriteRead_DMP04()
+ + check_measurement_program_data_DIDWriteRead_DMP05()
+ + check_measurement_program_data_DIDWriteRead_DMP06Invalid()
+ + check_measurement_program_data_DIDWriteRead_DMPFFFF_selector0()
+ + check_measurement_program_data_DIDWriteRead_DMPFFFF_selector1()
+ + check_measurement_program_data_write_defaultValue()
+}
+  
+class CTestSuiteDiagFbl {
+ + __init__(logger_api, canoe_api, t32_api, relay_api, hw, globalTestcaseFilter)
+ + executeFr5CuTestsUC1()
+ + executeFr5CuTestsUC2()
+ + getComponentName()             
+ + runAllDiagFblTests(t32_api)
+
+ + swTest_checkFblBctConfiguredIpIsWrittenToNvm()
+ + swTest_checkFblDiagRequestedIpIsWrittenToNvm()
+ + swTest_checkFblNoNewIpIsWrittenToNvm()
+ + swTest_checkFblBctConfiguredMacIsWrittenToNvm( )
+ + swTest_checkFblDiagRequestedMacIsWrittenToNvm( )
+ + swTest_checkFblDiagRequestedDoIpIsWrittenToNvm()
+ + swTest_checkJumpFromFblResetReasonPacket( )
+ + swTest_checkJumpToFblResponsePending( )
+}
+
+class CTestSuiteDiagVariantHandling { 
+ + __init__(logger_api, canoe_api, t32_api, relay_api, hw, globalTestcaseFilter)
+ + executeFr5CuTestsUC1()
+ + executeFr5CuTestsUC2()
+ + getComponentName()             
+ + runAllDiagVarHdlTests(t32_api)
+ 
+ + swTest_checkMacIsWrittenToNvm()
+ + swTest_checkMacRead()
+ + swTest_checkResetMacAddressToBctConfig()
+ + swTest_checkDoIpIsWrittenToNvm()
+ + swTest_checkDoIPAddrRead()
+ + swTest_LGPSrcandLGPDestandDiagFromNVMIsWrittenToNvmForGivenRange1()
+ + swTest_LGPSrcandLGPDestandDiagFromNVMIsWrittenToNvmForGivenRange2()
+ + swTest_LGPSrcandLGPDestandDiagFromNVMIsWrittenToNvmForGivenRange3()
+ + swTest_LGPSrcFromNVMandLGPDestandDIAGFromBCTIsWrittenToNvm()
+ + swTest_PreviousUsedLGPSrcandLGPDestFromBCTIsWrittenToNvm()
+ + swTest_LGPSrcFromBCTandLGPDestFromNVMIsWrittenToNvm()
+ + swTest_LGPSrcFromBCTandPreviousUsedLGPDestIsWrittenToNvm()
+ + swTest_PreviousUsedLGPSrcandLGPDestFromNVMIsWrittenToNvmForGivenRange1() 
+ + swTest_PreviousUsedLGPSrcandLGPDestFromNVMIsWrittenToNvmForGivenRange2()
+ + swTest_LGPSrcFromNVMandPreviousUsedLGPDestIsWrittenToNvmForGivenRange1() 
+ + swTest_LGPSrcFromNVMandPreviousUsedLGPDestIsWrittenToNvmForGivenRange2()
+ + swTest_PreviousUsedLGPSrcLGPDestandDiagIsWrittenToNvm() 
+ + swTest_PreviousUsedLGPSrcandLGPDestIsWrittenToNvm() 
+ + swTest_InvalidMaxLGPSrcForGivenRange1()
+ + swTest_InvalidMaxLGPSrcForGivenRange2() 
+ + swTest_InvalidMaxLGPSrcForGivenRange3() 
+ + swTest_InvalidMinLGPSrcForGivenRange1()
+ + swTest_InvalidMinLGPSrcForGivenRange2()
+ + swTest_InvalidMinLGPSrcForGivenRange3() 
+ + swTest_InvalidMaxLGPDestForGivenRange1() 
+ + swTest_InvalidMaxLGPDestForGivenRange2() 
+ + swTest_InvalidMaxLGPDestForGivenRange3()    
+ + swTest_InvalidMinLGPDestForGivenRange1() 
+ + swTest_InvalidMinLGPDestForGivenRange2() 
+ + swTest_InvalidMinLGPDestForGivenRange3() 
+ + swTest_InvalidsecondbyteLGPDestForGivenMaxRange2()
+ + swTest_InvalidsecondbyteLGPDestForGivenMinRange2() 
+ + swTest_InvalidsecondbyteLGPDestForGivenRange3() 
+ + swTest_InvalidsecondbyteLGPSrcForGivenMaxRange2()
+ + swTest_InvalidsecondbyteLGPSrcForGivenMinRange2() 
+ + swTest_InvalidsecondbyteLGPSrcForGivenRange3() 
+ + swTest_InvalidLGPSrcNVMFlag() 
+ + swTest_InvalidLGPDestNVMFlag()
+ + swTest_InvalidLGPDiagNVMFlag() 
+ + swTest_InvalidLGPSrcandLGPDestisDifferentRange() 
+ + swTest_InvalidLGPSrcandLGPDestisEqual() 
+ + swTest_InvalidFirstByteDiag()
+ + swTest_InvalidSecondByteDiag() 
+ + swTest_InvalidMinDiag() 
+ + swTest_InvalidMaxDiag() 
+ + swTest_checkIPAddrRead() 
+ + swTest_checkDestinationPortIsWrittenToNvm()
+ + swTest_InvalidMinDestinationPort() 
+ + swTest_InvalidMaxDestinationPort() 
+ + swTest_ReadDestinationPort()  
+ + swTest_checkModulationControlDefaultvalue()
+ + swTest_checkModulationControlvalue_startModulation()
+ + swTest_checkModulationControlvalue_stopModulation()
+ + swTest_checkModulationControlvalue_requestoutofrange()
+ + swTest_checkMACAddress_requestoutofrange()
+}
+
+class CTestSuiteInt {
+ + __init__(logger_api, canoe_api , t32_api, relay_api, hw, globalTestcaseFilter)
+ + run_sw_int_test_common(t32_api)
+ + TestSuiteResult executeFr5CuTestsUC1()  
+ + TestSuiteResult executeFr5CuTestsUC2()   
+ + getComponentName()
+ 
+ + check_dsp_error_table(t32_api, test_case_number)
+ + check_dsp_opmode(t32_api, test_case_number)
+ + check_dsp_spu_status(t32_api, test_case_number) 
+ + check_daddy_error_information(t32_api, test_case_number) 
+ + check_dem_events(t32_api, test_case_number)
+ + check_locations(canoe_api, test_case_number)
+ + check_trap_information (t32_api, test_case_number)
+ + check_safe_state (t32_api, test_case_number)
+ + check_Location_Interface (t32_api, test_case_number)  
+ + check_smu(t32_api, test_case_number) 
+}
+
+class CTestSuiteRbSysEvm {
+ + radarModPermanentOFFIndex : uint        
+
+ + __init__(logger_api, canoe_api, t32_api, relay_api, hw, globalTestcaseFilter)
+ + TestSuiteResult runAllRbSysEvMTests(t32_api)
+ + TestSuiteResult executeFr5CuTestsUC1()  
+ + TestSuiteResult executeFr5CuTestsUC2()   
+ + getComponentName()
+ 
+ + swTest_checkDefaultSensorMode(t32_api)      
+ + swTest_checkSensorModeInNvm(t32_api)
+ + swTest_checkStopModulationFault(t32_api) 
+ + swTest_checkStartModulationFault(t32_api)    
+ + swTest_checkStopModulationFaultfromDiagInterface(t32_api) 
+ + swTest_checkNoSensorModeReceived(t32_api)                       
+ + swTest_checkInvalidSensorModeReceivedStartMod(t32_api)          
+ + swTest_checkInvalidSensorModeReceivedStopMod(t32_api) 
+ + swTest_checkDisableModulationfromDiagInterface(t32_api) 
+ + swTest_checkDisableModulationOnInterface(t32_api)       
+ + swTest_checkEnableModulationOnInterface(t32_api)
+ + swTest_checkDspDemFaultMapping(t32_api)
+}
+
+class CTestSuiteSdm {
+ + dspFaultIdMmicRxampdrftErr : uint 
+ + demFaultIdMmicRxampdrftErr : uint
+ + demFaultIdRbEcuTempSensorRangeErr : uint
+
+ + __init__(logger_api, canoe_api, t32_api, relay_api, hw, globalTestcaseFilter)
+ + TestSuiteResult executeFr5CuTestsUC1()  
+ + TestSuiteResult executeFr5CuTestsUC2()       
+ + runAllSdmTests(t32_api)
+ + getComponentName()
+ 
+ + swTest_checkInSpecState(t32_api)                  
+ + swTest_checkSendInSpec(t32_api, canoe_api)             
+ + swTest_checkSendTemporaryState(t32_api)             
+ + swTest_sendTemporaryStateTriggerfaultfromDifferentCategoryandcomponent(t32_api)                                   
+ + swTest_checkPersistentstate(t32_api)           
+ + swTest_sendPersistentstateTriggerfromMultiplecategory(t32_api)           
+ + swTest_stateTransitionInspecTemporaryState(t32_api)                
+ + swTest_stateTransitionInspecPersistentstate(t32_api)           
+ + swTest_stateTransitionTemporaryPersistentState(t32_api)
+ + swTest_stateTransitionInSpecSilent(t32_api)           
+ + swTest_stateTransitionTemporarySilentState(t32_api)
+ + swTest_stateTransitionPersistentSilentState(t32_api)
+}
+
+class CTestSuiteOutputhandler {                                                                              
+ + testCaseCustomerVersion : CTestCaseOutputhandlerCustomerVersion
+ + testCaseInternalVersion : CTestCaseOutputhandlerInternalVersion
+
+ + TestSuiteResult executeFr5CuTestsUC1()  
+ + TestSuiteResult executeFr5CuTestsUC2()         
+ + runAllOutputhandlerTests(t32_api)
+ + getComponentName()
+}
+
+class CTestSuiteLodm {
+ + __init__(logger_api, canoe_api, t32_api, relay_api, hw, globalTestcaseFilter)
+ + TestSuiteResult executeFr5CuTestsUC1()  
+ + TestSuiteResult executeFr5CuTestsUC2()       
+ + getComponentName()
+ + runAllLodmTests(t32_api)
+ + swTest_MeasurementProgramIndex_via_DID()
+ + swTest_MeasurementProgramIndex_via_DIDWrite_Default_Value()
+ + swTest_MeasurementProgramIndex_via_DID_InValidValue()
+ + swTest_MeasurementProgramIndex_via_PDU()
+ + swTest_MeasurementProgramIndex_via_PDU_InvalidValue_afterreset()
+ + swTest_MeasurementProgramIndex_via_PDU_InvalidValue_run()
+ + swTest_sensorfeedback_channel_PDU()
+ + swTest_locationDataHeader_signalValidation()
+ + swTest_locationAttribHeader_signalValidation()
+ + swTest_MountingPosition_Data_Default()
+ + swTest_MountingPosition_Range_Check()
+ + swTest_MountingPosition_Data_Min()
+ + swTest_MountingPosition_Data_Max()
+ + swTest_MountingPosition_Data_Mid()
+ + swTest_MeasurementProgramIndex_via_DID_reset_default_value()
+ + swTest_MountingPosition_reset_default_value()
+}
+
+class CTestSuiteComa {
+ + __init__(logger_api, canoe_api, t32_api, relay_api, hw, globalTestcaseFilter)
+ + TestSuiteResult executeFr5CuTestsUC1()  
+ + TestSuiteResult executeFr5CuTestsUC2()       
+ + getComponentName()
+ + runAllComaTests(t32_api)
+ + swTest_LGP_RX_Message_Sensor_Mode_Request()
+ + swTest_LGP_RX_Message_Measurement_Program()
+ + swTest_LGP_RX_Message_Measurement_Cycle_Synchronization()
+ + swTest_LGP_RX_Message_EgoData()
+ + swTest_locationAttributePDU_commParams()
+ + swTest_locationData0PDU_commParams()
+ + swTest_sensorFeedbackPDU_commParams()
+ + swTest_Time_Syn()
+ + swTest_LGP_TX_Message_E2E()
+ + swTest_Sensorstinfo_commParams()
+ + swTest_SensorBroadcastPDU_commParams_sigValidation()
+}
+
+class CTestSuiteVama {
+ + __init__(logger_api, canoe_api, t32_api, relay_api, hw, globalTestcaseFilter)
+ + TestSuiteResult executeFr5CuTestsUC1()  
+ + TestSuiteResult executeFr5CuTestsUC2()       
+ + getComponentName()
+ + runAllVamaTests(t32_api)
+ + swTest_LGP_Local_IP_Variant_Handling()
+ + swTest_LGP_Remote_IP_Variant_Handling()
+ + swTest_LGP_Remote_Port_Variant_Handling()
+ + swTest_LGP_Variant_Handling_MulticastTX()
+ + swTest_LGP_Variant_Handling_MulticastRX()
+ + swTest_LGP_MAC_Variant_Handling()
+ + swTest_LGP_Variant_Handling_SourceDiagIP()
+ + swTest_LGP_Variant_Handling_DOIP()
+ + swTest_Variant_handling_IP_range_1()
+ + swTest_Variant_handling_IP_range_2()
+ + swTest_Variant_handling_IP_range_3()
+ 
+}
+
+CTestSuite <|-- CTestSuiteDiagBasic 
+CTestSuite <|-- CTestSuiteDiagFbl
+CTestSuite <|-- CTestSuiteDiagVariantHandling
+CTestSuite <|-- CTestSuiteInt
+CTestSuite <|-- CTestSuiteRbSysEvm
+CTestSuite <|-- CTestSuiteSdm
+CTestSuite <|-- CTestSuiteOutputhandler
+CTestSuite <|-- CTestSuiteLodm
+CTestSuite <|-- CTestSuiteComa
+CTestSuite <|-- CTestSuiteVama
+
+class CTestBase {
+ + __init__(logger_api, canoe_api , t32_api)
+ + executeTestCase(t32_api, testCaseNumber)
+ 
+ + {abstract} void setUp()  
+ + {abstract} void tearDown()   
+ + {abstract} executeTests(t32_api)
+ 
+ + logger
+ + canoe_api
+ + t32_api
+}   
+
+class CTestCaseOutputhandlerCustomerVersion {
+ + m_parsedCustomerVersion : c_uint32
+ 
+ + __init__(logger_api, canoe_api, t32_api)            
+ + setUp()                       
+ + tearDown()
+ + executeTests(t32_api, testCaseNumber)
+ 
+ + getUnusedByteCustVersion(customerVersionCType)
+ + getMajorByteCustVersion(customerVersionCType)
+ + getMinorByteCustVersion(customerVersionCType)
+ + getPatchLevelByteCustVersion(customerVersionCType)
+}
+
+class CTestCaseOutputhandlerInternalVersion {
+ + m_parsedShortCommitId : string
+ 
+ + __init__(logger_api, canoe_api, t32_api)            
+ + setUp()                       
+ + tearDown()
+ + executeTests(t32_api, testCaseNumber)
+  
+ + getHexFromInt(intValue)  
+}
+
+CTestBase <|-- CTestCaseOutputhandlerCustomerVersion
+CTestBase <|-- CTestCaseOutputhandlerInternalVersion
+
+abstract class CTestRunner {
+ + {abstract} TestSuiteResult executeFr5CuTestsUC1()  
+ + {abstract} TestSuiteResult executeFr5CuTestsUC2()   
+ + {abstract} string getComponentName()
+}
+
+CTestRunner <|-- CTestSuiteDiagBasic 
+CTestRunner <|-- CTestSuiteDiagFbl
+CTestRunner <|-- CTestSuiteDiagVariantHandling
+CTestRunner <|-- CTestSuiteInt
+CTestRunner <|-- CTestSuiteRbSysEvm
+CTestRunner <|-- CTestSuiteSdm
+CTestRunner <|-- CTestSuiteOutputhandler
+CTestRunner <|-- CTestSuiteLodm
+CTestRunner <|-- CTestSuiteComa
+CTestRunner <|-- CTestSuiteVama
+
+@enduml
+
+
+\subsection atf_sub_sec_classesAssociation Association
+@startuml
+
+class main
+class Input
+class TestExecution
+class Trace32MultiApi
+class Logger
+class Relay
+class CANoe
+
+main o-- Logger
+main o-- Input
+main o-- CANoe
+main o-- Relay
+main o-- Trace32MultiApi
+main o-- TestExecution
+
+class TestExecution
+class CTestSuiteDiagBasic  
+class CTestSuiteDiagFbl
+class CTestSuiteDiagVariantHandling
+class CTestSuiteInt
+class CTestSuiteRbSysEvm
+class CTestSuiteSdm
+class CTestSuiteOutputhandler
+class CTestSuiteLodm
+class CTestSuiteComa
+class CTestSuiteVama
+
+
+TestExecution o-- CTestSuiteDiagBasic
+TestExecution o-- CTestSuiteDiagFbl
+TestExecution o-- CTestSuiteDiagVariantHandling
+TestExecution o-- CTestSuiteInt
+TestExecution o-- CTestSuiteRbSysEvm
+TestExecution o-- CTestSuiteSdm
+TestExecution o-- CTestSuiteOutputhandler
+TestExecution o-- CTestSuiteLodm
+TestExecution o-- CTestSuiteComa
+TestExecution o-- CTestSuiteVama
+
+class CTestCaseOutputhandlerCustomerVersion
+class CTestCaseOutputhandlerInternalVersion
+
+CTestSuiteOutputhandler o-- CTestCaseOutputhandlerCustomerVersion
+CTestSuiteOutputhandler o-- CTestCaseOutputhandlerInternalVersion
+
+@enduml
+
+
+\subsection atf_sub_sequenceDiagram Sequence Diagram
+
+\subsubsection atf_sub_sub_sequenceDiagram_testMain atf_main.py: main
+@startuml
+
+main -> Input: ""__""init""__""(parser, logger)
+main -> Input: get_args()
+main -> CANoe: ""__""init""__""(logger_api) 
+main -> CANoe: initAndOpenConfig(canoepath)
+main -> CANoe: setupCANoeEnvironment(tollnerPS_port)
+main -> Relay: ""__""init""__""(logger_api)
+main -> Relay: control("reset")
+
+alt fr5cu
+	main -> Trace32MultiApi: ""__""init""__""(logger_api, configFileUC2, 1, trace32_startup_script)
+	main -> Trace32MultiApi: ""__""init""__""(logger_api, configFileUC1, 1, trace32_startup_script)
+else Hardware not supported
+	main -> Exception: raise()
+	
+end
+
+main -> TestExecution: ""__""init""__""(report_dir, logger_api, canoe_api, t32_api, relay_api, hw, tollnerPS_port, testcaseFilter, args)
+main -> TestExecution: run_tests()
+return tests passed/failed
+
+@enduml
+
+\subsubsection atf_sub_sub_sequenceDiagram_testExecutionRunTests atf_testexecution.py: run_tests
+@startuml
+
+alt hw == fr5cu
+	alt try
+		TestExecution -> AD_lauterbach_test_helper: flash_ecu_run_fr5cu(t32_api, lauterbach_helper_logger, args)        
+		TestExecution -> Logger: info()
+		TestExecution -> TestExecution: run_tests_uC1()
+		TestExecution -> Logger: info()
+		TestExecution -> TestExecution: run_tests_uC2()
+		TestExecution -> Logger: info()
+	else except
+		TestExecution -> Logger: info()
+		TestExecution -> Exception: raise()
+	else finally
+		TestExecution -> CANoe: stopMeasurement()
+	end
+else Hardware not supported
+	TestExecution -> Exception: raise()
+end
+
+@enduml
+
+
+\subsubsection atf_sub_sub_sequenceDiagram_testExecutionRunTestsUC1 atf_testexecution.py: run_tests_uC1
+@startuml
+	TestExecution -> CExecutionTime: measureFunctionTime()
+	CExecutionTime -> CTestSuiteInt: executeFr5CuTestsUC1()
+	TestExecution -> Logger: info("Component name spent time")
+	TestExecution -> TestExecution: printTestResults(k_atf_hardwareLrr, False, testResults, totalTestDuration)
+@enduml
+
+
+\subsubsection atf_sub_sub_sequenceDiagram_testExecutionRunTestsUC2 atf_testexecution.py: run_tests_uC2
+@startuml
+	loop all test components
+		alt compName == "diag_variant"
+			TestExecution -> CANoe: connectPowerSupply()
+		end
+		
+		TestExecution -> CExecutionTime: measureFunctionTime()
+		TestExecution -> CTestRunner: executeFr5CuTestsUC2()
+		TestExecution -> Logger: info("Component name spent time")	
+	end			
+	
+	TestExecution -> TestExecution: printTestResults(k_atf_hardwareLrr, True, testResults, totalTestDuration)
+@enduml
+
+
+\subsubsection atf_sub_sub_sequenceDiagram_filter testsuite.py: Filter Mechanism - all test cases are enabled
+@startuml
+	TestExecution -> CTestSuiteSdm: executeFr5CuTestsUC2()
+	note left: Example for //sdm// component\nVariant FR5CU	
+	CTestSuiteSdm -> CTestSuiteSdm: runAllSdmTests(variant) 
+	CTestSuiteSdm -> CTestSuite: executeFilteredFunction(t32_api)
+	activate CTestSuite
+	CTestSuite -> CTestSuite: createTestCaseDictionary()	
+	CTestSuite -> CTestSuite: getFilteredTestCaseDictionary(globalTestcaseFilter, createdTestCaseDictionary)
+	CTestSuite -> CTestSuite: executeDictionaryFunction()
+	return number of failed tests
+	CTestSuiteSdm --> TestExecution: TestSuiteResult
+@enduml
+
+
+\subsubsection atf_sub_sub_sequenceDiagram_filterUser testsuite.py: Filter Mechanism - Some test cases are disabled (user defined)
+@startuml
+	TestExecution -> CTestSuiteDiagBasic: executeFr5CuTestsUC2()
+	note left: Example for //diag_basic// component\nVariant FR5CU
+	CTestSuiteDiagBasic -> CTestSuiteDiagBasic: runAllDiagBasicTests(variant)
+	CTestSuiteDiagBasic -> CTestSuite: executeFilteredFunctionUser(t32_api, userFilter)
+	activate CTestSuite
+	CTestSuite -> CTestSuite: createTestCaseDictionary()
+	CTestSuite -> CTestSuite: getFilteredTestCaseDictionary(userFilter, createdTestCaseDictionary)
+	CTestSuite -> CTestSuite: **getFilteredTestCaseDictionary(globalTestcaseFilter, userDict)**	
+	CTestSuite -> CTestSuite: executeDictionaryFunction()
+	return number of failed tests
+	CTestSuiteDiagBasic --> TestExecution: TestSuiteResult
+@enduml
+
+
+\subsection atf_sub_activityDiagram Activity Diagram
+
+\subsubsection atf_sub_subactivityDiagram_createTestCaseDictionary testsuite.py: createTestCaseDictionary
+@startuml
+:create empty dictionary;
+:use python built-in function //dir()//;
+while (for every item in list of valid attributes) is (has items)
+	:get function object;
+	if (function object is callable AND not starts with "__"?) then (yes)
+  		if (function name starts with "swTest__" or starts with "check_"?) then (yes)
+  			:add function object to dictionary;
+  		endif
+	elseif (is function object instance of CTestBase) then (yes)
+  		:add function object to dictionary;
+	endif
+endwhile (attribute list is empty)
+:return test case dictionary;
+note right
+	Dictionary contains all callable test cases. 
+    Dictionary key: function name, value: callable function.
+end note
+@enduml
+
+
+\subsubsection atf_sub_sub_activityDiagram_getFilteredTestCaseDictionary testsuite.py: getFilteredTestCaseDictionary
+@startuml
+:create empty filter dictionary;
+floating note right
+	input dictionary is parameter to function. It is 
+	a mapping between testcase name and test function.
+end note
+while (for every item in input dictionary) is (has items)
+	if (component separator in filer?) then (yes)
+  		:split filer string by separator;
+  		while (for every item in splitted string) is (has items)
+  			if (item string == component name?) then (yes)
+  				:add item of input dictionary object to filter dictionary;
+  			else (no)
+  				:continue;
+			endif
+  		endwhile (splitted string empty)
+	elseif (test case separator in filter?) then (yes)
+  		:split filer string by separator;
+  		while (for every item in splitted string) is (has items)
+  			if (item string == test case name?) then (yes)
+  				:add item of input dictionary object to filter dictionary;  				
+  			else (no)
+  				:continue;
+			endif
+  		endwhile (splitted string empty)  		
+  	else (no)
+  		if (filter is "*") then (yes)
+  			:add item of input dictionary object to filter dictionary;
+  		else if (filter contained in test case name) then (yes)	
+  			:add item of input dictionary object to filter dictionary;
+  		else (no)
+  			:pass;
+		endif
+	endif
+endwhile (input dictionary is empty)
+:return filter dictionary;
+note right: Dictionary contains all filtered test cases.
+@enduml
+
+
+\subsubsection atf_sub_sub_activityDiagram_executeDictionaryFunction testsuite.py: executeDictionaryFunction
+@startuml
+note right: iteration over filtered test case dictionary
+while (for every item in dictionary) is (has items)
+	:print test start log;
+	if (try to catch //Exception//) then (no exception)
+		if (testcaseFunction instance of //CTestBase//?) then (yes)
+	  		:execute testcase inside derived class;
+		else (no)
+	  		:execute testcaseFunction;
+		endif		
+	else if (//Exception// occurred) then (except)
+		:increase failed test case;
+	else (finally)
+		:print test end log;
+		:increase number of test cases;
+	endif	
+endwhile (dictionary is empty)
+:return failed test cases;
+@enduml
+
+
+
+\section atf_interfaces Interface Types
+In the following the interfaces and structures of ATF are listed.
+
+\subsection atf_interfaces_classes Classes
+	\li canoe.CANoe
+	\li AD_input_functions.Input
+	\li relay.Relay
+	\li trace32api.Trace32Api
+	\li trace32multiapi.Trace32MultiApi
+	\li atf_testexecution.TestExecution
+	\li logger.Logger
+	\li testsuite.TestSuiteResult
+	\li testrunner.CTestRunner
+	\li atf_executiontime.CExecutionTime
+    
+\subsection atf_interfaces_helper Helper Function
+	\li AD_lauterbach_test_helper
+	\li AD_canoe_diag_functions
+	\li atf_testasserts
+	\li atf_toolbox
+	
+\subsection atf_interfaces_testcases Test Case Function
+	- diag_testsuitebasic.CTestSuiteDiagBasic  
+	- diag_testsuitefbl.CTestSuiteDiagFbl
+	- diag_testsuitevarianthandling.CTestSuiteDiagVariantHandling	
+	- rbSysEvM_testsuite.CTestSuiteRbSysEvm
+	- int_testsuite.CTestSuiteInt
+	- sdm_testsuite.CTestSuiteSdm			
+	- ohd_testsuite.CTestSuiteOutputhandler
+		+ ohd_testcasecustomerversion.CTestCaseOutputhandlerCustomerVersion
+ 		+ ohd_testcaseinternalversion.CTestCaseOutputhandlerInternalVersion
+	- testsuite.CTestSuite
+	- testbase.CTestBase
+	- testbase.CTestCaseResult
+	- coma_testsuite.CTestSuiteComa
+    - lodm_testsuite.CTestSuiteLodm
+    - vama_testsuite.CTestSuiteVama
+	
+
+\subsection atf_interfaces_constants Constants
+	- atf_globalconstants
+	- rbSysEvM_testsuiteconstants
+	- diag_constants 
+	- coma_constants 
+	- lodm_constants 
+	- vama_constants 
+
+
+
+@author SW-Int/SMF-Team
+
+*/

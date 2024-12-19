@@ -1,0 +1,71 @@
+schedules:
+- cron: "0 20 * * *"
+  displayName: Daily nightly build
+  branches:
+    include:
+    - develop
+  always: true
+
+trigger: none
+pr: none
+
+variables:
+  a_core_version_major: $[format('{0:dd}', pipeline.startTime)]
+  a_core_version_minor: $[format('{0:MM}', pipeline.startTime)]
+  a_core_version_patch: $[format('{0:yyyy}', pipeline.startTime)] 
+
+resources:
+  containers:
+  - container: a-core-application-container
+    image: artifactory.boschdevcloud.com/zugspitze-series-docker-local/a-core-application:latest
+    endpoint: sc-ado-docker-registry-artifactory
+    options: --user 0:0 --privileged
+    volumes: # Volumes to mount on the container.
+    - /var/tmp/conan_cache:/var/tmp/conan_cache
+    env: # Variables to map into the container's environment.
+      TARGET: armv8
+      TYPE: debug
+      MIDDLEWARE_INSTANCE: te0950_neutrino
+      AOS_VERSION: default
+      ENABLE_CLANG_TIDY_CHECKS: 'ON'
+      A_CORE_SW_VARIANT: 'nightly'
+      A_CORE_VERSION_MAJOR: $(a_core_version_major)
+      A_CORE_VERSION_MINOR: $(a_core_version_minor)
+      A_CORE_VERSION_PATCH: $(a_core_version_patch)
+      A_CORE_COMMIT_HASH: $(Build.SourceVersion)
+
+  - container: testreport-parser-container
+    image: artifactory.boschdevcloud.com/zugspitze-series-docker-local/testreport-parser:1.0.3
+    endpoint: sc-ado-docker-registry-artifactory
+    options: --user 0:0 --privileged
+    volumes: # Volumes to mount on the container.
+    - /var/tmp/conan_cache:/var/tmp/conan_cache 
+
+stages:
+  - template: /devops/templates/stages/build-a-core-application-template.yaml
+    parameters:
+      build_reason: 'nightly'
+      vmss: cx-lnx-m-vmss
+      base_image_target: te0950
+      middleware_instance: te0950_neutrino
+      package_type: conan
+      deploy_aos_runnable_in_base_image: false
+      deploy_fpga_bit_file_in_base_image: false
+      deploy_mmic_libraries_in_base_image: false
+      generate_swu_file: false
+      trigger_ct: false
+      trigger_testreport_parser: false
+
+
+
+  # - template: /devops/templates/stages/build-r-core-application-template.yaml
+  #   parameters:
+  #     build_reason: nightly
+  #     win_vmss: cx-win-l-vmss
+  #     linux_vmss: cx-lnx-l-vmss
+  - template: /devops/templates/stages/build-pc-application-template.yaml
+    parameters:
+      build_target: x86-64
+      build_type: debug
+      build_reason: 'nightly'
+      vmss: cx-lnx-m-vmss

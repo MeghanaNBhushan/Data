@@ -1,0 +1,15 @@
+<ToolCollection>
+  <ToolCollectionName>coverity</ToolCollectionName>
+  <Responsible>CC-ADPJ-DoitSoftwareQualityTeam@bcn.bosch.com</Responsible>
+  <Version>2020.12</Version>
+  <Date>2021-01-21</Date>
+  <ZipDirectory>TCC\ZippedTools</ZipDirectory>
+  <IndicatorDirectory>TCC</IndicatorDirectory>
+  <Tools>
+    <Tool>
+      <ToolName>coverity</ToolName>
+      <SourcePath>TCC\Tools\coverity\2020.12_WIN64</SourcePath>
+      <Mirror>No</Mirror>
+    </Tool>
+  </Tools>
+</ToolCollection>

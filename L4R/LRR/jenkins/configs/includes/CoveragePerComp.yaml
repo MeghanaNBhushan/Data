@@ -1,0 +1,17 @@
+    - name: Cantata Test on Host Coverage
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: Coverage_per_Comp.bat -c ^TPL:uc2;
+        fromPath: ./ad_radar_apl/tools/AutoMatedCantataTests/
+        name: Coverage_per_Comp_^TPL:uc2;
+      - cmd: Coverage_per_Comp.bat -c ^TPL:uc1;
+        fromPath: ./ad_radar_apl/tools/AutoMatedCantataTests/
+        name: Coverage_per_Comp_^TPL:uc1;
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\UnitTests
+        fromPath: ./generatedFiles/SWQualityReports/Coverage_report/
+        includes: "*.*" 
+        afterFail: true
+        zip: true
+        zipName: Coverage_per_Comp

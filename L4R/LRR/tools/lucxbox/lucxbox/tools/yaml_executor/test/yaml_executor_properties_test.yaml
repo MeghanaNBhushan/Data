@@ -1,0 +1,14 @@
+variant: myVariant1
+svariant: mySeparateVariant1
+mvariant: myMulitLineVariant1
+artifactory_path: mypath/to/artifactory
+jenkins_label: my_build
+
+properties:
+  buildDiscarder:
+      days: 5
+      num: 10
+  abortIfNotLatest: soft
+  artifactory:
+    url: https://rb-artifactory.bosch.com/artifactory
+    repository: my-repo-name

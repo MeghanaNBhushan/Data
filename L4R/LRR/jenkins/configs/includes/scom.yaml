@@ -1,0 +1,6 @@
+    - name: scom_gen
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: scom_gen_^TPL:uc2;.bat
+        fromPath: ./
+        name: scom_gen uC2

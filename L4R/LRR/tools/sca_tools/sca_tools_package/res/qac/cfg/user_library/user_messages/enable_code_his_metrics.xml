@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<user_messages>
+  <messages component="qacpp">
+    <message help="" id="6040" level="QA_WARNING" severity="8">
+      <text>Cyclomatic Complexity should be below 20. Current value: %1s = %2s</text>
+    </message>
+    <message help="" id="6041" level="QA_WARNING" severity="8">
+      <text>High static program path count should be below 1000. Current value: %1s = %2s</text>
+    </message>
+    <message help="" id="6042" level="QA_WARNING" severity="8">
+      <text>Function arguments should be below 9. Current value: %1s = %2s</text>
+    </message>
+    <message help="" id="6043" level="QA_WARNING" severity="8">
+      <text>Nesting depth should be below 4. Current value: %1s = %2s</text>
+    </message>
+    <message help="" id="6044" level="QA_WARNING" severity="8">
+      <text>Functions length should be below 100. Current value: %1s = %2s</text>
+    </message>
+    <message help="" id="6045" level="QA_WARNING" severity="8">
+      <text>The goto statement should never be used. Current value: %1s = %2s</text>
+    </message>
+  </messages>
+</user_messages>

@@ -1,0 +1,52 @@
+trigger: none
+pr: none
+
+variables:
+  - group: cs-artifactory-credentials
+  
+resources:
+  repositories:
+  - repository: SpeziRepo
+    type: githubenterprise
+    endpoint: sc-ado-github-2
+    name: Spezi/_prj_ir2_ulrr_a0
+
+pool: int-lnx-m-vmss
+
+jobs:
+- job: Dockerbuild
+  steps:
+  - template: /devops/templates/steps/docker-login.yml
+    parameters:
+      user: $(devops-artifactory-access-user)
+      token: $(devops-artifactory-access-token)
+      host: artifactory.boschdevcloud.com
+
+  - checkout: self
+  - checkout: SpeziRepo
+    submodules: true
+  - bash: |
+      set -e
+      cp $(Build.SourcesDirectory)/_prj_ir2_ulrr_a0/solv/manual_and_setup/3_pythomation/install_python_packages_linux.sh $(Build.SourcesDirectory)/_prj_ir2_ulrr_a0/DevContainer/docker
+      cp -r $(Build.SourcesDirectory)/ad-radar-sensor/tools/testbench_toolkit/swupdate $(Build.SourcesDirectory)/_prj_ir2_ulrr_a0/DevContainer/docker
+      cp $(Build.SourcesDirectory)/ad-radar-sensor/software/os/debian/ulrr_cfg/targets/tec0204/auxiliary/ssh/ulrr-root $(Build.SourcesDirectory)/_prj_ir2_ulrr_a0/DevContainer/docker
+    displayName: Pre build steps
+
+  - bash: |
+      set -e
+      echo "Going to Dockerfile folder... "
+      cd $(Build.SourcesDirectory)/_prj_ir2_ulrr_a0/DevContainer/docker/
+      echo "Build docker container... "
+      docker build -t artifactory.boschdevcloud.com/zugspitze-series-docker-local/spezi:latest .
+    displayName: Building spezi image container
+
+  - bash: |
+      echo "Testing final docker container... "
+      docker run -td artifactory.boschdevcloud.com/zugspitze-series-docker-local/spezi /bin/bash
+      docker ps
+    displayName: Validate spezi image container
+
+  - bash: |
+      set -e
+      docker push artifactory.boschdevcloud.com/zugspitze-series-docker-local/spezi:latest
+    displayName: Push container image

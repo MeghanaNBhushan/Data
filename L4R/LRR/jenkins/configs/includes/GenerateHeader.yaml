@@ -1,0 +1,8 @@
+    - name: Generate Header cfg  file
+      executionOrder: ^TPL:execOrder;
+      skipIfOnlyFilesChanged:
+      - ^INCLUDE:jenkins/configs/includes/skipFilesChangedListDoxygen.yaml;
+      steps:
+      - cmd: python generate_h_file.py --creator ^TPL:user_id;
+        fromPath: ./ad_radar_apl/cfg
+        name: GenerateHeader

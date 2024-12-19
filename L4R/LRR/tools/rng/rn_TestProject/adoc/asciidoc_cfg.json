@@ -1,0 +1,27 @@
+{
+    "asciidocvariants": [
+        {
+            "VariantName": "Customer Release Note",
+            "VariantShort": "cust",
+            "VariantSelectors": [
+                "PDFHTML_EXPORT"
+            ]
+        },
+        {
+            "VariantName": "Internal Release Note",
+            "VariantShort": "int",
+            "VariantSelectors": [
+                "PDFHTML_EXPORT",
+                "INTERNAL_RELEASE_NOTE"
+            ]
+        },
+        {
+            "VariantName": "Customer Approval Letter",
+            "VariantShort": "cas",
+            "VariantSelectors": [
+                "PDFHTML_EXPORT",
+                "CUSTOMER_APPROVAL_LETTER"
+            ]
+        }
+    ]
+}

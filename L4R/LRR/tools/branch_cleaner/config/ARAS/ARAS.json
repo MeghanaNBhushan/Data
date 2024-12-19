@@ -1,0 +1,12 @@
+{
+  "whitelist": [
+      "^develop$",
+      "^master$",
+      "^release\/.*$", 
+      "^Prem_develop$",
+      "^Prem_master$", 
+      "^NRR_develop$",
+      "^NRR_master$", 
+      "^AD_Radar_PF"
+    ]
+}

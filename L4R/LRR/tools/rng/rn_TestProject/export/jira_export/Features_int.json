@@ -1,0 +1,62 @@
+﻿[
+    {
+        "IssueID":  "ATR-14421",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-14421",
+        "IssueStatus":  "In Progress",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+
+                             ],
+        "Scope":  [
+                      "SRR",
+                      "LRR"
+                  ],
+        "Team":  null,
+        "Summary":  "ROS Decoder: Adaptations for LRR SW V9",
+        "StakeholderSummary":  "The ROS Decoder is compatible to the communcation interface of the sensor SW (LGU interface description).",
+        "Severity":  null,
+        "SafetyRelevance":  null
+    },
+    {
+        "IssueID":  "ATR-14302",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-14302",
+        "IssueStatus":  "In Progress",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+
+                             ],
+        "Scope":  [
+                      "Internal_only",
+                      "LRR"
+                  ],
+        "Team":  null,
+        "Summary":  "Reduction of QAC and Coverity warning.",
+        "StakeholderSummary":  "Confidence : 100%\r\n\r\nL8 and L9 warnings are brought to 0.",
+        "Severity":  null,
+        "SafetyRelevance":  null
+    },
+    {
+        "IssueID":  "ATR-13542",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-13542",
+        "IssueStatus":  "In Progress",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+
+                             ],
+        "Scope":  [
+                      "Internal_only",
+                      "LRR"
+                  ],
+        "Team":  null,
+        "Summary":  "Handling of outgoing requirements from platform project",
+        "StakeholderSummary":  "Confidence : 75%\r\n\r\nNot all requirements will be linked but a example will be created to demonstrate how the linkage could be established.",
+        "Severity":  null,
+        "SafetyRelevance":  null
+    }
+]

@@ -1,0 +1,13 @@
+ispAdapter/ispAdapterImager_initializationConstants_common.hpp:31:
+In file included from D:/j/vn2/ws/G3N@3/repo/generatedFiles/pirate_sb2/apu/include\ispAdapter/ispAdapterImager_pllSetting.hpp:4:
+D:/j/vn2/ws/G3N@3/repo/generatedFiles/pirate_sb2/apu/include\ispAdapter/../../../../../fv_if/ispAdapter/inc/ispAdapter/hardware/ispAdapterImager_pllSetting_B1.hpp:46:17: warning: WARNING: G_MASTER_CLOCK_HZ_F32 has not been setup properly, please don't use the sb1 variant (if you are sure that the pixel clock configuration is correct, remove this line) [-W#pragma-messages]
+        #pragma message("WARNING: G_MASTER_CLOCK_HZ_F32 has not been setup properly, please don't use the sb1 variant (if you are sure that the pixel clock configuration is correct, remove this line)")
+                ^
+[  0%] Building CXX object fv_cv/pepsi/CMakeFiles/pepsi.dir/src/per/modules/controllers/rep/pepsi/lanemanager/
+
+In file included from D:/j/vn2/ws/G3N@3/repo/generatedFiles/pirate_sb2/apu/include\ispAdapter/ispAdapterImager_pllSetting.hpp:4:
+D:/j/vn2/ws/G3N@3/repo/generatedFiles/pirate_sb2/apu/include\ispAdapter/../../../../../fv_if/ispAdapter/inc/ispAdapter/hardware/ispAdapterImager_pllSetting_B1.hpp:46:17: warning: WARNING: G_MASTER_CLOCK_HZ_F32 has not been setup properly, please don't use the sb1 variant (if you are sure that the pixel clock configuration is correct, remove this line) [-W#pragma-messages]
+        #pragma message("WARNING: G_MASTER_CLOCK_HZ_F32 has not been setup properly, please don't use the sb1 variant (if you are sure that the pixel clock configuration is correct, remove this line)")
+                ^
+[  0%] Building CXX object fv_cv/ehr_base/CMakeFiles/ehr_base.dir/src/ehr_base/adas_output/ehr_adas_meta.o
+armclang.exe: warning: Your license for feature compiler_em66 will expire in 19 days [-Wlicense-management]

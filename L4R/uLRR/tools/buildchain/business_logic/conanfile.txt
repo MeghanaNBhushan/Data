@@ -1,0 +1,10 @@
+[requires]
+gtest/1.11.0@aos/dev
+aos_runtime_dev/0.25.0@aos/mars
+pybind11/2.10.4@#dd44c80a5ed6a2ef11194380daae1248
+spdlog_header_only/1.11.0@aos/dev
+
+
+[generators]
+cmake
+cmake_find_package

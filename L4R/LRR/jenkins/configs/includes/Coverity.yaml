@@ -1,0 +1,44 @@
+    - name: Coverity analysis
+      executionOrder: ^TPL:execOrder;
+      failAbortsPipeline: false
+      steps:
+      - cmd: coverity.bat ^TPL:cov_uC1; 1
+        fromPath: ad_radar_apl/tools/sca_tools/coverity
+        name: Coverity_create_uC1
+      - cmd: coverity.bat ^TPL:cov_uC1; 2
+        fromPath: ad_radar_apl/tools/sca_tools/coverity
+        name: Coverity_analyze_uC1
+      - cmd: coverity.bat ^TPL:cov_uC1; 3
+        fromPath: ad_radar_apl/tools/sca_tools/coverity
+        name: Coverity_export_uC1
+      - cmd: coverity.bat ^TPL:cov_uC1; 4
+        fromPath: ad_radar_apl/tools/sca_tools/coverity
+        name: Coverity_upload_uC1
+      
+      - cmd: coverity.bat ^TPL:cov_uC2; 1
+        fromPath: ad_radar_apl/tools/sca_tools/coverity
+        name: Coverity_create_uC2
+      - cmd: coverity.bat ^TPL:cov_uC2; 2
+        fromPath: ad_radar_apl/tools/sca_tools/coverity
+        name: Coverity_analyze_uC2
+      - cmd: coverity.bat ^TPL:cov_uC2; 3
+        fromPath: ad_radar_apl/tools/sca_tools/coverity
+        name: Coverity_export_uC2
+      - cmd: coverity.bat ^TPL:cov_uC2; 4
+        fromPath: ad_radar_apl/tools/sca_tools/coverity
+        name: Coverity_upload_uC2
+        
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Quality_reports\Coverity\uC1
+        fromPath: build_coverity/coverity_LRR_uC1/sca_tools/export
+        includes: "cov-format-errors/**" 
+        afterFail: false
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\Quality_reports\Coverity\uC2
+        fromPath: build_coverity/coverity_LRR_uC2/sca_tools/export
+        includes: "cov-format-errors/**" 
+        afterFail: false
+
+
+

@@ -1,0 +1,18 @@
+The library demangle_ghs.so is the property of Green Hills Software under 
+the following copyright and proprietary notic: 
+
+    Copyright (c) <year> Green Hills Software, Inc.
+
+    This program is the property of Green Hills Software, Inc,
+    its contents are proprietary information and no part of it
+    is to be disclosed to anyone except employees of Green Hills
+    Software, Inc., or as agreed in writing signed by the President
+    of Green Hills Software, Inc.
+
+You may not provide this file to any party not having a proper license agreement 
+with Green Hills Software. 
+
+Please note that in addition to these conditions, the library is subject to the 
+export control laws of the United States and the prevailing regulations issued from time 
+to time by the United States Department of Commerce and Department of State. In doubt 
+please check with CAP-SST/ESM2.

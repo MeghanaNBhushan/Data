@@ -1,0 +1,59 @@
+﻿[
+    {
+        "IssueID":  "ATR-14926",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-14926",
+        "IssueStatus":  "Closed",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V8.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "555",
+        "Summary":  "Response not received for DID-F186 In Programming session ",
+        "StakeholderSummary":  "{color:#0747a6}Description:{color}\r\n\r\nThe V8 software , the F186 DID did not provide the response in the programming session.\r\n\r\n{color:#0747a6}Root Cause :{color}\r\n\r\nIn V8 software ECU reset response received two times(before and after reset)which is causing an issue in the transition and DoIP connection duration.\r\n\r\nThis could possibly have lead to the inconsistent response for F186 DID in the programming session.\r\n\r\nNote : Internally when the V8.0.0 is tested in the open sensor bench we could see positive response for F186 ( Failed 2 out of 15 times).\r\n\r\n{color:#0747a6}Impact:{color}\r\n The session out from one session to another session takes time.\r\n\r\nThe active diagnostic session information could not be read in programming session sporadically.\r\n\r\n{color:#0747a6}Fix Given:{color}\r\n\r\nThe Software Version V9.0.0 is updated to ensure only the single reset response is  triggered for ECU Reset.",
+        "Severity":  "Minor",
+        "SafetyRelevance":  "No"
+    },
+    {
+        "IssueID":  "ATR-14889",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-14889",
+        "IssueStatus":  "Closed",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V8.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "555",
+        "Summary":  "[SFLP] Current session Ecu response is not matching with expected response",
+        "StakeholderSummary":  "In V8 software ECU reset response received two times(before and after reset)this is causing an issue.\r\n\r\nImpact:\r\nThe session out from one session to another session takes time .",
+        "Severity":  "Minor",
+        "SafetyRelevance":  "No"
+    },
+    {
+        "IssueID":  "ATR-14859",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-14859",
+        "IssueStatus":  "Closed",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+                                 "LRR_LGU_PF_V8.0.0"
+                             ],
+        "Scope":  [
+                      "LRR"
+                  ],
+        "Team":  "555",
+        "Summary":  "DOIP taking time to connect after Reset.",
+        "StakeholderSummary":  "Description:\r\nThe doip is taking time to connect back after reset, because of In V8 software ECU reset response received two times(before and after reset)this is causing an issue.\r\n\r\nImpact:\r\nThe services are related to ECU reset delays the response .",
+        "Severity":  "Minor",
+        "SafetyRelevance":  "No"
+    }
+]

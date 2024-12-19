@@ -1,0 +1,26 @@
+steps:
+  - bash: |
+      set -e
+
+      docker pull artifactory.boschdevcloud.com/zugspitze-series-docker-local/sca:latest
+      docker run --rm -t -d --name sca_con \
+        -v $(Pipeline.Workspace)/s/:/ws \
+        artifactory.boschdevcloud.com/zugspitze-series-docker-local/sca bash
+      docker exec -t sca_con bash -c "cd software/apu/vrte; python3 ./build_vrte.py -u $(vrte-user) -p $(vrte-artifactory-token)"
+    displayName: VRTE build
+
+  - task: ArtifactoryGenericUpload@1
+    inputs:
+      artifactoryService: 'sc-ado-artifactory'
+      specSource: 'taskConfiguration'
+      fileSpec: |
+        {
+          "files": [
+            {
+              "pattern": "$(Pipeline.Workspace)/s/software/apu/vrte/build/bin/sample_app",
+              "target": "zugspitze-series-generic-local/$(BRANCH_NAME)/$(COMMIT_ID)/VRTE-binary/"
+            }
+          ]
+        }
+      failNoOp: true
+    displayName: Upload VRTE output to Artifactory

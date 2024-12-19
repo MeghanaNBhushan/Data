@@ -1,0 +1,4 @@
+[width="100%", cols="2a,3a,6a,3a,3a,2a", options="header"]
+|===
+| ID | Summary | Description	| Severity (_see note above_)| Safety Relevance (_yes/no_) | Status
+|===

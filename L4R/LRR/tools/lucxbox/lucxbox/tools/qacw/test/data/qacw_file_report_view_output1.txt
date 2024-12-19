@@ -1,0 +1,18 @@
+// ======= Results for /project/ara_sample_cache.hpp
+error;/project/ara_sample_cache.hpp;39;10; Cannot find include file 'vfc/container/vfc_fixedvector.hpp', ignoring #include.
+ ;/project/posh_event_receiver.hpp;37;10; Included from here.
+ ;/project/posh_field_receiver.hpp;36;10; Included from here.
+ ;/project/mta_class_info_provider.hpp;39;10; Included from here.
+ ;/project/mta_class_info_provider_instance.cpp;31;10; Included from here.
+warning;/project/ara_sample_cache.hpp;81;5; This C++ style comment, comments out source code.
+ ;/project/posh_event_receiver.hpp;37;10; Included from here.
+ ;/project/posh_field_receiver.hpp;36;10; Included from here.
+ ;/project/mta_class_info_provider.hpp;39;10; Included from here.
+ ;/project/mta_class_info_provider_instance.cpp;31;10; Included from here.
+error;/project/ara_sample_cache.hpp;282;5; 'vfc' is not a namespace or class.
+ ;/project/posh_event_receiver.hpp;37;10; Included from here.
+ ;/project/posh_field_receiver.hpp;36;10; Included from here.
+ ;/project/mta_class_info_provider.hpp;39;10; Included from here.
+ ;/project/mta_class_info_provider_instance.cpp;31;10; Included from here.
+
+/project/ara_sample_cache.hpp - was analyzed resulting in 2 harderror(s)

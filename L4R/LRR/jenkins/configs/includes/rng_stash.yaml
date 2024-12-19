@@ -1,0 +1,7 @@
+    - name: rng stash
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: python rng_stash.py -rn ^TPL:releasename; -v ^TPL:variant;
+        fromPath: ./ad_radar_apl/tools/rng/user_cfg
+        name: rng_stash
+      

@@ -1,0 +1,119 @@
+{
+   "summary": "Athena Radar Test WorkOn",
+   "pkey": "RBGA",
+   "issuetype": "rbga.issuetype.default",
+   "applicant": "hej3lr",
+   "priority": "default",
+   "data": {
+      "common.field.employee.firstname": "Jochen",
+      "common.field.employee.lastname": "Held",
+      "common.field.employee.department": "XC-DA(EDB7)",
+      "common.field.employee.costcenter": "201429",
+      "common.field.employee.phone.business": "+49(711)811-27486",
+      "common.field.employee.location": "Leonberg",
+      "rbga.field.sourceSystem": "Release_Note_Generator_XC-DA_AthenaRadar",
+      "rbga.field.termCheck": "yes",
+      "rbga.field.description": "This is the short description",
+      "rbga.field.comments": "",
+      "rbga.field.approvalstep": "Two Step Approval",
+      "rbga.field.workflowType": "Parallel",
+      "rbga.field.parallelWorkflowSel": "All the Approvers has to approve",
+      "rbga.field.approver1": {
+         "approvers": [
+            {
+               "addAfterEnabled": true,
+               "deleteFlag": "Yes",
+               "description": "SW PCM",
+               "fixed": false,
+               "removable": true,
+               "userid": "hej3lr",
+               "ccList": ""
+            },
+            {
+               "addAfterEnabled": true,
+               "deleteFlag": "Yes",
+               "description": "SYS PCM",
+               "fixed": false,
+               "removable": true,
+               "userid": "nkm1lr",
+               "ccList": ""
+            },
+            {
+               "addAfterEnabled": true,
+               "deleteFlag": "Yes",
+               "description": "Group Manager of SW PCM",
+               "fixed": false,
+               "removable": true,
+               "userid": "npe2si",
+               "ccList": ""
+            },
+            {
+               "addAfterEnabled": true,
+               "deleteFlag": "Yes",
+               "description": "Department Head of SW PCM",
+               "fixed": false,
+               "removable": true,
+               "userid": "jae2kor",
+               "ccList": ""
+            },
+            {
+               "addAfterEnabled": true,
+               "deleteFlag": "Yes",
+               "description": "Configuration Manager",
+               "fixed": false,
+               "removable": true,
+               "userid": "bls4fe",
+               "ccList": ""
+            },
+            {
+               "addAfterEnabled": true,
+               "deleteFlag": "Yes",
+               "description": "TPM",
+               "fixed": false,
+               "removable": true,
+               "userid": "rei1lr",
+               "ccList": "bce2lr"
+            },
+            {
+               "addAfterEnabled": true,
+               "deleteFlag": "Yes",
+               "description": "EPQ",
+               "fixed": false,
+               "removable": true,
+               "userid": "llm2si",
+               "ccList": ""
+            }
+         ],
+         "checkDuplicate": "false",
+         "maxApprover": "20",
+         "type": "1"
+      },
+      "rbga.field.wf2": "Serial",
+      "rbga.field.parallelWorkflowSel2": "All the Approvers has to approve",
+      "rbga.field.approver2": {
+         "approvers": [
+            {
+               "addAfterEnabled": true,
+               "deleteFlag": "Yes",
+               "description": "PM",
+               "fixed": false,
+               "removable": true,
+               "userid": "cit2abt",
+               "ccList": ""
+            },
+            {
+               "addAfterEnabled": true,
+               "deleteFlag": "Yes",
+               "description": "Head of Athena Sensors",
+               "fixed": false,
+               "removable": true,
+               "userid": "scx1lr",
+               "ccList": ""
+            }
+         ],
+         "checkDuplicate": "false",
+         "maxApprover": "20",
+         "type": "1"
+      }
+   }
+}

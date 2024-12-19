@@ -1,0 +1,85 @@
+parameters:
+- name: build_target
+  displayName: Build target
+  values:
+  - x86-64
+  - armv8
+  default: armv8
+- name: build_type
+  displayName: Build type
+  values:
+  - debug
+  - release
+  default: debug
+- name: middleware_instance
+  displayName: Middleware instance
+  values:
+  - tec0204_linux
+  - te0950_linux
+  - te0950_neutrino
+  - car_pc
+  default: tec0204_linux
+- name: build_bl
+  displayName: Build business logic
+  type: boolean
+  default: true
+- name: enable_clangtidy_checks
+  displayName: 'Enable Clang Tidy Checks'
+  type: string
+  default: 'ON'
+  values:
+    - 'ON'
+    - 'OFF'
+- name: enable_helix_checks
+  displayName: 'Enable Helix SCA'
+  type: string
+  default: 'OFF'
+  values:
+    - 'ON'
+    - 'OFF'
+- name: run_unit_test
+  displayName: Run unit tests
+  type: boolean
+  default: true
+- name: package_bl
+  displayName: Package business logic
+  type: boolean
+  default: true
+- name: trigger_ct
+  displayName: Trigger CT
+  type: boolean
+  default: true
+
+trigger: none
+
+pr: none
+
+resources:
+  containers:
+  - container: a-core-application-container
+    image: artifactory.boschdevcloud.com/zugspitze-series-docker-local/a-core-application:latest
+    endpoint: sc-ado-docker-registry-artifactory
+    options: --user 0:0 --privileged
+    volumes: # Volumes to mount on the container.
+    - /var/tmp/conan_cache:/var/tmp/conan_cache
+    env: # Variables to map into the container's environment.
+      TARGET: ${{parameters.build_target}}
+      TYPE: ${{parameters.build_type}}
+      MIDDLEWARE_INSTANCE: ${{ parameters.middleware_instance }}
+      ENABLE_CLANG_TIDY_CHECKS: '${{ parameters.enable_clangtidy_checks }}'
+      ENABLE_HELIX_CHECKS: '${{ parameters.enable_helix_checks }}'
+
+stages:
+  - template: /devops/templates/stages/build-a-core-business-logic-template.yaml
+    parameters:
+      build_target: ${{parameters.build_target}}
+      build_type: ${{parameters.build_type}}
+      build_reason: manual
+      build_bl: ${{parameters.build_bl}}
+      enable_clangtidy_checks: ${{parameters.enable_clangtidy_checks}}
+      enable_helix_checks: ${{parameters.enable_helix_checks}}
+      run_unit_test: ${{parameters.run_unit_test}}
+      package_bl: ${{parameters.package_bl}}
+      trigger_ct: ${{parameters.trigger_ct}}
+      vmss: int-lnx-m-vmss
+      middleware_instance: ${{parameters.middleware_instance}}

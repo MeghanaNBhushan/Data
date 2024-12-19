@@ -1,0 +1,165 @@
+^INCLUDE:jenkins/configs/includes/properties.yaml<abortIfNotLatest=abortIfNotLatest: "soft">; # aborts the PR's current build if there is a newer one running
+
+ 
+
+uc1: ^ENV:SELECT_uC1;
+uc2: ^ENV:SELECT_uC2;
+
+testHwU: ^ENV:testHwU;
+testStU: ^ENV:setup;
+filter: "^ENV:filter;"
+user_id: cis9lr
+cmake_cfg_path: ad_radar_apl/tools/cmake/cfg
+cantataBuildType : "^ENV:cta;"
+
+IntTest_ROOT_DIR: C:\ws\aras@1\repo\
+a2l_build_env: jenkins
+variant_FR5CU: FR5CU
+testVariant: "^ENV:testVariant;"
+
+
+
+<%
+int order = 0
+%>
+<%
+int nodeOrder = 0
+%>
+
+
+pipelines:
+- nodes: 
+  - label: ATR
+    executionOrder: ${nodeOrder=0}
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM_commit.yaml<execOrder=${order=0}>;
+    - ^INCLUDE:jenkins/configs/includes/FetchTags.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/GenerateHeader.yaml<execOrder=${++order}, user_id=^YAML:user_id;>;
+    - ^INCLUDE:jenkins/configs/includes/GenerateHeader_archive.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/GeneratePDM.yaml<execOrder=${++order}, build_variant=^YAML:uc2;>;
+<%
+if ("^ENV:flux;".equals("true")) {
+out.println(
+"""\
+    - ^INCLUDE:jenkins/configs/includes/CheckFluxErrors.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/CheckFluxDetails.yaml<execOrder=${++order}>;
+""")
+}
+%>
+<%
+if ("^ENV:bct;".equals("true")) {
+out.println(
+"""\
+    - ^INCLUDE:jenkins/configs/includes/BuildBCT.yaml<execOrder=${++order}, uc1=^YAML:uc1;, uc2=^YAML:uc2;, cfg_path_uc1=ad_radar_apl/tools/builder/cubas_gen_^YAML:uc1;.cfg, cfg_path_uc2=ad_radar_apl/tools/builder/cubas_gen_^YAML:uc2;.cfg>;
+""")
+}
+%>
+
+<%
+if ("^ENV:swb;".equals("true") || "^ENV:swc;".equals("true") || "^ENV:cal;".equals("true") || ( "^ENV:tot;".equals("true") && "^ENV:exist_artefacts;".equals("false") ) ) {
+out.println(
+"""\
+    - ^INCLUDE:jenkins/configs/includes/BuildSW.yaml<execOrder=${++order}, build_variant=^YAML:uc1;, cfg_path=^YAML:cmake_cfg_path;, variant=uc1, threshold=213, ignore_type= >;
+    - ^INCLUDE:jenkins/configs/includes/BuildSW.yaml<execOrder=${++order}, build_variant=^YAML:uc2;, cfg_path=^YAML:cmake_cfg_path;, variant=uc2, threshold=257, ignore_type= >;
+""")
+}
+%>
+<%
+if ("^ENV:CantataBuildFull;".contains("true") || "^ENV:CantataBuildPartial;".contains("true")) {
+out.println(
+"""\
+    - ^INCLUDE:jenkins/configs/includes/CantataHost.yaml<execOrder=${++order}, uc1=^YAML:uc1;, uc2=^YAML:uc2;, buildType=^YAML:cantataBuildType;>;
+""")
+}
+%>
+<%
+if ("^ENV:CantataBuildFull;".contains("true") ) {
+out.println(
+"""\
+    - ^INCLUDE:jenkins/configs/includes/CoveragePerComp.yaml<execOrder=${++order}, uc2=^YAML:uc2;, hw=^YAML:hw;>;
+""")
+}
+%>
+<%
+if ("^ENV:swc;".contains("true") || ( "^ENV:tot;".equals("true") && "^ENV:exist_artefacts;".equals("false") ) ) {
+out.println(
+"""\
+    - ^INCLUDE:jenkins/configs/includes/PlantContainer_PR.yaml<execOrder=${++order}, uc1=^YAML:uc1;, uc2=^YAML:uc2;>;
+""")
+}
+%>
+<%    
+if ("^ENV:cal;".contains("true")) {
+out.println(
+"""\
+    - ^INCLUDE:jenkins/configs/includes/resViz.yaml<execOrder=${++order}, uc1=^YAML:uc1;, uc2=^YAML:uc2;>;
+""")
+}
+%>
+<%    
+if ("^ENV:qac;".contains("true")) {
+out.println(
+"""\
+    - ^INCLUDE:jenkins/configs/includes/QACDeltaCheckCustom.yaml<execOrder=${++order}, uc1=^YAML:uc1;, uc2=^YAML:uc2;>;
+""")
+}
+%>
+<%
+if ("^ENV:dox;".contains("true")) {
+out.println(
+"""\
+    - ^INCLUDE:jenkins/configs/includes/Doxygen.yaml<execOrder=${++order}>;
+""")
+}
+%>
+<%
+if ( ( "^ENV:a2l;".equals("true") || "^ENV:MT;".equals("true") ) ) {
+out.println(
+"""\
+  - label: Canape_license
+    executionOrder: 1
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM.yaml<execOrder=${order=0}>;
+    - ^INCLUDE:jenkins/configs/includes/GenerateHeader.yaml<execOrder=${++order}, user_id=^YAML:user_id;>;
+    - ^INCLUDE:jenkins/configs/includes/BuildSW.yaml<execOrder=${++order}, build_variant=^YAML:uc1;, cfg_path=^YAML:cmake_cfg_path;, variant=uc1, threshold=213, ignore_type= >;
+    - ^INCLUDE:jenkins/configs/includes/BuildSW.yaml<execOrder=${++order}, build_variant=^YAML:uc2;, cfg_path=^YAML:cmake_cfg_path;, variant=uc2, threshold=257, ignore_type= >;
+    - ^INCLUDE:jenkins/configs/includes/A2LUpdate.yaml<execOrder=${++order}, a2l_build_env=^YAML:a2l_build_env;, variant=^YAML:variant_FR5CU;>;
+""")
+}
+%>
+<%
+if ( "^ENV:MT;".equals("true") ) {
+out.println(
+"""\
+    - ^INCLUDE:jenkins/configs/includes/MTUpdate.yaml<execOrder=${++order}, variant=^YAML:variant_FR5CU;, ROOT_DIR=^YAML:IntTest_ROOT_DIR;, VAR1=^YAML:uc1;, VAR2=^YAML:uc2;>;
+""")
+}
+%>
+<%
+if ( ( "^ENV:tot;".equals("true") && "^ENV:exist_artefacts;".equals("false")  ) ) {
+out.println(
+"""\
+  - label: ^ENV:node_label;
+    executionOrder: ${nodeOrder=1}
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM_commit.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/Unstash.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/SoftIntTest.yaml<execOrder=${++order}, hw=^YAML:testHwU;, st = ^YAML:testStU;, filter=^YAML:filter;, tm=^ENV:test_mode;, ar=^ENV:testVariant;>;
+""")
+}
+%>
+
+<%
+if ( ( "^ENV:tot;".equals("true") && "^ENV:exist_artefacts;".equals("true") ) ) {
+out.println(
+"""\
+  - label: ^ENV:node_label;
+    executionOrder: ${nodeOrder=1}
+    stages:
+    - ^INCLUDE:jenkins/configs/includes/CheckoutSCM_commit.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/Unstash_existing_artefacts.yaml<execOrder=${++order}>;
+    - ^INCLUDE:jenkins/configs/includes/SoftIntTest.yaml<execOrder=${++order}, hw=^YAML:testHwU;, st = ^YAML:testStU;, filter=^YAML:filter;, tm=^ENV:test_mode;, ar=^ENV:testVariant;>;
+""")
+}
+%>
+

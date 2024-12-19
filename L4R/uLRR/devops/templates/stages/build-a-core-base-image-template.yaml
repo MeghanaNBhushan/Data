@@ -1,0 +1,269 @@
+parameters:
+- name: build_reason
+  type: string
+- name: swu_version
+  type: string
+  default: None
+- name: build_target
+  displayName: Build target
+  values:
+  - zcu102
+  - tec0204
+  - systemroot
+  default: tec0204
+- name: update_cache
+  type: boolean
+  default: false
+- name: build_arch
+  displayName: Build architecture
+  values:
+  - aarch64
+  default: aarch64
+- name: use_cache
+  displayName: Use cache
+  type: boolean
+  default: false
+- name: build_dtb
+  displayName: Build DTB (no dependency)
+  type: boolean
+  default: true
+- name: create_boot_bin
+  displayName: Create BOOT.bin (depends on DTB)
+  type: boolean
+  default: true
+- name: build_kernel
+  displayName: Build kernel (depends on DTB)
+  type: boolean
+  default: true
+- name: create_rootfs
+  displayName: Create initial rootfs (no dependency)
+  type: boolean
+  default: true
+- name: final_rootfs
+  displayName: Install comp. in rootfs (cfg and kernel) (depends on Kernel, RootFs and Cfg.)
+  type: boolean
+  default: true
+- name: create_ulrr_cfg
+  displayName: Build ulrr cfg. (*.deb) (no dependency)
+  type: boolean
+  default: true
+- name: create_swu_file
+  displayName: Build SWu file (depends on Final RootFs)
+  type: boolean
+  default: true
+- name: run_deploy_stage
+  displayName: Run deploy and validate stage
+  type: boolean
+  default: false
+- name: rootfs_version
+  displayName: Rootfs version
+  type: string
+  default: "0.7.11"
+- name: vitis_version
+  type: string
+  default: 2021.2
+- name: debug
+  type: boolean
+  default: false
+
+
+stages:
+- stage: Initial
+  variables:
+    - group: cs-swbuildir2st-credentials
+    - group: cs-artifactory-credentials
+  jobs:
+    - job: ConfirmPrBuildRequest
+      condition: eq('${{ parameters.build_reason }}', 'pr')
+      timeoutInMinutes: 0
+      cancelTimeoutInMinutes: 35790
+      steps:
+        - template: /devops/templates/steps/check-changed-files.yml
+          parameters:
+            folders_list: software/os/debian/ devops/ tools/
+
+    - job: CleanCache
+      condition: |
+          eq('${{ parameters.build_reason }}', 'release')
+      timeoutInMinutes: 0
+      cancelTimeoutInMinutes: 35790
+      steps:
+        - template: /devops/templates/steps/mount-storage-account.yml
+          parameters:
+            sa_user_name: $(swbuildir2st-user)
+            sa_user_password: $(swbuildir2st-key)
+            sa_uri: //swbuildir2st.file.core.windows.net/debian-build
+            mountdir: /mnt/debian-build
+        - bash: |
+            echo "Cleaning cache... "
+            if ! mountpoint -q /mnt/debian-build; then
+              echo "/mnt/debian-build is not a mountpoint."
+            else
+              echo "/mnt/debian-build is a mountpoint."
+            fi
+            sudo rm -rf /mnt/debian-build/cache/${{ parameters.vitis_version }}/${{ parameters.build_target }}
+            echo "Cleaned cache... "
+
+
+- stage: Build
+  condition: |
+      or(
+        and(
+          eq('${{ parameters.build_reason }}', 'pr'),
+          eq(dependencies.Initial.outputs['ConfirmPrBuildRequest.CheckChangedFiles.pr_build_requird'],true)
+        ),
+        ne('${{ parameters.build_reason }}', 'pr')
+      )
+  variables:
+    - group: cs-swbuildir2st-credentials
+    - group: cs-artifactory-credentials
+    - group: cs-acr-pull-credentials
+
+  jobs:
+    - template: /devops/templates/jobs/build-debian-components-template.yml
+      parameters:
+        build_target: ${{parameters.build_target}}
+        update_cache: ${{parameters.update_cache}}
+        build_arch: ${{parameters.build_arch}}
+        vitis_version: ${{parameters.vitis_version}}
+        use_cache: ${{parameters.use_cache}}
+        build_dtb: ${{parameters.build_dtb}}
+        create_boot_bin: ${{parameters.create_boot_bin}}
+        build_kernel: ${{parameters.build_kernel}}
+        create_rootfs: ${{parameters.create_rootfs}}
+        final_rootfs: ${{parameters.final_rootfs}}
+        create_ulrr_cfg: ${{parameters.create_ulrr_cfg}}
+        create_swu_file: ${{parameters.create_swu_file}}
+        rootfs_version: ${{parameters.rootfs_version}}
+
+
+- stage: DeployAndVerify
+  condition: |
+      and(
+        eq(dependencies.Build.outputs['BuildSWUFile.SWUStep.run_deployment_stage'],true),
+        or(
+          ne('${{ parameters.build_reason }}', 'manual'),
+          and(
+            eq('${{ parameters.build_reason }}', 'manual'),
+            eq('${{ parameters.run_deploy_stage }}', 'true')
+          )
+        )
+      )
+  jobs:
+    - job: FlashSWUFileOnTarget
+      timeoutInMinutes: 0
+      cancelTimeoutInMinutes: 35790    
+      variables:      
+        swu_artifactname: $[stageDependencies.Build.BuildSWUFile.outputs['SWUStep.swu_artifactname']]
+        swu_filename: $[stageDependencies.Build.BuildSWUFile.outputs['SWUStep.swu_filename']]
+        kernel_id: $[stageDependencies.Build.BuildFinalRootFS.outputs['DownloadPreBuiltKernelStep.kernel_id']]
+
+      pool:
+        name: local-test-benches
+        demands:
+          - Agent.Name -equals LR-C-001ET
+
+      steps:
+        - download: current
+          artifact: $(swu_artifactname)
+          displayName: Downlaod SWU
+
+        - template: /devops/templates/steps/controlsensor.yml
+          parameters:
+            trigger_sensor: boot
+        
+        - template: /devops/templates/steps/swu-flash.yml
+          parameters:
+            pathToFlashFile: $(Pipeline.Workspace)/$(swu_artifactname)/$(swu_filename)
+        
+        - ${{ if ne(parameters.build_reason, 'manual') }}:
+          - template: /devops/templates/steps/smoke_test.yml
+            parameters:
+              kernel_id: $(kernel_id)
+              before_sd_rootdev: $(FlashSWU.before_sd_rootdev)
+              before_sd_rootdev_altboot: $(FlashSWU.before_sd_rootdev_altboot)
+
+        - template: /devops/templates/steps/controlsensor.yml
+          parameters:
+            trigger_sensor: shutdown
+
+
+- stage: Deliver
+  condition:  |
+    and(
+      eq('${{ parameters.build_reason }}', 'release'),
+      in(dependencies.DeployAndVerify.result, 'Succeeded')
+    )
+  dependsOn:
+    - Build
+    - DeployAndVerify 
+  variables:
+    - group: cs-swbuildir2st-credentials
+  jobs:
+    - job: DownloadAndPublishArtifacts
+      displayName: Download And Publish Artifacts
+      variables:
+        bootbin_artifactname: $[stageDependencies.Build.BuildBootBin.outputs['BootBinStep.bootbin_artifactname']]
+        bootbin_filename: $[stageDependencies.Build.BuildBootBin.outputs['BootBinStep.bootbin_filename']]
+        final_rootfs_artifactname: $[stageDependencies.Build.BuildFinalRootFS.outputs['FinalSysRootStep.final_rootfs_artifactname']]
+        final_rootfs_filename: $[stageDependencies.Build.BuildFinalRootFS.outputs['FinalSysRootStep.final_rootfs_filename']]
+        smoketests_artifactname: $[stageDependencies.DeployAndVerify.FlashSWUFileOnTarget.outputs['Somketests.smoketests_artifactname']]
+      steps:
+        - download: current
+          artifact: $(bootbin_artifactname)
+          displayName: Download boot bin
+        - download: current
+          artifact: $(final_rootfs_artifactname)
+          displayName: Download final rootfs
+        - download: current
+          artifact: $(smoketests_artifactname)
+          displayName: Download smoketests reports
+        - task: ArtifactoryGenericUpload@1
+          inputs:
+            artifactoryService: 'sc-ado-artifactory'
+            specSource: 'taskConfiguration'
+            fileSpec: |
+              {
+                "files": [
+                  {
+                    "pattern": "$(Pipeline.Workspace)/$(bootbin_artifactname)/$(bootbin_filename)",
+                    "target": "zugspitze-series-generic-local/releases/debian-base-image/TEC_${{parameters.swu_version}}/"
+                  },
+                  {
+                    "pattern": "$(Pipeline.Workspace)/$(final_rootfs_artifactname)/$(final_rootfs_filename)",
+                    "target": "zugspitze-series-generic-local/releases/debian-base-image/TEC_${{parameters.swu_version}}/"
+                  },
+                  {
+                    "pattern": "$(Pipeline.Workspace)/$(smoketests_artifactname)/*",
+                    "target": "zugspitze-series-generic-local/releases/debian-base-image/TEC_${{parameters.swu_version}}/Reports/"
+                  }
+                ]
+              }
+            failNoOp: true
+          displayName: Upload new Bootbin & Rootfs release version
+        - task: ArtifactoryGenericUpload@1
+          condition: |
+            ne(${{ parameters.debug }}, true)
+          inputs:
+            artifactoryService: 'sc-ado-artifactory'
+            specSource: 'taskConfiguration'
+            fileSpec: |
+              {
+                "files": [
+                  {
+                    "pattern": "$(Pipeline.Workspace)/$(bootbin_artifactname)/$(bootbin_filename)",
+                    "target": "zugspitze-series-generic-local/releases/debian-base-image/latest/"
+                  },
+                  {
+                    "pattern": "$(Pipeline.Workspace)/$(final_rootfs_artifactname)/$(final_rootfs_filename)",
+                    "target": "zugspitze-series-generic-local/releases/debian-base-image/latest/"
+                  },
+                  {
+                    "pattern": "$(Pipeline.Workspace)/$(smoketests_artifactname)/*",
+                    "target": "zugspitze-series-generic-local/releases/debian-base-image/latest/Reports/"
+                  }
+                ]
+              }
+            failNoOp: true
+          displayName: Replace latest Bootbin & Rootfs
+

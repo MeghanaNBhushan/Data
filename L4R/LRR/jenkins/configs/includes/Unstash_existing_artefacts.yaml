@@ -1,0 +1,5 @@
+    - name: Unstash artefacts
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: python Unstash.py -j ^ENV:JOBNAME_ARTEFACTS; -bn ^ENV:BUILDNUMBER_ARTEFACTS;
+        fromPath: ./jenkins/scripts

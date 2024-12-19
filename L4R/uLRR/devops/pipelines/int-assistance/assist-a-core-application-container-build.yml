@@ -1,0 +1,95 @@
+trigger: none
+
+pr: none
+
+parameters:
+  - name: container_version
+    displayName: Container version (eq. to "0.0.1")
+    type: string
+  - name: willBeLatest
+    displayName: Is the built container, the latest?
+    type: boolean
+    default: false
+  - name: build_reason
+    displayName: Reason for the build
+    type: string
+
+variables:
+  - group: cs-artifactory-credentials
+  - group: cs-swbuildir2st-credentials
+  - name: aarch64-sysroot
+    value: ulrr-aarch64-sysroot-bullseye_0.0.0_amd64.deb
+  - name: python-glibc
+    value: Python3.9.5-glibc.tar.xz
+  - name: Helix-deb
+    value: helix-qac-2023.2~tcc.deb
+
+pool: int-lnx-m-vmss
+
+jobs:
+- job: Dockerbuild
+  steps:
+  - template: /devops/templates/steps/docker-login.yml
+    parameters:
+      user: $(devops-artifactory-access-user)
+      token: $(devops-artifactory-access-token)
+      host: artifactory.boschdevcloud.com
+
+  - template: /devops/templates/steps/mount-storage-account.yml
+    parameters:
+      sa_user_name: $(swbuildir2st-user)
+      sa_user_password: $(swbuildir2st-key)
+      sa_uri: //swbuildir2st.file.core.windows.net/a-core-application-container
+      mountdir: /mnt/a-core-application-container
+
+  - bash: |
+      set -e
+
+      sudo rsync -ah --progress /mnt/a-core-application-container/$(python-glibc) \
+          /mnt/a-core-application-container/$(Helix-deb) \
+          /mnt/a-core-application-container/$(aarch64-sysroot) \
+          $(Pipeline.Workspace)/s/tools/docker/debian_toolkit/a-core-application/
+      cp $(Pipeline.Workspace)/s/software/aos/conanfile.py $(Pipeline.Workspace)/s/tools/docker/debian_toolkit/a-core-application/
+      cp $(Pipeline.Workspace)/s/tools/v_getk/install.sh $(Pipeline.Workspace)/s/tools/docker/debian_toolkit/a-core-application/
+      cp $(Pipeline.Workspace)/s/tools/v_getk/config.ini $(Pipeline.Workspace)/s/tools/docker/debian_toolkit/a-core-application/
+    displayName: Copy required files
+
+  - bash: |
+      set -e
+
+      docker build --build-arg="CONANUSER=$(devops-artifactory-access-user)" --build-arg="CONANTOKEN=$(devops-artifactory-access-token)" -t artifactory.boschdevcloud.com/zugspitze-series-docker-local/a-core-application:${{ parameters.container_version }} $(Pipeline.Workspace)/s/tools/docker/debian_toolkit/a-core-application/
+      if [[ "${{ parameters.willBeLatest }}" == "True" ]]; then
+          docker tag artifactory.boschdevcloud.com/zugspitze-series-docker-local/a-core-application:${{ parameters.container_version }} artifactory.boschdevcloud.com/zugspitze-series-docker-local/a-core-application:latest
+      fi
+    displayName: Build container image
+
+  - ${{ if eq(parameters.willBeLatest, true) }}:
+    - template: /devops/templates/steps/generate-docker-release-note.yml
+      parameters:
+        container_version: ${{ parameters.container_version }}
+        build_reason: ${{ parameters.build_reason }}
+
+  
+  - task: ArtifactoryGenericUpload@1
+    condition: eq(${{ parameters.willBeLatest }}, True)
+    inputs:
+      artifactoryService: 'sc-ado-artifactory'
+      specSource: 'taskConfiguration'
+      fileSpec: |
+        {
+          "files": [
+            {
+              "pattern": "$(Pipeline.Workspace)/s/devops/scripts/python/docker_release_note_generator/devcontainer_release_note_${{ parameters.container_version }}.pdf",
+              "target": "zugspitze-series-generic-local/devcontainer-release-notes/devcontainer_release_note_${{ parameters.container_version }}.pdf"
+            }
+          ]
+        }
+      failNoOp: true
+    displayName: Upload release note to Artifactory
+
+  - bash: |
+      set -e
+
+      docker push -a artifactory.boschdevcloud.com/zugspitze-series-docker-local/a-core-application
+    displayName: Push container image
+  

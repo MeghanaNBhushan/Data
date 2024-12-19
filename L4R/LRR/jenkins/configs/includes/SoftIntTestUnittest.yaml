@@ -1,0 +1,11 @@
+    - name: Software Integration Tests Unittest ^TPL:hw;
+      executionOrder: ^TPL:execOrder;
+      executeOnFileChange:
+      - "ad_radar_apl/tools/AutoMatedTests/framework/main/**"
+      - "ad_radar_apl/tools/AutoMatedTests/framework/interface/**"
+      - "ad_radar_apl/tools/AutoMatedTests/framework/helper/**"
+      - "ad_radar_apl/tools/AutoMatedTests/framework/scheduling/**"
+      steps:
+      - cmd: python -m unittest -v framework/unittest/test_atftestbase.py framework/unittest/test_atftestsuite.py framework/unittest/test_atftestsuiteresult.py
+        fromPath: ./ad_radar_apl/tools/AutomatedTests
+        name: SWTests_Unittest_^TPL:hw;

@@ -1,0 +1,5 @@
+    - name: Stash artefacts
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: python Stash.py -rbj ^ENV:JOBNAME_ARTEFACTS; -rbbn ^ENV:BUILDNUMBER_ARTEFACTS; -rtj ^ENV:LUCX_JOB_NAME_WINDOWS; -rtbn ^ENV:BUILD_NUMBER;
+        fromPath: ./jenkins/scripts

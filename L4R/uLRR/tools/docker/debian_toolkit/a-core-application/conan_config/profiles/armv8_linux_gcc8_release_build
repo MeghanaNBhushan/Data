@@ -1,0 +1,4 @@
+include(armv8_linux_gcc8_debug_build)
+
+[settings]
+build_type=Release

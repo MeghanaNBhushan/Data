@@ -1,0 +1,14 @@
+parameters:
+- name: host
+  type: string
+  default: https://artifactory.boschdevcloud.com/artifactory
+
+steps:
+- task: PythonScript@0
+  inputs:
+    scriptSource: 'filePath'
+    scriptPath: $(Pipeline.Workspace)/s/devops/scripts/python/libraries/jfrog/jfrog-availability.py
+    arguments: ${{ parameters.host }} $(devops-artifactory-access-token)
+    pythonInterpreter: python3.8
+  displayName: Checking availability of the artifactory
+  

@@ -1,0 +1,29 @@
+targetDir: testEnv
+content:
+# executables
+- source: generatedFiles/VARIANT/VARIANT.hex
+  dest: executables/VARIANT.hex
+- source: generatedFiles/VARIANT/VARIANT.elf
+  dest: executables/VARIANT_merged_HSM.elf
+- source: generatedFiles/VARIANT/VARIANT_merged_HSM.hex
+  dest: executables/VARIANT_merged_HSM.hex
+- source: generatedFiles/VARIANT/VARIANT.dla
+  dest: executables/VARIANT.dla
+- source: generatedFiles/VARIANT/VARIANT.dnm
+  dest: executables/VARIANT.dnm
+- source: generatedFiles/VARIANT/VARIANT.map
+  dest: executables/VARIANT.map
+
+# test_framework
+- source: ad_radar_apl/tools/test_framework
+  dest: test_framework
+
+# test_int
+#- source: test_int
+#  dest: test_int
+#- source: ad_radar_apl/component/net_x/cfg/FR5CP_5NNN1_CAN_N_MX_2/net_desc/CanFdTestNetwork_v22.arxml
+#  dest: test_int/resources/database/CanFdTestNetwork_v22.arxml
+#- source: ad_radar_apl/component/net_x/cfg/FR5CP_5NNN1_CAN_N_MX_2/net_desc/UweTestNetwork_v2.arxml
+#  dest: test_int/resources/database/UweTestNetwork_v2.arxml
+#- source: ad_radar_apl/tools/supplements/06_RadarData
+# dest: test_int/resources/binaries/AntennaDiagram

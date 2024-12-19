@@ -1,0 +1,35 @@
+// complex
+//
+
+#ifndef INCLUDED_PRLGCC_COMPLEX
+#define INCLUDED_PRLGCC_COMPLEX
+
+#include <bits/prlgcc_c++config.h>
+
+#if defined (__PRL_GLIBCXX__)
+
+#  if (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 7)
+
+#    include <4.7/complex>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 8)
+
+#    include <4.8/complex>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 9)
+
+#    include <4.9/complex>
+
+#  else
+
+#    include_next <complex>
+
+#  endif
+
+#else
+
+#  include_next <complex>
+
+#endif
+
+#endif

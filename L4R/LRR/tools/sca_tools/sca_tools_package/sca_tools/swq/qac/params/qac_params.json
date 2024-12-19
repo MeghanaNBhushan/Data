@@ -1,0 +1,399 @@
+{
+    "argparser": {
+        "root": {
+            "description": "Interacts with QAC",
+            "subparser_description": "Interacts with qacli as provided by the tool vendor"
+        },
+        "create": {
+            "description": "Create QAC project"
+        },
+        "create_baseline": {
+            "description": "Create baseline"
+        },
+        "analyze": {
+            "description": "Analyze QAC project"
+        },
+        "report": {
+            "description": "Generate QAC analysis report"
+        },
+        "gui": {
+            "description": "Open project in QAC GUI"
+        },
+        "qavupload": {
+            "description": "Upload to QAC Dashboard"
+        },
+        "s101gen": {
+            "description": "s101gen"
+        },
+        "state": {
+            "description": "Generate project state report"
+        },
+        "export_state": {
+            "description": "Export state information"
+        },
+        "fix_cl_json": {
+            "description": "Fix cl compiler based compile_commands.json that contain @<<"
+        },
+        "filter_qaview": {
+            "description": "Parse the export of Helix QAC (via qaview command from helper) for which severity levels are contained in the export and then fail or pass the build on jenkins"
+        },
+        "export_analysis": {
+            "description": "Export analysis results and generate reports"
+        }
+    },
+    "parameters": {
+        "ACF_FILE": {
+            "mandatory": ["create"],
+            "cli": false
+        },
+        "ANALYZE_FILE": {
+            "description": "Analyze single file",
+            "cli_option_short": "af"
+        },
+        "ANALYZE_LIST": {
+            "description": "Path to a file that contains list of files to be analyzed",
+            "cli_option_short": "al"
+        },
+        "ANALYZE_PARAMS": {
+            "cli": false
+        },
+        "CODEOWNERS_FILE": {
+            "description": "Absolute path or relative to PROJECT_ROOT to the codeowners file",
+            "cli_option_short": "cf"
+        },
+        "COMPILER_LIST": {
+            "cli": false,
+            "mandatory": ["create"]
+        },
+        "C_FILES_ANALYZED_AS_C": {
+            "description": "Enable analysis of C files as C instead of C++. By default the C files are analyzed according to the C++ configs",
+            "cli_option_short": "caac"
+        },
+        "CLEANUP_ON_CREATE": {
+            "description": "A boolean to clean or not on create",
+            "cli_option_short": "coc"
+        },
+        "QAC_CLEANUP_DIAGNOSTICS_OUTPUT": {
+            "description": "A boolean to remove QACLI diagnostics output XML files",
+            "cli_option": "cleanup_diagnostics_output",
+            "cli_option_short": "cdo"
+        },
+        "CUSTOM_HELP_PATH": {
+            "cli": false
+        },
+        "DATASTORE_PATH": {
+            "mandatory": ["create", "analyze", "report", "qaview", "gui", "qavupload", "s101gen", "state", "export_state"]
+        },
+        "EXPORT_FORMATS": {
+            "description": "Set export formats.",
+            "cli_option_short": "ef"
+        },
+        "GITIGNORE_MAPPING": {
+            "description": "Same as \"-olt / --only_last_team\" argument and is overridden if \"-olt / --only_last_team\" is specified. Keeping for compatibility reasons for lucxbox users",
+            "cli_option_short": "gm",
+            "deprecated": true,
+            "deprecation_message": "\"GITIGNORE_MAPPING\" / -gm / --gitignore_mapping is deprecated. Please use \"ONLY_LAST_TEAM\" / -olt / --only_last_team instead"
+        },
+        "HELP_PAGES_ROOT_DIR": {
+            "description": "Root directory where help pages in HTML format are located. If specified, it creates custom configuration files where paths to help pages are set for all messages accordingly.",
+            "cli_option_short": "hprd"
+        },
+        "HELPER_CREATE_BASELINE": {
+            "description": "If specified, a baseline will be created after an analysis run.",
+            "cli_option_short": "hcb"
+        },
+        "HELPER_REMOVE_FILE_LIST": {
+            "description": "Remove the given file list from the project (e.g. as workaround for fatal errors).",
+            "cli_option_short": "hrfl"
+        },
+        "HELPER_SUPPRESS_C_HEADER": {
+            "description": "All C headers .h will be ignored in the analysis.",
+            "cli_option_short": "hsc"
+        },
+        "HELPER_SUPPRESS_FILE_LIST_A": {
+            "description": "Absolute or relative path (to project repo folder) to a text file, with the list of files to exclude from analysis.",
+            "cli_option_short": "hsfa"
+        },
+        "HELPER_SUPPRESS_FILE_LIST_S": {
+            "description": "Absolute or relative path (to project repo folder) to a text file, with list of files to exclude from sync.",
+            "cli_option_short": "hsfs"
+        },
+        "FILTER_REPORT_OUTPUT_FILE": {
+            "description": "Write results to specified output file. Absolute or relative to repo root paths can be used.",
+            "cli_option_short": "frof"
+        },
+        "IGNORE_IDS": {
+            "json": false,
+            "env": false,
+            "description": "Error IDs that can be ignored (as a CSV list)",
+            "cli_option_short": "i"
+        },
+        "JUSTIFICATION_MESSAGE_REGEXP": {
+            "json": false,
+            "env": false,
+            "description": "Regular expression for Justification message",
+            "cli_option_short": "jmre"
+        },
+        "IGNORE_VALIDATION": {
+            "description": "Enables bypass of QAC components validation mechanisms",
+            "cli_option_short": "iv"
+        },
+        "INPUT_CL_JSON": {
+            "description": "Path to JSON file that should be modified",
+            "cli_option_short": "icj",
+            "mandatory": ["fix_cl_json"]
+        },
+        "LICENSE_SERVERS": {
+            "cli": false
+        },
+        "LOCAL_BASELINE_PATH": {
+            "description": "If specified, it sets a baseline when creating a new project from the baseline path.",
+            "cli_option": "helper_set_baseline",
+            "cli_option_short": "hsb"
+        },
+        "MAXIMUM_PARALLEL_WORKERS": {
+            "description": "Maximum number of parallel jobs to be executed in parallel workers",
+            "cli_option_short": "mpw"
+        },
+        "METRICS_FILTER_LIST": {
+            "description": "Metrics to be included in generated metrics report",
+            "cli_option_short": "mfl"
+        },
+        "NCF_FILE": {
+            "cli": false
+        },
+        "ONLY_LAST_TEAM": {
+            "description": "Include only the last matched team in the teams report",
+            "cli_option_short": "olt"
+        },
+        "PROJECT_ROOT": {
+            "mandatory": true
+        },
+        "QAC_ANALYSIS_PATH_BLACKLIST": {
+            "cli": false
+        },
+        "QAC_BIN_PATH": {
+            "description": "Absolute path to the directory where QAC is installed.",
+            "cli_option_short": "qac",
+            "mandatory": true
+        },
+        "QAC_CONFIG_PATH": {
+            "description": "Absolute path to the QAC preferred configurations search path. Accepts single path or list of paths",
+            "cli_option_short": "qaf"
+        },
+        "QAC_DISABLE_OPTIMIZATION": {
+            "description": "Disables QAC project optimization",
+            "cli_option": "disable_optimization",
+            "cli_option_short": "do"
+        },
+        "QAC_FROM_STATE_FILE": {
+            "description": "Generates reports based on state file",
+            "cli_option": "from_state_file",
+            "cli_option_short": "fsf"
+        },
+        "QAC_LOGGING_LEVEL": {
+            "description": "Set verbosity of the QAC output.",
+            "cli_option_short": "qll"
+        },
+        "QAC_MODULES": {
+            "cli": false
+        },
+        "QAC_PROJECT_PATH": {
+            "description": "It overrides the project path specified in the json datastore.",
+            "cli_option_short": "qap",
+            "mandatory": true
+        },
+        "QAC_SYNC_PATH_BLACKLIST": {
+            "cli": false
+        },
+        "QAC_SYNC_SETTINGS_INCLUDE_PATH": {
+            "cli": false
+        },
+        "QAC_WITH_ANALYSIS": {
+            "description": "Generate analysis report",
+            "cli_option": "with_analysis",
+            "cli_option_short": "wa"
+        },
+        "QAC_WITH_METRICS": {
+            "description": "Generate metrics report",
+            "cli_option": "with_metrics",
+            "cli_option_short": "wm"
+        },
+        "QAC_WITH_SUMMARY": {
+            "description": "Generate summary report",
+            "cli_option": "with_summary",
+            "cli_option_short": "ws"
+        },
+        "QAC_WITH_STATE_FILE": {
+            "description": "Generate state file",
+            "cli_option": "with_state_file",
+            "cli_option_short": "wsf"
+        },
+        "QAC_WITH_SUBDIAGNOSTICS": {
+            "description": "Generates report with light subdiagnostics included",
+            "cli_option": "with_subdiagnostics",
+            "cli_option_short": "wsd"
+        },
+        "QAC_WITH_FULL_SUBDIAGNOSTICS": {
+            "description": "Generates report with full subdiagnostics included",
+            "cli_option": "with_full_subdiagnostics",
+            "cli_option_short": "wfsd"
+        },
+        "QACLI_POST_CREATE_COMMANDS": {
+            "description": "List of commands to be executed after Helix QAC project creation",
+            "env": false,
+            "cli": false
+        },
+        "QACLI_VIEW_EXTRA_ARGS" : {
+            "description": "List of extra arguments for qacli view subcommand",
+            "env": false,
+            "cli": false
+        },
+        "QAVIEW_CSV": {
+            "description": "Path to qaview export",
+            "cli_option_short": "qacsv"
+        },
+        "QAV_PASSWORD": {
+            "cli": false,
+            "mandatory": ["qavupload"]
+        },
+        "QAV_USERNAME": {
+            "cli": false,
+            "mandatory": ["qavupload"]
+        },
+        "QAV_PROJECT_NAME": {
+            "description": "QAVerify project name.",
+            "cli_option_short": "qpn",
+            "mandatory": ["qavupload"]
+        },
+        "QAV_PROJECT_SNAPSHOT": {
+            "description": "QAVerify project snapshot name.",
+            "cli_option_short": "qps",
+            "mandatory": ["qavupload"]
+        },
+        "QAV_SERVER_URL": {
+            "description": "QAVerify server URL.",
+            "cli_option_short": "qsu",
+            "mandatory": ["qavupload"]
+        },
+        "QAV_UPLOAD_SOURCE": {
+            "description": "QAVerify upload source directory.",
+            "cli_option_short": "qus",
+            "mandatory": ["qavupload"]
+        },
+        "RCF_FILE": {
+            "cli": false,
+            "mandatory": ["create"]
+        },
+        "SEVERITY_LEVEL_FAIL_THRESHOLD_FOR_LEVEL_0": {
+            "json": false,
+            "env": false,
+            "description": "Script will fail if amount of warnings of level 0 exceeds this integer",
+            "cli_option_short": "f0"
+        },
+        "SEVERITY_LEVEL_FAIL_THRESHOLD_FOR_LEVEL_1": {
+            "json": false,
+            "env": false,
+            "description": "Script will fail if amount of warnings of level 1 exceeds this integer",
+            "cli_option_short": "f1"
+        },
+        "SEVERITY_LEVEL_FAIL_THRESHOLD_FOR_LEVEL_2": {
+            "json": false,
+            "env": false,
+            "description": "Script will fail if amount of warnings of level 2 exceeds this integer",
+            "cli_option_short": "f2"
+        },
+        "SEVERITY_LEVEL_FAIL_THRESHOLD_FOR_LEVEL_3": {
+            "json": false,
+            "env": false,
+            "description": "Script will fail if amount of warnings of level 3 exceeds this integer",
+            "cli_option_short": "f3"
+        },
+        "SEVERITY_LEVEL_FAIL_THRESHOLD_FOR_LEVEL_4": {
+            "json": false,
+            "env": false,
+            "description": "Script will fail if amount of warnings of level 4 exceeds this integer",
+            "cli_option_short": "f4"
+        },
+        "SEVERITY_LEVEL_FAIL_THRESHOLD_FOR_LEVEL_5": {
+            "json": false,
+            "env": false,
+            "description": "Script will fail if amount of warnings of level 5 exceeds this integer",
+            "cli_option_short": "f5"
+        },
+        "SEVERITY_LEVEL_FAIL_THRESHOLD_FOR_LEVEL_6": {
+            "json": false,
+            "env": false,
+            "description": "Script will fail if amount of warnings of level 6 exceeds this integer",
+            "cli_option_short": "f6"
+        },
+        "SEVERITY_LEVEL_FAIL_THRESHOLD_FOR_LEVEL_7": {
+            "json": false,
+            "env": false,
+            "description": "Script will fail if amount of warnings of level 7 exceeds this integer",
+            "cli_option_short": "f7"
+        },
+        "SEVERITY_LEVEL_FAIL_THRESHOLD_FOR_LEVEL_8": {
+            "json": false,
+            "env": false,
+            "description": "Script will fail if amount of warnings of level 8 exceeds this integer",
+            "cli_option_short": "f8"
+        },
+        "SEVERITY_LEVEL_FAIL_THRESHOLD_FOR_LEVEL_9": {
+            "json": false,
+            "env": false,
+            "description": "Script will fail if amount of warnings of level 9 exceeds this integer",
+            "cli_option_short": "f9"
+        },
+        "SKIP_EXIT_ON_ANALYSIS_RETURN_CODES": {
+            "description": "Prevent QAC from exit if the analysis returns one of the specified return codes e.g. -see 3 9",
+            "cli_option_short": "see"
+        },
+        "SKIP_EXIT_ON_BUILD_RETURN_CODES": {
+            "description": "Prevent QAC from exit if the build returns one of the specified return codes e.g. -seb 0 2",
+            "cli_option_short": "seb"
+        },
+        "SYNC_BUILD_COMMAND": {
+            "description": "Build command that generates a log file, ideally a script, if this field is left empty, no build will be performed",
+            "cli_option_short": "sbc"
+        },
+        "SYNC_BUILD_LOG_FILE": {
+            "description": "Override the build log settings from the config file. It is used as an input to create a QAC project",
+            "cli_option_short": "sbf"
+        },
+        "SYNC_TYPE_JSON_PATH_PATTERN_WHITELIST": {
+            "cli": false
+        },
+        "SYNC_TYPE": {
+            "cli": false,
+            "mandatory": ["create"]
+        },
+        "QAC_THRESHOLD_WARNINGS_REPORT": {
+            "description": "Path to threshold warnings report",
+            "cli_option": "threshold_warnings_report",
+            "cli_option_short": "twr"
+        },
+        "TO_STDOUT": {
+            "json": false,
+            "env": false,
+            "description": "Write results to stdout. Otherwise, the results are written to the file which is specified as filter qaview output file either from JSON configuration file, or from CLI",
+            "cli_option_short": "ts"
+        },
+        "USE_PYTHON_BUILD_SHELL": {
+            "description": "Use python build shell for running the build command.",
+            "cli_option": "build_shell",
+            "cli_option_short": "pbs"
+        },
+        "USE_VSCODE_INTEGRATION": {
+            "description": "Integrate output into MS VS Code",
+            "cli_option": "vscode_integration",
+            "cli_option_short": "vsc"
+        },
+        "USER_MESSAGES": {
+            "cli": false
+        },
+        "VCF_FILE": {
+            "cli": false
+        }
+    }
+}

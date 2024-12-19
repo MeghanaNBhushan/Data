@@ -1,0 +1,30 @@
+trigger: none
+
+pr:
+  autoCancel: true
+  branches:
+    include:
+      - develop
+  drafts: false
+
+resources:
+  containers:
+  - container: a-core-application-container
+    image: artifactory.boschdevcloud.com/zugspitze-series-docker-local/a-core-application:latest
+    endpoint: sc-ado-docker-registry-artifactory
+    options: --user 0:0 --privileged
+    volumes: # Volumes to mount on the container.
+    - /var/tmp/conan_cache:/var/tmp/conan_cache
+    env: # Variables to map into the container's environment.
+      TARGET: x86-64
+      TYPE: debug
+      MIDDLEWARE_INSTANCE: car_pc
+      AOS_VERSION: default
+
+stages:
+  - template: /devops/templates/stages/build-pc-application-template.yaml
+    parameters:
+      build_target: x86-64
+      build_type: debug
+      build_reason: pr
+      vmss: cx-lnx-l-vmss

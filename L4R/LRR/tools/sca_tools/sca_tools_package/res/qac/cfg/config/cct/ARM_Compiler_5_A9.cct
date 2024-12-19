@@ -1,0 +1,115 @@
+*{
+* "PLATFORM" : "ALL",
+* "COMPILER_HIERARCHY" : "ARM Compiler",
+* "COMPILER_NAME": "ARM Compiler 5",
+* "COMPILER_VERSION": "5.x",
+* "HOST": "standalone",
+* "TARGET": "ARMA9",
+* "SOURCE_LANGUAGE": "C++",
+* "COMPILER_CMD": "armclang",
+* "ADDITIONAL_INCLUDES":"DATA/ARM_Compiler_5_A9/Stub",
+* "INCLUDE_LIST": [
+*   {"INCLUDE_STRUCTURE": {
+*       "INCLUDE_TYPE": "MasterScript",
+*       "INCLUDE_VALUE": "DATA/ARM_Compiler_5_A9/Script/ARM_Compiler_5_A9.py"
+*       }
+*   },
+*   {"INCLUDE_STRUCTURE": {
+*       "INCLUDE_TYPE": "HelperScript",
+*           "INCLUDE_VALUE": ""
+*       }
+*   }
+* ],
+* "SYNCHRONISATION" : {
+*   "INCLUDE_FLAGS":"",
+*   "DEFINE_FLAGS":"",
+*   "SETTINGS_FILE_OPTIONS":{
+*       "FLAG":"",
+*       "EXTENSION":"",
+*       "LITERAL_QUOTES":""
+*       }
+*   }
+*}
+
+-sd "__cplusplus=199711"
+-sd "__ARMCC_VERSION=5040081"
+-sd "__arm__"
+-sd "__TARGET_CPU_CORTEX_A9"
+-sd "__TARGET_FEATURE_NEON"
+-sd "NDEBUG"
+-sd "__inline="
+
+-sd "_ARMABI_NORETURN="
+-sd "_ARMABI="
+-sd "_ARMABI_PURE="
+-sd "_ARMABI_FPEXCEPT="
+-sd "_ARMABI_SOFTFP="
+
+-sd "__int64=long long"
+
+-sd "__WCHAR_DISABLED"
+-sd "__value_in_regs="
+-sd "__packed="
+-sd "__softfp="
+-sd "MCU_UARTPRINTF_H"
+-sd "__ESCAPE__="
+
+-sd "__is_constrange="
+
+-d __attribute__=_ignore_paren
+
+-d float32x4_t=float
+-d "uint32x4=unsigned int"
+-d float32x2=float
+-d int16x8=int
+-d "uint8x8=unsigned char"
+-d int8x8=int
+
+-d __asm=_ignore_paren
+
+-d __disable_irq=_ignore_paren
+-d __enable_irq=_ignore_paren
+
+-d __disable_fiq=_ignore_paren
+-d __enable_fiq=_ignore_paren
+
+-d "__current_sp()=0"
+
+-d __dsb=_ignore_paren
+
+-d Mcu_UartPrintf=_ignore_paren
+   
+-d eth_debug=_ignore_paren
+
+-d __promise=_ignore_semi
+-d __breakpoint=_ignore_semi
+
+-sd "__forceinline="
+
+-sd __asm=_ignore_paren
+
+-d __attribute=_ignore_paren
+-d MMU_ASSERT=_ignore_semi
+-d MMUIF_AREAS=_ignore_paren
+-d vld1_f32=_ignore_semi
+-d vld1q_f32=_ignore_semi
+
+-d __nop=_ignore_paren
+
+-sd "__dmb="
+-sd "__isb="
+
+-sd "__clz="
+
+-d __sev=_ignore_paren
+-d __wfe=_ignore_paren
+-d __svc=_ignore_paren
+
+-d __declspec=_ignore_paren
+
+-d __align=_ignore_paren
+-d __schedule_barrier=_ignore_paren
+-d VFC_LINKER_SECT=_ignore_paren
+-sd "__ssub16="
+-sd "__uqsub16="
+-sd "__restrict="

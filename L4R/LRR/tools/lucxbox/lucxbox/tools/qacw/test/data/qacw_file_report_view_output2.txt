@@ -1,0 +1,2 @@
+// ======= Results for /project/ara_sample_pool.hpp
+warning;/project/ara_sample_pool.hpp;48;49; This is a call to 'malloc', 'calloc', 'realloc' or 'free' from library <cstdlib>.

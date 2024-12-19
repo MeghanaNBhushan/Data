@@ -1,0 +1,4 @@
+PER.Set.simple D:0xFA000170 %Long  0xFFFFFFFF
+PER.Set.simple D:0xFA00017C %Long  0xFFFFFFFF
+go
+EndDo

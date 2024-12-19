@@ -1,0 +1,63 @@
+﻿[
+    {
+        "IssueID":  "ATR-14413",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-14413",
+        "IssueStatus":  "Closed",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+
+                             ],
+        "Scope":  [
+                      "Customer_relevant",
+                      "LRR"
+                  ],
+        "Team":  "555",
+        "Summary":  "Pre-condition checks for Diagnostics",
+        "StakeholderSummary":  "None",
+        "Severity":  null,
+        "SafetyRelevance":  null
+    },
+    {
+        "IssueID":  "ATR-14307",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-14307",
+        "IssueStatus":  "In Progress",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+
+                             ],
+        "Scope":  [
+                      "Customer_relevant",
+                      "LRR",
+                      "InterfaceChange"
+                  ],
+        "Team":  null,
+        "Summary":  "E2E Protection for LGP (only Tx)",
+        "StakeholderSummary":  "All Output PDU\u0027s contains an Autosar E2E Header. The header is defined according to autosar profile 44.\r\nFor further signal details please refer to the document \"Technical Customer Information - Location Gateway Protocol\".\r\n\r\nConfidence : 100%",
+        "Severity":  null,
+        "SafetyRelevance":  null
+    },
+    {
+        "IssueID":  "ATR-14060",
+        "IssueURL":  "https://rb-tracker.bosch.com/tracker08/browse/ATR-14060",
+        "IssueStatus":  "In Progress",
+        "FixVersion":  [
+                           "LRR_LGU_PF_V9.0.0"
+                       ],
+        "AffectedVersions":  [
+
+                             ],
+        "Scope":  [
+                      "Customer_relevant",
+                      "LRR"
+                  ],
+        "Team":  "555",
+        "Summary":  "Suspend/Reactivate Modulation with Diagnostics",
+        "StakeholderSummary":  "Confidence : 100%\r\n\r\n \r\n\r\nSolution A is implemented, for Solution B needs some more detailed discussion.\r\n\r\n ",
+        "Severity":  null,
+        "SafetyRelevance":  null
+    }
+]

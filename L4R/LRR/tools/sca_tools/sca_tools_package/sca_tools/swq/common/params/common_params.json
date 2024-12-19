@@ -1,0 +1,20 @@
+{
+    "parameters": {
+        "DATASTORE_PATH": {
+            "description": "Absolute path to the sca_tools config file.",
+            "cli_option_short": "dp"
+        },
+        "DATASTORE_TARGET": {
+            "description": "Project in map which holds the configuration.",
+            "cli_option_short": "dt"
+        },
+        "PROJECT_ROOT": {
+            "description": "Project base folder.",
+            "cli_option_short": "pr"
+        },
+        "HELPER_LOGS_PATH": {
+            "description": "Sets the helper logs folder path. Either absolute or relative to PROJECT_ROOT",
+            "cli_option_short": "hlp"
+        }
+    }
+}

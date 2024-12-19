@@ -1,0 +1,13 @@
+steps:
+  - task: Bash@3
+    continueOnError: true
+    timeoutInMinutes: 35790
+    inputs:
+      targetType : inline
+      script: |
+        cd ./tools/build_toolkit/sca/
+        docker build ./ -t artifactory.boschdevcloud.com/zugspitze-series-docker-local/sca:latest --no-cache
+        docker push artifactory.boschdevcloud.com/zugspitze-series-docker-local/sca:latest
+      failOnStderr: true
+    displayName: Building sca container
+

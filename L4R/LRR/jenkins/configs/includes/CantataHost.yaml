@@ -1,0 +1,20 @@
+    - name: Cantata Test on Host 
+      executionOrder: ^TPL:execOrder;
+      skipIfOnlyFilesChanged:
+      - ^INCLUDE:jenkins/configs/includes/skipFilesChangedList.yaml;
+      steps:
+      - cmd: ExecuteCantataTests.bat -c ^TPL:uc1; -bt ^TPL:buildType; 
+        fromPath: ./ad_radar_apl/tools/AutoMatedCantataTests
+        name: Cantata_Host_Exec_^TPL:uc1;
+      - cmd: ExecuteCantataTests.bat -c ^TPL:uc2; -bt ^TPL:buildType;
+        fromPath: ./ad_radar_apl/tools/AutoMatedCantataTests
+        name: Cantata_Host_Exec_^TPL:uc2;
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\UnitTests
+        fromPath: ./generatedFiles/SWQualityReports
+        includes: "Cantata/**"
+        allowEmpty: true
+        afterFail: true
+        zip: true
+        zipName: Cantata

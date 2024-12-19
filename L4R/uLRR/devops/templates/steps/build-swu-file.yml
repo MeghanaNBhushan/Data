@@ -1,0 +1,133 @@
+parameters:
+- name: build_target
+  type: string
+  default: tec0204
+- name: update_cache
+  type: boolean
+  default: true
+- name: vitis_version
+  type: string
+  default: 2021.2
+- name: path_to_final_rootfs_file
+  type: string
+  default: ""
+
+steps:
+  - template: /devops/templates/steps/mount-storage-account.yml
+    parameters:
+      sa_user_name: $(swbuildir2st-user)
+      sa_user_password: $(swbuildir2st-key)
+      sa_uri: //swbuildir2st.file.core.windows.net/debian-build
+      mountdir: /mnt/debian-build
+
+  - template: /devops/templates/steps/prepare_generic_infrastructure.yml
+    parameters:
+      build_target: ${{ parameters.build_target }}
+
+  - bash: |
+      set -e
+
+      echo "Target:"
+      echo " - TARGET: ${{ parameters.build_target }}"
+      echo "##vso[task.setvariable variable=TARGET]${{ parameters.build_target }}"
+
+      echo "Deploy artifact:"
+      echo " - UPDATE_CACHE: ${{ parameters.update_cache }}"
+      echo "##vso[task.setvariable variable=UPDATE_CACHE]${{ parameters.update_cache }}"
+
+      echo "Vitis version:"
+      echo " - VITIS_VERSION: ${{ parameters.vitis_version }}"
+      echo "##vso[task.setvariable variable=VITIS_VERSION]${{ parameters.vitis_version }}"
+
+      echo "Path to final rootfs file:"
+      echo " - PATH_TO_FINAL_ROOTFS_FILE: ${{ parameters.path_to_final_rootfs_file }}"
+      echo "##vso[task.setvariable variable=PATH_TO_FINAL_ROOTFS_FILE]${{ parameters.path_to_final_rootfs_file }}"
+
+      echo "###############################################################"
+      echo "Repo handling: "
+      echo "..............................................................."
+      echo "Fetching develop branch..."
+      git fetch origin develop:develop
+      echo "Fetched develop branch..."
+    displayName: 1.1 - Prepare infrastructure
+
+  - bash: |
+      set -e
+
+      echo "Download pre-built rootfs..."
+
+      if [ -d "$PATH_TO_FINAL_ROOTFS_FILE" ]; then
+        echo "Using final rootfs from Storage account..."
+
+        cd ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/final_rootfs/
+
+        if [[ "${TARGET}" == "zcu102" ]] || [[ "${TARGET}" == "tec0204" ]]; then
+          rootfs_filename=$(find * -type f -name 'rootfs_$(TARGET)_bullseye_final*ext4.gz');
+        fi
+        echo "$rootfs_filename was found."
+
+        if [ ! -z "$rootfs_filename" ]; then
+          echo "##vso[task.setvariable variable=rootfs_file_found]Succeeded"
+          echo "##vso[task.setvariable variable=rootfs_file;isOutput=true]$rootfs_filename"
+
+          sudo rsync -ah --progress ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/final_rootfs/$rootfs_filename ${ARTIFACTS_DIR}
+        fi
+      else
+        echo "Using final rootfs from the current pipeline run..."
+
+        rootfs_filename=$(basename -- "${PATH_TO_FINAL_ROOTFS_FILE}")
+        echo "$rootfs_filename was found."
+
+        echo "##vso[task.setvariable variable=rootfs_file_found]Succeeded"
+        echo "##vso[task.setvariable variable=rootfs_file;isOutput=true]$rootfs_filename"
+
+        sudo rsync -ah --progress ${PATH_TO_FINAL_ROOTFS_FILE} ${ARTIFACTS_DIR}
+      fi
+
+      echo "Finished download pre-built rootfs."
+    name: DownloadPreBuiltRootFsStep
+    displayName: 2 - Download pre-built rootfs
+
+  - bash: |
+      set -e
+
+      echo "Starting build of swu file..."
+
+      $(Build.SourcesDirectory)/software/os/debian/components/swupdate/generate_swu.sh -r ${ARTIFACTS_DIR}/$(DownloadPreBuiltRootFsStep.rootfs_file) -t ${TARGET}
+
+      echo "Finished build of swu file."
+    displayName: 3 - Build swu file.
+    condition: eq(variables['rootfs_file_found'], 'Succeeded')
+
+  - bash: |
+      set -e
+
+      echo "Checking if swu file is available..."
+
+      cd $(Build.SourcesDirectory)/software/os/debian/components/swupdate/build/
+
+      swu_filename=$(find * -type f -name 'uLRR_image-*.swu');
+      echo "Found file was: $swu_filename"
+
+      if [ ! -z "$swu_filename" ]; then
+        echo "##vso[task.setvariable variable=swu_filename;isOutput=true]$swu_filename"
+        echo "##vso[task.setvariable variable=swu_artifactname;isOutput=true]$(Agent.JobName)-$(TARGET)-sw-debian-build-swu-file-$(System.StageAttempt)-$(System.JobAttempt)"
+        echo "##vso[task.setvariable variable=build_swu_result]Succeeded"
+        echo "##vso[task.setvariable variable=run_deployment_stage;isOutput=true]true"
+
+        if [[ "${UPDATE_CACHE}" == "True" ]]; then
+          sudo mkdir -p ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/swu_file/
+          sudo rsync -ah --progress $(Build.SourcesDirectory)/software/os/debian/components/swupdate/build/$swu_filename ${MOUNT_DIR}/cache/${VITIS_VERSION}/${TARGET}/swu_file/
+        fi
+      else
+        echo "swu file not found."
+        echo "##vso[task.setvariable variable=build_swu_result]Failed"
+      fi
+    name: SWUStep
+    displayName: 4 - Checking if swu file is available...
+
+  - publish: $(Build.SourcesDirectory)/software/os/debian/components/swupdate/build/$(SWUStep.swu_filename)
+    artifact: $(SWUStep.swu_artifactname)
+    displayName: 5 - Publish swu file
+    condition: eq(variables['build_swu_result'], 'Succeeded')
+

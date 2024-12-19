@@ -1,0 +1,7 @@
+{
+    "compiler_warnings_dir": "./static_analysis/Compiler_Warnings",
+    "qac_warnings_dir": "./static_analysis/QAC_Warnings",
+    "coverity_warnings_dir": "./static_analysis/Coverity",
+    "resource_data_dir": "./static_analysis/CheckMem",
+    "coverage_data_dir": "./test_reports/UnitTests"
+}

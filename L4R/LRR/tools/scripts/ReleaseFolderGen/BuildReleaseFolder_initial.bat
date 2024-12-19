@@ -1,0 +1,1 @@
+C:\TCC\Tools\python3\3.7.4-21_WIN64\python.exe BuildReleaseFolder_initial.py FR5CU_DNNN1_NNN_N_XX_2_uC1 FR5CU_DENN1_CEN_N_XX_2_uC2

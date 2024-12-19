@@ -1,0 +1,30 @@
+variables: 
+  - name: current_date
+    value: $[format('{0:yyyyMMdd}', pipeline.startTime)]
+      ## necessary because of the python script
+  - group: cs-swbuildir2st-credentials
+
+trigger: none     
+pr: none
+
+pool: com-lnx-s-vmss
+
+resources:
+  containers:
+  - container: testreport-parser-container
+    image: artifactory.boschdevcloud.com/zugspitze-series-docker-local/testreport-parser:1.0.3
+    endpoint: sc-ado-docker-registry-artifactory
+    options: --user 0:0 --privileged
+    volumes: # Volumes to mount on the container.
+    - /var/tmp/conan_cache:/var/tmp/conan_cache
+
+jobs:
+  - job: Testreport_Parser
+    timeoutInMinutes: 0
+    cancelTimeoutInMinutes: 35790
+    container: testreport-parser-container
+    steps:
+      - template: /devops/templates/steps/testreport-parser.yml
+        parameters:
+          output_path: $(Pipeline.Workspace)/reports/testresults
+

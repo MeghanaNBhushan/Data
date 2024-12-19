@@ -1,0 +1,188 @@
+# @copyright (c) 2023 by Robert Bosch GmbH. All rights reserved.
+#
+# The reproduction, distribution and utilization of this file as
+# well as the communication of its contents to others without express
+# authorization is prohibited. Offenders will be held liable for the
+# payment of damages and can be prosecuted. All rights reserved
+# particularly in the event of the grant of a patent, utility model
+# or design.
+#
+# Azure pipeline to build and upload docker image to artifactory
+
+trigger:
+  # No trigger on branch
+  # Manuel Trigger also required
+  tags:
+    include:
+      # Trigger on branches when tagging with semver 'v*.*.*' and build info docudocker
+      - v*.*.*+docudocker
+
+pr: none
+
+variables:
+- name: BRANCH_NAME
+  value: $(Build.SourceBranch)
+- name: COMMIT_ID
+  value: $(Build.SourceVersion)
+- name: SHORT_COMMIT_ID
+  value: ${COMMIT_ID::8}
+- name: BUILDDIR 
+  value: _build
+- name: DOCKER_REGISTRY 
+  value: artifactory.boschdevcloud.com
+- name: DOCKER_REGISTRY_PATH 
+  value: zugspitze-series-docker-local/ad-radar-sensor-docker-doc-as-code
+- name: IMAGE_NAME 
+  value: sphinxneeds-toolkit
+- group: cs-docs4radar-credentials
+
+
+parameters:
+- name: DeployCheck
+  displayName: 'Deploy Docker Image (yes/no)?'
+  type: string
+  default: no
+  values:
+    - no
+    - yes
+
+pool:
+  name: docu-lnx-m-vmss
+
+stages:
+- stage: BuildProductEngineeringDocumentationDockerImage
+  displayName: Build product engineering documentation docker image (docudocker)
+  jobs:
+
+  - job: BuildDockerImage
+    displayName: Build Docker Image
+    steps:
+
+    # Checkout repository
+    - checkout: self
+      lfs: true
+      fetchTags: true
+
+    # Login to artifactory
+    - template: /devops/templates/steps/docker-login.yml
+      parameters:
+        user: $(docs4radar-artifactory-id)
+        token: $(docs4radar-artifactory-token)
+
+    # Show docker images before build
+    - bash: |
+        docker image ls
+      displayName: Show docker images before build
+
+    # Creating a PIP configuration as netrc to pull packages from Bosch docs-as-code PyPi
+    - bash: |
+        set -x
+        envsubst < "$(Build.SourcesDirectory)/tools/sphinxneeds_toolkit/templates/netrc.conf.template" > "$(Build.SourcesDirectory)/tools/sphinxneeds_toolkit/netrc.conf"
+        set +x
+        cd $(Build.SourcesDirectory)/tools/sphinxneeds_toolkit/
+        pwd
+        ls -a
+      env:
+        # env required by netrc.conf.template
+        ARTIFACTORY_USER: $(docs4radar-artifactory-id)
+        ARTIFACTORY_TOKEN: $(docs4radar-artifactory-token)
+        AZURE_L4_PYPI_ID: $(docs4radar-l4-pypi-id)
+        AZURE_L4_PYPI_CLIENT_TOKEN: $(docs4radar-l4-pypi-token)
+      displayName: Creating a PIP configuration
+
+    # Docker image tag handling
+    - bash: |
+        TAG=$(Build.SourceBranchName)
+        echo The branch tag is: "$TAG"
+        string1_to_replace="v"
+        string2_to_replace="+docudocker"
+        replacewith=""
+        versionregex='^v[0-9].[0-9].[0-9][+]\<docudocker\>'
+        IMAGE_TAG=$(echo $TAG | grep $versionregex)
+        echo The docker image tag after regex is: "$IMAGE_TAG"
+        IMAGE_TAG=$(echo $IMAGE_TAG | sed "s/$string1_to_replace/$replacewith/" | sed "s/$string2_to_replace/$replacewith/")
+        if [ -z "$IMAGE_TAG" ]; then
+            DEPLOYONTAG="no"
+            echo The docker image tag "$TAG" dose not match the regular expression "$versionregex"
+            IMAGE_TAG="latest"
+            echo Set the docker image tag "$IMAGE_TAG"
+        else
+          DEPLOYONTAG="yes"
+        fi
+        echo "##vso[task.setvariable variable=DEPLOYONTAG]$DEPLOYONTAG"
+        echo The deploy on tag is: $(DEPLOYONTAG)
+        echo "##vso[task.setvariable variable=IMAGE_TAG]$IMAGE_TAG"
+        echo The docker image tag is: "$IMAGE_TAG"
+      displayName: Docker image tag handling
+
+    # Build Documentation Docker Image
+    - task: Docker@2
+      displayName: Build Documentation Docker Image
+      inputs:
+        repository: $(DOCKER_REGISTRY)/$(DOCKER_REGISTRY_PATH)/$(IMAGE_NAME)
+        command: build
+        Dockerfile: $(Build.SourcesDirectory)/tools/sphinxneeds_toolkit/Dockerfile
+        tags: |
+          latest
+          $(IMAGE_TAG)
+        arguments: 
+          --build-arg GITHUB_USER=$(docs4radar-github-id)
+          --build-arg GITHUB_TOKEN=$(docs4radar-github-token)
+          --build-arg ARTIFACTORY_USER=$(docs4radar-artifactory-id)
+          --build-arg ARTIFACTORY_TOKEN=$(docs4radar-artifactory-token)
+          --build-arg NEEDS_ENTERPRISE_LICENSE=
+          --secret id=netrc,src=$(Build.SourcesDirectory)/tools/sphinxneeds_toolkit/netrc.conf
+          --label git-branch="$(BRANCH_NAME)"
+          --label git-commit="$(COMMIT_ID)"
+          --label git-branch-tag="$(Build.SourceBranchName)"
+
+    # Show docker images after build
+    - bash: |
+        docker image ls
+      displayName: Show docker images after build
+
+      # Deploy docker images to artifactory
+    - bash: |
+        # Check if deployment is needed (if no manual trigger was done, defaults to 'yes')
+        echo The deploy parameter is: ${{ parameters.DeployCheck }}
+        echo The deploy on tag is: $(DEPLOYONTAG)
+        if [ $(DEPLOYONTAG) = "yes" ] || [ ${{ parameters.DeployCheck }} = "yes" ] ; then
+            echo Deploy docker images. DEPLOYONTAG:$(DEPLOYONTAG) and DeployCheck:${{ parameters.DeployCheck }}
+            docker push $(DOCKER_REGISTRY)/$(DOCKER_REGISTRY_PATH)/$(IMAGE_NAME):$(IMAGE_TAG)
+        else
+            echo Do not deploy docker images. DEPLOYONTAG:$(DEPLOYONTAG) and DeployCheck:${{ parameters.DeployCheck }}
+        fi
+      displayName: Deploy docker images to artifactory
+
+    # Create requirements dependency files
+    - bash: |
+        set -x
+        cd $(Build.SourcesDirectory)/tools/sphinxneeds_toolkit/
+        docker run --rm \
+        --mount type=bind,source=$(Build.SourcesDirectory)/.git,target=/.git \
+        --mount type=bind,source=$(Build.SourcesDirectory)/documentation,target=/documentation \
+        --mount type=bind,source=$(Build.SourcesDirectory)/software,target=/software \
+        --mount type=bind,source=$(Build.SourcesDirectory)/tools/sphinxneeds_toolkit,target=/tools/sphinxneeds_toolkit \
+        --mount type=bind,source=$(Build.SourcesDirectory)/tools/sphinxneeds_toolkit/.gitconfig,target=/home/dockeruser/.gitconfig \
+        --workdir=/tools/sphinxneeds_toolkit \
+        $(DOCKER_REGISTRY)/$(DOCKER_REGISTRY_PATH)/$(IMAGE_NAME):$(IMAGE_TAG) sh requirements_dependency.sh
+        cd $(Build.SourcesDirectory)/tools/sphinxneeds_toolkit/
+        pwd
+        ls -a
+        set +x
+      displayName: Create requirements dependency files
+
+    # Publish requirements.txt file
+    - publish: $(Build.SourcesDirectory)/tools/sphinxneeds_toolkit/requirements.txt
+      artifact: build-docu-docker-output-reqtxt-$(System.StageAttempt)-$(System.JobAttempt)
+      displayName: Publish requirements.txt file
+
+    # Publish requirements.in file
+    - publish: $(Build.SourcesDirectory)/tools/sphinxneeds_toolkit/requirements.in
+      artifact: build-docu-docker-output-reqin-$(System.StageAttempt)-$(System.JobAttempt)
+      displayName: Publish requirements.in file
+
+    # Publish packages.txt file
+    - publish: $(Build.SourcesDirectory)/tools/sphinxneeds_toolkit/packages.txt
+      artifact: build-docu-docker-output-packtxt-$(System.StageAttempt)-$(System.JobAttempt)
+      displayName: Publish packages.txt file

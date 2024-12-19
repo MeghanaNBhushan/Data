@@ -1,0 +1,2 @@
+Break.Set     C:0xA00040C0 /Program /CMD "do SysResetExeptionWorkaround_Execute.cmm" 
+EndDo

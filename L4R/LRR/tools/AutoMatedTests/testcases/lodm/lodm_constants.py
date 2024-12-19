@@ -1,0 +1,165 @@
+# -*- coding: utf-8 -*-
+
+# Constants regarding MCS
+CONST_MCS_SYNC_TYPE_YES                                 = "01"
+CONST_MCS_SYNC_TYPE_NO                                  = "00"
+CONST_MCS_SENS_OFFSET_DEF                               = "00000000"
+CONST_MCS_SENS_OFFSET_MIN                               = "014FB180"
+CONST_MCS_SENS_OFFSET_MID                               = "01F78A40"
+CONST_MCS_SENS_OFFSET_MAX                               = "029F6300"
+CONST_MCS_RESERVED                                      = "0000"
+CONST_MCS_SELECTOR_ZERO                                 = "00"
+CONST_MCS_SELECTOR_ONE                                  = "01"
+
+# Constants regarding Mounting Position
+CONST_MOUNT_POS_X_VALUE1                                = "3194"    #value = 4.5    
+CONST_MOUNT_POS_X_VALUE2                                = "0C78"    #value = -5    
+CONST_MOUNT_POS_X_VALUE3                                = "1254"    #value = -3.5    
+CONST_MOUNT_POS_X_MAX_VALUE                             = "4000"    #value = 8.192    
+CONST_MOUNT_POS_X_MIN_VALUE                             = "0000"    #value = -8.192    
+CONST_MOUNT_POS_X_DEF_VALUE                             = "2000"    #value = 0
+CONST_MOUNT_POS_X_OUT_OF_RANGE                          = "4328"    #value = OUT_OF_RANGE
+CONST_MOUNT_POS_Y_VALUE1                                = "3770"    #value = 6.0
+CONST_MOUNT_POS_Y_VALUE2                                = "02B4"    #value = -7.5
+CONST_MOUNT_POS_Y_VALUE3                                = "082C"    #value = -6.1    
+CONST_MOUNT_POS_Y_MAX_VALUE                             = "4000"    #value = 8.192    
+CONST_MOUNT_POS_Y_MIN_VALUE                             = "0000"    #value = -8.192
+CONST_MOUNT_POS_Y_DEF_VALUE                             = "2000"    #value = 0
+CONST_MOUNT_POS_Y_OUT_OF_RANGE                          = "4008"    #value = OUT_OF_RANGE
+CONST_MOUNT_POS_Z_VALUE1                                = "3EDC"    #value = 7.9
+CONST_MOUNT_POS_Z_VALUE2                                = "0F66"    #value = -4.25
+CONST_MOUNT_POS_Z_VALUE3                                = "02B4"    #value = -7.5    
+CONST_MOUNT_POS_Z_MAX_VALUE                             = "4000"    #value = 8.192    
+CONST_MOUNT_POS_Z_MIN_VALUE                             = "0000"    #value = -8.192
+CONST_MOUNT_POS_Z_DEF_VALUE                             = "2000"    #value = 0
+CONST_MOUNT_POS_Z_OUT_OF_RANGE                          = "4198"    #value = OUT_OF_RANGE
+CONST_MOUNT_AZIMUTH_VALUE1                              = "6978"    #value = 90
+CONST_MOUNT_AZIMUTH_VALUE2                              = "5DC0"    #value = 60
+CONST_MOUNT_AZIMUTH_VALUE3                              = "3A98"    #value = -30
+CONST_MOUNT_AZIMUTH_VALUE4                              = "1F40"    #value = -100
+CONST_MOUNT_AZIMUTH_MIN_VALUE                           = "0000"    #value = -180
+CONST_MOUNT_AZIMUTH_MAX_VALUE                           = "8CA0"    #value = 180
+CONST_MOUNT_AZIMUTH_DEF_VALUE                           = "4650"    #value = 0
+CONST_MOUNT_AZIMUTH_OUT_OF_RANGE                        = "8E94"    #value = OUT_OF_RANGE
+CONST_MOUNT_ELEVATION_VALUE1                            = "0A28"    #value = 11
+CONST_MOUNT_ELEVATION_VALUE2                            = "09C4"    #value = 10
+CONST_MOUNT_ELEVATION_VALUE3                            = "03E8"    #value = -5
+CONST_MOUNT_ELEVATION_VALUE4                            = "0320"    #value = -7
+CONST_MOUNT_ELEVATION_MIN_VALUE                         = "0000"    #value = -15
+CONST_MOUNT_ELEVATION_MAX_VALUE                         = "0BB8"    #value = 15
+CONST_MOUNT_ELEVATION_DEF_VALUE                         = "05DC"    #value = 0
+CONST_MOUNT_ELEVATION_OUT_OF_RANGE                      = "0C1C"    #value = OUT_OF_RANGE
+CONST_MOUNT_ORIENTATION_VALUE1                          = "00"      #value = -1
+CONST_MOUNT_ORIENTATION_DEF_VALUE                       = "02"      #value = 1
+CONST_MOUNT_ORIENTATION_OUT_OF_RANGE                    = "03"      #value = OUT_OF_RANGE
+
+# Constants regarding Measurement Program 
+CONST_MEAS_PGM_ID0                                      = "0000"
+CONST_MEAS_PGM_ID1                                      = "0001"
+CONST_MEAS_PGM_ID2                                      = "0002"
+CONST_MEAS_PGM_ID3                                      = "0003"
+CONST_MEAS_PGM_ID4                                      = "0004"
+CONST_MEAS_PGM_RESERVED                                 = "0000000000"
+CONST_MEAS_PGM_SELECTOR0                                = "00"              
+CONST_MEAS_PGM_SELECTOR1                                = "01"
+
+CONST_DUMMY_BYTE                                        = "00"
+#constants for default values
+CONST_DEFAULT_SENSOR_POS_X                              = "2000" 
+CONST_DEFAULT_SENSOR_POS_Y                              = "2000"
+CONST_DEFAULT_SENSOR_POS_Z                              = "2000"
+CONST_DEFAULT_SENSOR_AZIMUTH                            = "4650"     
+CONST_DEFAULT_SENSOR_ELEVATION                          = "05dc"   
+CONST_DEFAULT_SENSOR_ORIENTATION                        = "02"    
+CONST_DEFAULT_MP_PHYSICAL_VALUE                         = "00000000"
+CONST_DEFAULT_PHYSICAL_VALUE_ORIENTATION                = "01"
+
+#constants for minimum values
+CONST_MIN_SENSOR_POS_X                                  = "0000" 
+CONST_MIN_SENSOR_POS_Y                                  = "0000"
+CONST_MIN_SENSOR_POS_Z                                  = "0000"
+CONST_MIN_SENSOR_AZIMUTH                                = "0000"     
+CONST_MIN_SENSOR_ELEVATION                              = "0000"   
+CONST_MIN_SENSOR_ORIENTATION                            = "00" 
+CONST_PHYS_MIN_SENSOR_POS_X                             = "c103126f" 
+CONST_PHYS_MIN_SENSOR_POS_Y                             = "c103126f"
+CONST_PHYS_MIN_SENSOR_POS_Z                             = "c103126f"
+CONST_PHYS_MIN_SENSOR_AZIMUTH                           = "c0490fdb"    
+CONST_PHYS_MIN_SENSOR_ELEVATION                         = "be860a92"   
+CONST_PHYS_MIN_SENSOR_ORIENTATION                       = "ff" 
+
+#constants for maximum values
+CONST_MAX_SENSOR_POS_X                                  = "4000" 
+CONST_MAX_SENSOR_POS_Y                                  = "4000"
+CONST_MAX_SENSOR_POS_Z                                  = "4000"
+CONST_MAX_SENSOR_AZIMUTH                                = "8ca0"     
+CONST_MAX_SENSOR_ELEVATION                              = "0bb8"   
+CONST_MAX_SENSOR_ORIENTATION                            = "02" 
+CONST_PHYS_MAX_SENSOR_POS_X                             = "4103126f"
+CONST_PHYS_MAX_SENSOR_POS_Y                             = "4103126f"
+CONST_PHYS_MAX_SENSOR_POS_Z                             = "4103126f"
+CONST_PHYS_MAX_SENSOR_AZIMUTH                           = "40490fdb"    
+CONST_PHYS_MAX_SENSOR_ELEVATION                         = "3e860a92"  
+CONST_PHYS_MAX_SENSOR_ORIENTATION                       = "01"
+
+#constants for mid values
+CONST_MID_SENSOR_POS_X                                  = CONST_DEFAULT_SENSOR_POS_X
+CONST_MID_SENSOR_POS_Y                                  = CONST_DEFAULT_SENSOR_POS_Y
+CONST_MID_SENSOR_POS_Z                                  = CONST_DEFAULT_SENSOR_POS_Z
+CONST_MID_SENSOR_AZIMUTH                                = CONST_DEFAULT_SENSOR_AZIMUTH     
+CONST_MID_SENSOR_ELEVATION                              = CONST_DEFAULT_SENSOR_ELEVATION   
+CONST_MID_SENSOR_ORIENTATION                            = CONST_MIN_SENSOR_ORIENTATION
+CONST_PHYS_MID_SENSOR_POS_X                             = "00000000"
+CONST_PHYS_MID_SENSOR_POS_Y                             = "00000000"
+CONST_PHYS_MID_SENSOR_POS_Z                             = "00000000"
+CONST_PHYS_MID_SENSOR_AZIMUTH                           = "00000000"   
+CONST_PHYS_MID_SENSOR_ELEVATION                         = "00000000"  
+CONST_PHYS_MID_SENSOR_ORIENTATION                       = "ff"
+
+#constants for validating range check
+CONST_SENSOR_POS_MAX                                    = "4000" 
+CONST_SENSOR_POS_VALUE_SET1                             = "3000"
+CONST_SENSOR_POS_VALUE_SET2                             = "1000"
+CONST_SENSOR_POS_MAX_INVALID_VALUE                      = "4001" 
+CONST_SENSOR_AZIMUTH_INVALID_VALUE                      = "8ca1"     
+CONST_SENSOR_ELEVATION_INVALID_VALUE                    = "0bb9"     
+CONST_SENSOR_ORIENTATION_INVALID_VALUE                  = "01"  
+   
+CONST_PHYS_SENSOR_POS_Y_VALUE_SET1                      = "4083126f"
+CONST_PHYS_SENSOR_POS_Z_VALUE_SET1                      = "c083126f"
+
+
+CONST_READ_REQ_MOUNTING_POSITION                        = "220500"
+CONST_READ_RESP_MOUNTING_POSITION                       = "620500"
+CONST_WRITE_REQ_MOUNTING_POSITION                       = "2e0500"
+CONST_WRITE_RESP_MOUNTING_POSITION                      = "6e0500"
+
+
+CONST_WRITE_REQ_DEFAULT_MOUNTING_POSITION               = CONST_WRITE_REQ_MOUNTING_POSITION + CONST_DEFAULT_SENSOR_POS_X + CONST_DEFAULT_SENSOR_POS_Y + CONST_DEFAULT_SENSOR_POS_Z + CONST_DEFAULT_SENSOR_AZIMUTH + CONST_DEFAULT_SENSOR_ELEVATION +  CONST_DEFAULT_SENSOR_ORIENTATION  
+CONST_READ_RESP_DEFAULT_MOUNTING_POSITION               = CONST_READ_RESP_MOUNTING_POSITION + CONST_DEFAULT_SENSOR_POS_X + CONST_DEFAULT_SENSOR_POS_Y + CONST_DEFAULT_SENSOR_POS_Z + CONST_DEFAULT_SENSOR_AZIMUTH + CONST_DEFAULT_SENSOR_ELEVATION +  CONST_DEFAULT_SENSOR_ORIENTATION  
+
+CONST_WRITE_REQ_MOUNTING_POSITION_MIN                   = CONST_WRITE_REQ_MOUNTING_POSITION + CONST_MIN_SENSOR_POS_X + CONST_MIN_SENSOR_POS_Y + CONST_MIN_SENSOR_POS_Z + CONST_MIN_SENSOR_AZIMUTH + CONST_MIN_SENSOR_ELEVATION +  CONST_MIN_SENSOR_ORIENTATION  
+CONST_READ_RESP_MOUNTING_POSITION_MIN                   = CONST_READ_RESP_MOUNTING_POSITION + CONST_MIN_SENSOR_POS_X + CONST_MIN_SENSOR_POS_Y + CONST_MIN_SENSOR_POS_Z + CONST_MIN_SENSOR_AZIMUTH + CONST_MIN_SENSOR_ELEVATION +  CONST_MIN_SENSOR_ORIENTATION  
+
+CONST_WRITE_REQ_MOUNTING_POSITION_MAX                   = CONST_WRITE_REQ_MOUNTING_POSITION + CONST_MAX_SENSOR_POS_X + CONST_MAX_SENSOR_POS_Y + CONST_MAX_SENSOR_POS_Z + CONST_MAX_SENSOR_AZIMUTH + CONST_MAX_SENSOR_ELEVATION +  CONST_MAX_SENSOR_ORIENTATION  
+CONST_READ_RESP_MOUNTING_POSITION_MAX                   = CONST_READ_RESP_MOUNTING_POSITION + CONST_MAX_SENSOR_POS_X + CONST_MAX_SENSOR_POS_Y + CONST_MAX_SENSOR_POS_Z + CONST_MAX_SENSOR_AZIMUTH + CONST_MAX_SENSOR_ELEVATION +  CONST_MAX_SENSOR_ORIENTATION  
+
+CONST_WRITE_REQ_MOUNTING_POSITION_MID                   = CONST_WRITE_REQ_MOUNTING_POSITION + CONST_MID_SENSOR_POS_X + CONST_MID_SENSOR_POS_Y + CONST_MID_SENSOR_POS_Z + CONST_MID_SENSOR_AZIMUTH + CONST_MID_SENSOR_ELEVATION +  CONST_MID_SENSOR_ORIENTATION  
+CONST_READ_RESP_MOUNTING_POSITION_MID                   = CONST_READ_RESP_MOUNTING_POSITION + CONST_MID_SENSOR_POS_X + CONST_MID_SENSOR_POS_Y + CONST_MID_SENSOR_POS_Z + CONST_MID_SENSOR_AZIMUTH + CONST_MID_SENSOR_ELEVATION +  CONST_MID_SENSOR_ORIENTATION  
+
+CONST_WRITE_REQ_MOUNTING_POSITION_VALID                 = CONST_WRITE_REQ_MOUNTING_POSITION + CONST_MAX_SENSOR_POS_X + CONST_SENSOR_POS_VALUE_SET1 + CONST_SENSOR_POS_VALUE_SET2 + CONST_MAX_SENSOR_AZIMUTH + CONST_MAX_SENSOR_ELEVATION +  CONST_MAX_SENSOR_ORIENTATION  
+CONST_READ_RESP_MOUNTING_POSITION_VALID                 = CONST_READ_RESP_MOUNTING_POSITION + CONST_MAX_SENSOR_POS_X + CONST_SENSOR_POS_VALUE_SET1 + CONST_SENSOR_POS_VALUE_SET2 + CONST_MAX_SENSOR_AZIMUTH + CONST_MAX_SENSOR_ELEVATION +  CONST_MAX_SENSOR_ORIENTATION  
+
+CONST_WRITE_REQ_MOUNTING_POSITION_INVALID_SET1          = CONST_WRITE_REQ_MOUNTING_POSITION + CONST_SENSOR_POS_MAX_INVALID_VALUE + CONST_SENSOR_POS_VALUE_SET1 + CONST_SENSOR_POS_VALUE_SET2 + CONST_MAX_SENSOR_AZIMUTH + CONST_MAX_SENSOR_ELEVATION +  CONST_MAX_SENSOR_ORIENTATION  
+
+CONST_WRITE_REQ_MOUNTING_POSITION_INVALID_SET2          = CONST_WRITE_REQ_MOUNTING_POSITION + CONST_MAX_SENSOR_POS_X + CONST_SENSOR_POS_MAX_INVALID_VALUE + CONST_SENSOR_POS_VALUE_SET2 + CONST_MAX_SENSOR_AZIMUTH + CONST_MAX_SENSOR_ELEVATION +  CONST_MAX_SENSOR_ORIENTATION 
+
+CONST_WRITE_REQ_MOUNTING_POSITION_INVALID_SET3          = CONST_WRITE_REQ_MOUNTING_POSITION + CONST_MAX_SENSOR_POS_X + CONST_SENSOR_POS_VALUE_SET1 + CONST_SENSOR_POS_MAX_INVALID_VALUE + CONST_MAX_SENSOR_AZIMUTH + CONST_MAX_SENSOR_ELEVATION +  CONST_MAX_SENSOR_ORIENTATION  
+
+CONST_WRITE_REQ_MOUNTING_POSITION_INVALID_SET4          = CONST_WRITE_REQ_MOUNTING_POSITION + CONST_MAX_SENSOR_POS_X + CONST_SENSOR_POS_VALUE_SET1 + CONST_SENSOR_POS_VALUE_SET2 + CONST_SENSOR_AZIMUTH_INVALID_VALUE + CONST_MAX_SENSOR_ELEVATION +  CONST_MAX_SENSOR_ORIENTATION 
+
+CONST_WRITE_REQ_MOUNTING_POSITION_INVALID_SET5          = CONST_WRITE_REQ_MOUNTING_POSITION + CONST_MAX_SENSOR_POS_X + CONST_SENSOR_POS_VALUE_SET1 + CONST_SENSOR_POS_VALUE_SET2 + CONST_MAX_SENSOR_AZIMUTH + CONST_SENSOR_ELEVATION_INVALID_VALUE +  CONST_MAX_SENSOR_ORIENTATION  
+
+CONST_WRITE_REQ_MOUNTING_POSITION_INVALID_SET6          = CONST_WRITE_REQ_MOUNTING_POSITION + CONST_MAX_SENSOR_POS_X + CONST_SENSOR_POS_VALUE_SET1 + CONST_SENSOR_POS_VALUE_SET2 + CONST_MAX_SENSOR_AZIMUTH + CONST_MAX_SENSOR_ELEVATION +  CONST_SENSOR_ORIENTATION_INVALID_VALUE  
+
+

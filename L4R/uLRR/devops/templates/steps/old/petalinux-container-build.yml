@@ -1,0 +1,14 @@
+steps:
+  - task: Bash@3
+    continueOnError: true
+    timeoutInMinutes: 35790
+    inputs:
+      targetType : inline
+      script: |
+        cd ./tools/docker/petalinux_toolkit/baseimage/
+        cp /mnt/peta-transfer/petalinux-v2021.2-final-installer.run ./
+        docker build ./ --build-arg PETA_RUN_FILE=./petalinux-v2021.2-final-installer.run -t artifactory.boschdevcloud.com/zugspitze-series-docker-local/petalinux-v2021.2:latest --no-cache
+        docker push artifactory.boschdevcloud.com/zugspitze-series-docker-local/petalinux-v2021.2:latest
+      failOnStderr: true
+    displayName: Building Petalinux container
+

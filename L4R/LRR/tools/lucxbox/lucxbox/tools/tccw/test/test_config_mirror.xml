@@ -1,0 +1,15 @@
+<ToolCollection>
+  <ToolCollectionName>AFFEAFFE</ToolCollectionName>
+  <Responsible>AFFEAFFE</Responsible>
+  <Version>AFFEAFFE</Version>
+  <Date>AFFEAFFE</Date>
+  <ZipDirectory>AFFEAFFE</ZipDirectory>
+  <IndicatorDirectory>TCC</IndicatorDirectory>
+  <Tools>
+    <Tool>
+      <ToolName>lucxbox</ToolName>
+      <SourcePath>TCC\Tools\lucxbox\2.0.0_WIN64</SourcePath>
+      <Mirror>Yes</Mirror>
+    </Tool>
+  </Tools>
+</ToolCollection>

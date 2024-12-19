@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+This file can be used to generate your own custom reports using an
+xsl translation file or any other method you wish. It contains all active and total diagnostic counts for each 
+folder, file, rule, message, component and level in the project.
+It also contains links to files with additional data for each analyzed file.
+NOTE: Format of file will be changed in the next framework version.
+-->
+<AnalysisData timestamp="20180716T185211" projectpath="something" reportpath="something/reports">
+  <dataroot type="per-file">
+    <File path="something/header.hpp">
+      <Json>something/reports/data/1.json</Json>
+      <tree type="rules">
+        <RuleGroup name="MISRA Cpp Rules" total="40" active="40">
+          <Rule id="MCPP Rule 7" total="40" active="40" text="Declarations">
+            <Rule id="Rule 7-3" total="40" active="40" text="Namespaces">
+              <Rule id="Rule 7-3-1" total="40" active="40" text=" The global namespace shall only contain main, namespace declarations and extern &quot;C&quot; declarations.">
+                <Message guid="qacpp-4.2.0-2400" total="40" active="40" text="2400.  The type name '%1s' is in the global scope." />
+              </Rule>
+            </Rule>
+          </Rule>
+        </RuleGroup>
+        <RuleGroup name="Severity Levels 1.0" total="80" active="80">
+          <Rule id="severitylevels" total="80" active="80" text="Severity Levels">
+            <Rule id="severitylevel2" total="40" active="40" text="Severity Level 1">
+              <Message guid="qacpp-4.2.0-2400" total="40" active="40" text="2400.  The type name '%1s' is in the global scope." />
+            </Rule>
+            <Rule id="severitylevel8" total="40" active="40" text="Severity Level 2">
+              <Message guid="qacpp-4.2.0-2400" total="40" active="40" text="2400.  The type name '%1s' is in the global scope." />
+            </Rule>
+          </Rule>
+        </RuleGroup>
+      </tree>
+    </File>
+    <File path="something/header.hpp">
+      <Json>something/reports/data/1.json</Json>
+      <tree type="rules">
+        <RuleGroup name="MISRA Cpp Rules" total="40" active="40">
+          <Rule id="MCPP Rule 7" total="40" active="40" text="Declarations">
+            <Rule id="Rule 7-3" total="40" active="40" text="Namespaces">
+              <Rule id="Rule 7-3-1" total="40" active="40" text=" The global namespace shall only contain main, namespace declarations and extern &quot;C&quot; declarations.">
+                <Message guid="qacpp-4.2.0-2400" total="40" active="40" text="2400.  The type name '%1s' is in the global scope." />
+              </Rule>
+            </Rule>
+          </Rule>
+        </RuleGroup>
+        <RuleGroup name="Severity Levels 1.0" total="80" active="80">
+          <Rule id="severitylevels" total="80" active="80" text="Severity Levels">
+            <Rule id="severitylevel4" total="40" active="40" text="Severity Level 4">
+              <Message guid="qacpp-4.2.0-2400" total="40" active="40" text="2400.  The type name '%1s' is in the global scope." />
+              <Message guid="qacpp-4.2.0-2400" total="40" active="40" text="2400.  The type name '%1s' is in the global scope." />
+            </Rule>
+            <Rule id="severitylevel2" total="40" active="40" text="Severity Level 3">
+              <Message guid="qacpp-4.2.0-2400" total="40" active="40" text="2400.  The type name '%1s' is in the global scope." />
+              <Message guid="qacpp-4.2.0-2400" total="40" active="40" text="2400.  The type name '%1s' is in the global scope." />
+            </Rule>
+          </Rule>
+        </RuleGroup>
+      </tree>
+    </File>
+    <File path="something/header.hpp">
+      <Json>something/reports/data/1.json</Json>
+      <tree type="rules">
+        <RuleGroup name="MISRA Cpp Rules" total="40" active="40">
+          <Rule id="MCPP Rule 7" total="40" active="40" text="Declarations">
+            <Rule id="Rule 7-3" total="40" active="40" text="Namespaces">
+              <Rule id="Rule 7-3-1" total="40" active="40" text=" The global namespace shall only contain main, namespace declarations and extern &quot;C&quot; declarations.">
+                <Message guid="qacpp-4.2.0-2400" total="40" active="40" text="2400.  The type name '%1s' is in the global scope." />
+              </Rule>
+            </Rule>
+          </Rule>
+        </RuleGroup>
+      </tree>
+    </File>
+  </dataroot>
+</AnalysisData>

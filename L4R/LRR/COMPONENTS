@@ -1,0 +1,44 @@
+# This component owners list is used for the mapping...
+#    ... of sw tests to teams (Star Trek framework)
+#    ... of components to teams (Heatmap) 
+
+
+**ad_radar_apl/cfg/** @ATR
+
+**component/diag/** @ATR
+**component/doc/** @ATR  
+**component/ECUConfig/** @ATR
+**component/EgoVehDataIF/** @ATR
+**component/Hotfix/rba/** @extern
+**component/Hotfix/rbDia/** @extern
+**component/inputhandler/** @ATR
+**component/LocDataIF/** @ATR
+**component/measurement_program/** @ATR
+**component/memprot/** @ATR
+**component/MntPosMgmt/** @ATR 
+**component/net_x/** @ATR
+**component/nvm/** @ATR
+**component/outputhandler/** @ATR
+**component/pda/** @ATR
+**component/rbHsmPrepare/** @ATR
+**component/rbPdm/** @ATR
+**component/rbSched/** @ATR
+**component/rbSysEvM/** @ATR
+**component/rbTimeConv/** @ATR
+**component/rte/** @ATR
+**component/sdm/** @ATR
+**component/smu/** @ATR
+**component/traptest/** @ATR
+
+**ToBeCleanUp/** @ATR
+
+**ip_dc/** @ATR
+
+**cubas/gen/FR5CU_WENN1_CEN_N_XX_2_uC2/** @extern
+**cubas/gen/FR5CU_WNNN1_NNN_N_LX_2_uC1/** @extern
+**cubas/stubs/** @ATR
+**cubas/stubs_premium_uC1/** @ATR
+**cubas/cfg/** @ATR
+
+**ip_if/** @extern
+**rc_fw/** @extern

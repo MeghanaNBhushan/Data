@@ -1,0 +1,51 @@
+{
+    // User-defined option
+    "IS_SUBMODULE_BUILD": false,
+    // Map team option
+    //"CODEOWNERS_FILE": "COMPONENTS",
+    //"FIELD_DELIMITER": ",",
+    //"GITIGNORE_MAPPING": false,
+    //"MAPPING_COLUMN": "first_occurence_file",
+    // coverity option
+    "COVERITY_COMMIT_HOST": "abt-coverity1.de.bosch.com",
+    "COVERITY_COMMIT_DATAPORT": "9090",
+    "COVERITY_BIN_PATH": "C:/TCC/Tools/coverity/2021.03_WIN64/bin",
+    "COV_BUILD_OPTION_LIST": ["--instrument"],
+    "COV_ANALYZE_OPTION_LIST": [
+        "--enable-parse-warnings",
+        "--enable PARSE_ERROR",
+        "--enable STACK_USE"
+    ],
+    "TRANSLATION_UNITS_BLACKLIST": [],
+    "COV_EXPORT_WHITELIST": "",
+    "COV_EXPORT_BLACKLIST": "",
+    "COMPILER_LIST": [
+        "--compiler cxtri --comptype green_hills_cxx --template",
+        "--compiler cctri --comptype green_hills --template"
+    ],
+    "USE_PYTHON_BUILD_SHELL": true,
+    "INCLUDE_TRIAGE_HISTORY": "true",
+    "WEBAPI_URL": "https://abt-coverity1.de.bosch.com",
+    "WEBAPI_PROJECT_NAME": "ATR",
+    "WEBAPI_VIEW_NAME": "ATR",
+    "EXPORT_FORMAT": "csv",
+    "TRIAGE_STORE": "Default Triage Store",
+    "WITH_CID" : true,
+    //Target
+    "FR5CU_DNNN1_NNN_N_XX_2_uC1": {
+        "COVERITY_PROJECT_PATH": "build_coverity/coverity_LRR_uC1",
+        "COVERITY_COMMIT_STREAM": "FR5CU_DNNN1_NNN_N_XX_2_uC1",
+        "BUILD_COMMAND": "cmake_gen.bat -hw FR5CU_DNNN1_NNN_N_XX_2_uC1 -p Radar -cfg ad_radar_apl/tools/cmake/cfg -m -c -tcc -f",
+        "OEM": "PF",
+        "VARIANT": "FR5CU_DNNN1_NNN_N_XX_2_uC1",
+        "ECU": "AURIX"
+    },
+    "FR5CU_DENN1_CEN_N_XX_2_uC2": {
+        "COVERITY_PROJECT_PATH": "build_coverity/coverity_LRR_uC2",
+        "COVERITY_COMMIT_STREAM": "FR5CU_DENN1_CEN_N_XX_2_uC2",
+        "BUILD_COMMAND": "cmake_gen.bat -hw FR5CU_DENN1_CEN_N_XX_2_uC2 -p Radar -cfg ad_radar_apl/tools/cmake/cfg -m -c -tcc -f",
+        "OEM": "PF",
+        "VARIANT": "FR5CU_DENN1_CEN_N_XX_2_uC2",
+        "ECU": "AURIX"
+    }
+}

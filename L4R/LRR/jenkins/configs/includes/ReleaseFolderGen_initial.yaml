@@ -1,0 +1,17 @@
+    - name: Release folder initial
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: python Unstash_Artefacts.py -j ^TPL:jn; -bn ^TPL:bn;
+        fromPath: ad_radar_apl/tools/scripts/ReleaseFolderGen
+        name: Unstash_Artefacts
+      - cmd: python BuildReleaseFolder_initial.py ^TPL:uc1; ^TPL:uc2;
+        fromPath: ad_radar_apl/tools/scripts/ReleaseFolderGen
+        name: Build_release_folder
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;
+        fromPath: ./RelFolder
+        includes: "**" 
+        afterFail: true
+        zip: true
+        zipName: Release_folder

@@ -1,0 +1,77 @@
+@Library("LUCxBau@21.5.6") _
+
+env.LUCX_COMMIT_HASH = env.LUCX_COMMIT_HASH.trim()
+
+env.qac = env.QAC_filebased
+env.swb = env.SWBuild
+env.swc = env.PlantContainer
+env.bct = env.BCTBuild
+env.cal = env.Calcres
+env.cta = env.CantataBuildFull
+env.flux = env.FluxErrors
+env.dox = env.Doxygen
+env.tot = env.TestOnTarget
+env.exist_artefacts = env.EXISTING_ARTEFACTS
+env.a2l = env.UpdateA2L
+env.MT = env.UpdateMT
+env.node_label = null
+env.testHwU = null
+env.filter = null
+env.test_mode = null
+env.setup = null
+if (env.LUCX_COMMIT_HASH.length()!= 40){
+    error("CommitId must have 40 characters")
+}
+
+if (env.SELECT_VARIANT == 'FR5CU_C0'){
+    env.SELECT_uC1 = 'FR5CU_DNNN1_NNN_N_XX_2_uC1'
+    env.SELECT_uC2 = 'FR5CU_DENN1_CEN_N_XX_2_uC2'
+
+	
+	if (env.tot == 'true'){
+		env.node_label = 'L4_Prem_C0'
+		env.setup = '6501'
+		env.testHwU = 'fr5cu'
+		env.filter = env.ATF_FILTER
+		env.testVariant = env.SELECT_VARIANT
+		env.test_mode = " "
+		if (env.testMode == 'true'){
+			env.test_mode = "-testmode"
+		}
+	}
+
+}
+
+if (env.SELECT_VARIANT == 'FR5CU_C1'){
+    env.SELECT_uC1 = 'FR5CU_DNNN1_NNN_N_XX_2_uC1'
+    env.SELECT_uC2 = 'FR5CU_DENN1_CEN_N_XX_2_uC2'
+
+	
+	if (env.tot == 'true'){
+		env.node_label = 'L4_Prem_C1'
+		env.setup = '001f2'
+		env.testHwU = 'fr5cu'
+		env.filter = env.ATF_FILTER
+		env.testVariant = env.SELECT_VARIANT
+		env.test_mode = " "
+		if (env.testMode == 'true'){
+			env.test_mode = "-testmode"
+		}
+	}
+
+}
+
+if (env.CantataBuildFull == 'true'){
+    env.cta = 'full'
+
+}
+
+if (env.CantataBuildPartial == 'true'){
+    env.cta = 'partial'
+
+}
+
+lucx.bau(configsDirs: ["jenkins/configs/"],
+         config: 'jenkins/configs/CommitID_Builder/CommitID_builder_customized.yaml',
+         isPath: true)
+

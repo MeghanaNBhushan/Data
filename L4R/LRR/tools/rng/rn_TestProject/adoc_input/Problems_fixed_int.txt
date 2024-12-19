@@ -1,0 +1,33 @@
+[width="100%", cols="2a,3a,6a,3a,3a,2a", options="header"]
+|===
+| ID | Summary | Description	| Severity (_see note above_)| Safety Relevance (_yes/no_) | Status
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14926[ATR-14926]| Response not received for DID-F186 In Programming session | {color:#0747a6}Description:{color}
+
+The V8 software , the F186 DID did not provide the response in the programming session.
+
+{color:#0747a6}Root Cause :{color}
+
+In V8 software ECU reset response received two times(before and after reset)which is causing an issue in the transition and DoIP connection duration.
+
+This could possibly have lead to the inconsistent response for F186 DID in the programming session.
+
+Note : Internally when the V8.0.0 is tested in the open sensor bench we could see positive response for F186 ( Failed 2 out of 15 times).
+
+{color:#0747a6}Impact:{color}
+ The session out from one session to another session takes time.
+
+The active diagnostic session information could not be read in programming session sporadically.
+
+{color:#0747a6}Fix Given:{color}
+
+The Software Version V9.0.0 is updated to ensure only the single reset response is  triggered for ECU Reset.| Minor| No| Closed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14889[ATR-14889]| [SFLP] Current session Ecu response is not matching with expected response| In V8 software ECU reset response received two times(before and after reset)this is causing an issue.
+
+Impact:
+The session out from one session to another session takes time .| Minor| No| Closed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14859[ATR-14859]| DOIP taking time to connect after Reset.| Description:
+The doip is taking time to connect back after reset, because of In V8 software ECU reset response received two times(before and after reset)this is causing an issue.
+
+Impact:
+The services are related to ECU reset delays the response .| Minor| No| Closed
+|===

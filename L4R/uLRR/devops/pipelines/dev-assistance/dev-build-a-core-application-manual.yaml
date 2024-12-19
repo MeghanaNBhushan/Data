@@ -1,0 +1,107 @@
+parameters:
+- name: build_target
+  displayName: Build target
+  values:
+  - x86-64
+  - armv8
+  default: armv8
+- name: build_type
+  displayName: Build type
+  values:
+  - debug
+  - release
+  default: debug
+- name: middleware_instance
+  displayName: Middleware instance
+  values:
+  - tec0204_linux
+  - te0950_linux
+  - te0950_neutrino
+  - car_pc
+  default: tec0204_linux
+- name: build_aos_runnable
+  displayName: Build AOS runnable
+  type: boolean
+  default: true
+- name: run_unit_test_aos_runnable
+  displayName: Run unit tests
+  type: boolean
+  default: true
+- name: package_aos_runnable
+  displayName: Package AOS runnable
+  type: boolean
+  default: true
+- name: package_type
+  displayName: Package type
+  default: deb
+  values:
+  - conan
+  - deb
+- name: base_image_target
+  displayName: Base image type (target)
+  values:
+  - tec0204
+  - te0950
+- name: deploy_aos_runnable_in_base_image
+  displayName: Deploy AOS runnable into baseimage
+  type: boolean
+  default: true
+- name: deploy_fpga_bit_file_in_base_image
+  displayName: Deploy FPGA bit file into baseimage
+  type: boolean
+  default: true
+- name: base_image_specific_run_id
+  displayName: 'Base image specific run ID - Zero ("0") means to use the released one!'
+  type: number
+  default: 0
+- name: deploy_mmic_libraries_in_base_image
+  displayName: Deploy MMIC libraries into baseimage
+  type: boolean
+  default: true
+- name: generate_swu_file
+  displayName: Generate SWU file
+  type: boolean
+  default: true
+- name: suppress_compiler_warnings
+  displayName: Suppress compiler warnings
+  type: boolean
+  default: false
+
+trigger: none
+
+pr: none
+
+resources:
+  containers:
+  - container: a-core-application-container
+    image: artifactory.boschdevcloud.com/zugspitze-series-docker-local/a-core-application:latest
+    endpoint: sc-ado-docker-registry-artifactory
+    options: --user 0:0 --privileged
+    volumes: # Volumes to mount on the container.
+    - /var/tmp/conan_cache:/var/tmp/conan_cache
+    env: # Variables to map into the container's environment.
+      TARGET: ${{parameters.build_target}}
+      TYPE: ${{parameters.build_type}}
+      MIDDLEWARE_INSTANCE: ${{ parameters.middleware_instance }}
+
+
+stages:
+  - template: /devops/templates/stages/build-a-core-application-template.yaml
+    parameters:
+      build_target: ${{parameters.build_target}}
+      build_type: ${{parameters.build_type}}
+      build_reason: manual
+      build_aos_runnable: ${{parameters.build_aos_runnable}}
+      run_unit_test_aos_runnable: ${{parameters.run_unit_test_aos_runnable}}
+      package_aos_runnable: ${{parameters.package_aos_runnable}}
+      package_type: ${{parameters.package_type}}
+      deploy_aos_runnable_in_base_image: ${{parameters.deploy_aos_runnable_in_base_image}}
+      deploy_fpga_bit_file_in_base_image: ${{parameters.deploy_fpga_bit_file_in_base_image}}
+      deploy_mmic_libraries_in_base_image: ${{parameters.deploy_mmic_libraries_in_base_image}}
+      base_image_target: ${{parameters.base_image_target}}
+      base_image_specific_run_id: ${{parameters.base_image_specific_run_id}}
+      generate_swu_file: ${{parameters.generate_swu_file}}
+      trigger_ct: false
+      vmss: dev-lnx-l-vmss
+      suppress_compiler_warnings: ${{parameters.suppress_compiler_warnings}}
+      middleware_instance: ${{parameters.middleware_instance}}

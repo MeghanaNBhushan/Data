@@ -1,0 +1,155 @@
+parameters:
+- name: build_target
+  type: string
+  default: tec0204
+- name: version
+  type: string
+  default: ""
+- name: cleanup
+  type: boolean
+  default: true
+- name: update_cache
+  type: boolean
+  default: true
+- name: vitis_version
+  type: string
+  default: 2021.2
+
+steps:
+  - template: /devops/templates/steps/mount-storage-account.yml
+    parameters:
+      sa_user_name: $(swbuildir2st-user)
+      sa_user_password: $(swbuildir2st-key)
+      sa_uri: //swbuildir2st.file.core.windows.net/debian-build
+      mountdir: /mnt/debian-build
+
+  - template: /devops/templates/steps/docker-login.yml
+    parameters:
+      user: $(ir2acr-pull-user)
+      token: $(ir2acr-pull-password)
+      host: ir2acr.azurecr.io
+
+
+
+  - template: /devops/templates/steps/prepare_generic_infrastructure.yml
+    parameters:
+      build_target: ${{ parameters.build_target }}
+
+  - bash: |
+      set -e
+
+      echo "Target:"
+      echo " - TARGET: ${{ parameters.build_target }}"
+      echo "##vso[task.setvariable variable=TARGET]${{ parameters.build_target }}"
+
+      echo "Deploy artifact:"
+      echo " - UPDATE_CACHE: ${{ parameters.update_cache }}"
+      echo "##vso[task.setvariable variable=UPDATE_CACHE]${{ parameters.update_cache }}"
+
+      echo "Vitis version:"
+      echo " - VITIS_VERSION: ${{ parameters.vitis_version }}"
+      echo "##vso[task.setvariable variable=VITIS_VERSION]${{ parameters.vitis_version }}"
+
+      echo "Version:"
+      echo " - VERSION: ${{ parameters.version }}"
+      echo "##vso[task.setvariable variable=VERSION]${{ parameters.version }}"
+    displayName: 1.1 - Prepare infrastructure
+    condition: or(
+                eq('${{ parameters.build_target }}', 'zcu102'),
+                eq('${{ parameters.build_target }}', 'tec0204'),
+                eq('${{ parameters.build_target }}', 'systemroot')
+                )
+
+  - bash: |
+      set -e
+
+      docker run -td --rm \
+            --privileged \
+            -v $(Build.SourcesDirectory):/ws \
+            --env=USERNAME=$USER \
+            --env=USERID=$UID \
+            --env=GNAME=$(id -gn) \
+            --env=GID=$(id -g) \
+            --env=USERHOME=$HOME \
+            --env=DISPLAY=unix$DISPLAY \
+            --env=VERSION=$(VERSION) \
+            --name a-core-debian-base-image-container ir2acr.azurecr.io/a-core-debian-base-image:latest \
+            /bin/bash
+    displayName: Launching docker container
+
+  - bash: |
+      set -e
+
+      echo "Starting building system root..."
+
+      docker exec -t -e TARGET="${TARGET}" a-core-debian-base-image-container bash -c "\
+        source /opt/Xilinx/Vitis/2021.2/settings64.sh; \
+        whoami; \
+        id; \
+        ls -ld /proc/sys/fs/binfmt_misc; \
+        echo /ws/software/os/debian/rootfs/build_debian_based_rootfs.sh -a arm64 -d bullseye -t ${TARGET} -v ${VERSION}; \
+        sudo /ws/software/os/debian/rootfs/build_debian_based_rootfs.sh -a arm64 -d bullseye -t ${TARGET} -v ${VERSION}" || exit 1
+
+      echo "Finished building system root..."
+    displayName: 2.1 - Build system root
+
+  - bash: |
+      set -e
+
+      echo "Checking if system root is available..."
+
+      cd $(Build.SourcesDirectory)/software/os/debian/rootfs/build/${{ parameters.build_target }}/images      
+      ext4_gz_filename=$(find * -type f -name 'rootfs_$(TARGET)_bullseye*ext4.gz');
+      deb_filename=$(find * -type f -name 'ulrr-aarch64-sysroot-bullseye*deb');
+      
+      if [ ! -z "$ext4_gz_filename" ]; then
+        echo "$ext4_gz_filename was found."
+        echo "##vso[task.setvariable variable=create_sysroot_result]Succeeded"
+        echo "##vso[task.setvariable variable=rootfs_filename;isOutput=true]$ext4_gz_filename"
+        echo "##vso[task.setvariable variable=rootfs_artifactname;isOutput=true]$(Agent.JobName)-$(TARGET)-sw-debian-build-sysroot-ext4_gz-$(System.StageAttempt)-$(System.JobAttempt)"
+
+        if [[ "${UPDATE_CACHE}" == "True" ]]; then
+          sudo mkdir -p /mnt/debian-build/cache/${VITIS_VERSION}/${TARGET}/sysroot/
+          sudo rsync -ah --progress $(Build.SourcesDirectory)/software/os/debian/rootfs/build/${{ parameters.build_target }}/images/$ext4_gz_filename /mnt/debian-build/cache/${VITIS_VERSION}/${TARGET}/sysroot/
+        fi          
+      fi
+
+      if [ ! -z "$deb_filename" ]; then
+        echo "$deb_filename was found."
+        echo "##vso[task.setvariable variable=create_sysroot_deb_result]Succeeded"
+        echo "##vso[task.setvariable variable=rootfs_deb_file_filename;isOutput=true]$deb_filename"
+        echo "##vso[task.setvariable variable=rootfs_deb_file_artifactname;isOutput=true]$(Agent.JobName)-$(TARGET)-sw-debian-build-sysroot-deb-$(System.StageAttempt)-$(System.JobAttempt)"
+
+        if [[ "${UPDATE_CACHE}" == "True" ]]; then
+          sudo mkdir -p /mnt/debian-build/cache/${VITIS_VERSION}/${TARGET}/sysroot/
+          sudo rsync -ah --progress $(Build.SourcesDirectory)/software/os/debian/rootfs/build/${{ parameters.build_target }}/images/$deb_filename /mnt/debian-build/cache/${VITIS_VERSION}/${TARGET}/sysroot/
+        fi
+      fi
+    name: SysRootStep
+    displayName: 2.2 - Checking if system root is available...
+
+  - publish: $(Build.SourcesDirectory)/software/os/debian/rootfs/build/$(TARGET)/images/$(SysRootStep.rootfs_filename)
+    artifact: $(SysRootStep.rootfs_artifactname)
+    displayName: 2.3 - Publish generated sysroot file
+    condition: eq(variables['create_sysroot_result'], 'Succeeded')
+
+  - publish: $(Build.SourcesDirectory)/software/os/debian/rootfs/build/$(TARGET)/images/$(SysRootStep.rootfs_deb_file_filename)
+    artifact: $(SysRootStep.rootfs_deb_file_artifactname)
+    displayName: 2.3 - Publish generated sysroot *.deb
+    condition: eq(variables['create_sysroot_deb_result'], 'Succeeded')
+
+  - bash: |
+      set -e
+
+      echo "Stopping launched container..."
+      docker stop a-core-debian-base-image-container
+      echo "Stopped launched container..."
+      echo "Clean Enabled: ${{ parameters.cleanup }}"
+      if [[ "${{ parameters.cleanup }}" == "True" ]]; then
+        echo "Cleaning-up..."
+        sudo rm -rf $(Build.SourcesDirectory)/software/os/debian
+        sudo rm -rf $(OUT_DIR)
+      else
+        echo "Cleanup is disabled. Skipping..."
+      fi
+    displayName: 3.1 - Cleaning-up

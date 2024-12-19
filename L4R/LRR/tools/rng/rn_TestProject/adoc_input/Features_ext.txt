@@ -1,0 +1,16 @@
+[width="100%", cols="1a,5a,5a,1a", options="header"]
+|===
+| ID | Feature  |  Stakeholder Summary | Status
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14413[ATR-14413]| Pre-condition checks for Diagnostics| None| Closed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14307[ATR-14307]| E2E Protection for LGP (only Tx)| All Output PDU's contains an Autosar E2E Header. The header is defined according to autosar profile 44.
+For further signal details please refer to the document "Technical Customer Information - Location Gateway Protocol".
+
+Confidence : 100%| In Progress
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14060[ATR-14060]| Suspend/Reactivate Modulation with Diagnostics| Confidence : 100%
+
+ 
+
+Solution A is implemented, for Solution B needs some more detailed discussion.
+
+ | In Progress
+|===

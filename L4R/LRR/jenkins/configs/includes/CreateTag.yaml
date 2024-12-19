@@ -1,0 +1,5 @@
+    - name: Create Tag
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: python CreateTag.py -bn ^ENV:BUILD_NUMBER;
+        fromPath: ./jenkins/scripts

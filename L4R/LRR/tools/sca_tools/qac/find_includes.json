@@ -1,0 +1,20 @@
+{
+    "jenkins": {
+        "CODE_DIRS_FILE": ["ad_radar_apl"],
+        "THIRDPARTY_PREFIXES": ["ip_if", "rc_fw", "ip_dc"],
+        "OUTPUT_FILE": "ad_radar_apl/tools/sca_tools/qac/PR_changes_list.txt",
+        "FIND_INCLUDE_STRATEGY": "minimal",
+        "BLACKLIST_PATTERN": [".*(test_|_tools\\b|_unittest_|_cantata_|googletests|dc_apl_test|dsmTest_|_testHelper_|testHelpers|_sysTest_|_systest_).*"],
+        "HELPER_LOGS_PATH": "generatedFiles/qac_report/logs"
+    }, 
+
+    "local": {
+        "CODE_DIRS_FILE": ["ad_radar_apl"],
+        "THIRDPARTY_PREFIXES": ["ip_if", "rc_fw", "ip_dc"],
+        "OUTPUT_FILE": "ad_radar_apl/tools/sca_tools/qac/PR_changes_list.txt",
+        "HELPER_LOGS_PATH": "generatedFiles/qac_report/logs",
+        "FIND_INCLUDE_STRATEGY": "minimal",
+        "BLACKLIST_PATTERN": [".*(test_|_tools\\b|_unittest_|_cantata_|googletests|dc_apl_test|dsmTest_|_testHelper_|testHelpers|_sysTest_|_systest_).*"],
+        "FROM_LIST": "ad_radar_apl/tools/sca_tools/qac/deltas_list.txt"
+    }
+}

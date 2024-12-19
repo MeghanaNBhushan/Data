@@ -1,0 +1,16 @@
+    - name: Generate PDM cfg  file
+      executionOrder: ^TPL:execOrder;
+      skipIfOnlyFilesChanged:
+      - ^INCLUDE:jenkins/configs/includes/skipFilesChangedListDoxygen.yaml;
+      steps:
+      - cmd: python ExecuteInsert.py --link -v ^TPL:build_variant;
+        fromPath: ./ad_radar_apl/component/rbPdm/insert
+        name: GeneratePDM
+      archive:
+      - backend: share
+        sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\SW_build
+        fromPath: ./ad_radar_apl/component/rbPdm/gen
+        includes: "*"
+        afterFail: false
+        zip: true
+        zipName: rbPdmGen_^TPL:build_variant;

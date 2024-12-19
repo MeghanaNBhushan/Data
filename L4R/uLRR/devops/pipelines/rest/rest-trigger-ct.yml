@@ -1,0 +1,89 @@
+parameters:
+- name: assist_run
+  displayName: Assist Testrun
+  type: boolean
+  default: true
+- name: test_coverage
+  displayName: Test coverage
+  values:
+  - full_run
+  - testsuite_assist_run
+  - testcase_assist_run
+  default: testcase_assist_run
+- name: artifactoryPathSwuImg
+  displayName: Path to Artifactory Swu Image
+  type: string
+  default: releases/system-release/IR2_RSP_V0.5/software/
+- name: artifactoryNameSwuImg
+  displayName: Swu Image Name
+  type: string
+  default: uLRR_image-c985e61.swu
+- name: spezi_drive
+  displayName: Mount path Spezi HiL
+  type: string
+  default: /usr/testbench/spezi
+- name: spezi_project
+  displayName: Name of the spezi Project
+  type: string
+  default: _prj_ir2_ulrr_a0
+- name: spezi_branch
+  displayName: Branch Spezi Repo
+  type: string
+  default: develop
+- name: testcase_name
+  displayName: Name of TC
+  type: string
+  default: TC0201_SwUpdate_Stability.py
+- name: testclassfilter
+  displayName: List of Testsuite
+  type: string
+  default: T02 T0004
+- name: agentName
+  displayName: Agent Name
+  type: string
+  default: LR-C-001ET
+  values: 
+  - LR-C-001ET
+  - BRG-C-002CC
+  - LR-C-000XM
+- name: build_type
+  displayName: Build type
+  type: string
+  default: debug
+
+variables:
+  ${{ if eq(parameters.agentName, 'LR-C-001ET') }}:
+    poolName: 'local-test-benches'
+  ${{ if eq(parameters.agentName, 'BRG-C-002CC') }}:
+    poolName: 'local-test-benches-dev'
+  ${{ if eq(parameters.agentName, 'LR-C-000XM') }}:
+    poolName: 'local-test-benches-dev'
+  ${{ if notIn(parameters.agentName, 'LR-C-001ET', 'BRG-C-002CC', 'LR-C-000XM') }}:
+    poolName: 'local-test-benches'
+
+
+trigger: none 
+pr: none
+
+jobs:
+- job: ContinuousTesting
+  timeoutInMinutes: 200
+  # cancelTimeoutInMinutes: 2000
+  pool:
+    name: $(poolName)
+    demands:
+    - Agent.Name -equals ${{parameters.agentName}}
+  steps:
+  - checkout: self
+  - template: /devops/templates/steps/continuousTesting.yml
+    parameters:
+      assist_run: ${{parameters.assist_run}}
+      test_coverage: ${{parameters.test_coverage}}
+      artifactoryPathSwuImg: ${{parameters.artifactoryPathSwuImg}}
+      artifactoryNameSwuImg: ${{parameters.artifactoryNameSwuImg}}
+      spezi_drive: ${{parameters.spezi_drive}}
+      spezi_project: ${{parameters.spezi_project}}
+      spezi_branch: ${{parameters.spezi_branch}}
+      testcase_name: ${{parameters.testcase_name}}
+      testclassfilter: ${{parameters.testclassfilter}}
+      build_type: ${{parameters.build_type}}

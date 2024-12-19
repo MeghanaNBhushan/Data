@@ -1,0 +1,32 @@
+[width="100%", cols="2a,3a,6a,3a,3a,2a", options="header"]
+|===
+| ID | Summary | Description	| Severity (_see note above_)| Safety Relevance (_yes/no_) | Status
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15184[ATR-15184]| Bosch Radar mounting position mismatch between CANoe and LGP| *Description:* Mounting position data mismatch between "DID response data" and "Mounting position in Location data PDU"
+
+*Impact:* No impact to the sensor as the Mounting position data used by the sensor is correct, only the disaplyed value via communication is incorrect.
+
+*Solution:* The issue does not exists in SW V8.0.0 or higher release as "Mounting position" data is sent in Float32 format| Minor| No| Analyzed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15153[ATR-15153]| Bosch Radar sensor state info timestamp mismatch| Issue: Time stamp information displayed in "Sensor State Information" is incorrect sometimes wrt current sensor / system timestamp
+
+Impact: No impact to the sensor as the current sensor / system timestamp data used by the sensor is correct, only the displayed value via communication is incorrect.
+
+ | Minor| Yes| Analyzed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14851[ATR-14851]| [COMA] Internal commit Id Signal in SensorState TX PDU is in little endian format | Description:
+
+Commit ID signal in "sensor state PDU" is sent in little Endian format.
+
+Bu the expected requirement is to send/display the data in Big Endian format.
+
+Impact:
+
+Commit ID is sent wrong over the BUS, the user may be mislead with the data sent.| Minor| No| In Verification
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-13722[ATR-13722]| MCS: Wrong modulation time offset between sensors in synchronized mode| Description:
+The _SensorTimeOffset_ applies the double value compared to the defined value
+ E.g. _SensorTimeOffset_ of "33 ms" will be applied as 2 x 33 ms = 66 ms.
+
+Impact:
+The sensors are not syncronized correctly. Therefore, interferences will not be avoided in worst case.
+
+Short term fix: use half of the intended SensorTimeOffset e.g. for 33ms set SensorTimeOffset = 16.5ms
+ * {color:#ff0000}+*Caution:*+{color} this work-around has to be removed/set back, once the fixed SW is used| Minor| No| In Verification
+|===

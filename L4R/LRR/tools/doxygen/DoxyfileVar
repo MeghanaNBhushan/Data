@@ -1,0 +1,32 @@
+#---------------------------------------------------------------------------
+# Configuration of Projetct Name
+#---------------------------------------------------------------------------
+# The PROJECT_NAME tag is a single word (or a sequence of words surrounded by
+# double-quotes, unless you are using Doxywizard) that should identify the
+# project for which the documentation is generated. This name is used in the
+# title of most generated pages and in a few other places.
+# The default value is: My Project.
+
+PROJECT_NAME           = FceHandler
+
+#---------------------------------------------------------------------------
+# Configuration of input files
+#---------------------------------------------------------------------------
+
+# The INPUT tag is used to specify the files and/or directories that contain
+# documented source files. You may enter file names like myfile.cpp or
+# directories like /usr/src/myproject. Separate the files or directories with
+# spaces.
+# Note: If this tag is empty the current directory is searched.		
+		
+INPUT                  = ../../ip_if/uC_fwLr/core/ ../../ip_if/uC_fwLr/ifr/
+
+#---------------------------------------------------------------------------
+# Configuration of output files
+#---------------------------------------------------------------------------
+# The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) path
+# into which the generated documentation will be written. If a relative path is
+# entered, it will be relative to the location where doxygen was started. If
+# left blank the current directory will be used.
+
+OUTPUT_DIRECTORY       = ./../doxygen_output

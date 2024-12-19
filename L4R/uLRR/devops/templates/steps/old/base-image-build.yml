@@ -1,0 +1,87 @@
+steps:
+  - bash: |
+      mkdir -m 777 $(Pipeline.Workspace)/s/software/zcu-102/downloads 
+      mkdir -m 777 $(Pipeline.Workspace)/s/software/zcu-102/sstate-cache 
+      cp -dRv /mnt/downloads-petalinux-2021dot2/. $(Pipeline.Workspace)/s/software/zcu-102/downloads/ 
+      cp -dRv /mnt/sstate-cache-petalinux-2021dot2/sstate-cache/. $(Pipeline.Workspace)/s/software/zcu-102/sstate-cache/
+    displayName: Petalinux pre-build
+
+  - bash: |
+      docker pull artifactory.boschdevcloud.com/zugspitze-series-docker-local/petalinux-v2021.2:latest
+      docker run --rm -t -d --name petalinux-v2021.2_con \
+        -v $(Pipeline.Workspace)/s/:/ws \
+        artifactory.boschdevcloud.com/zugspitze-series-docker-local/petalinux-v2021.2 bash
+      docker exec -t petalinux-v2021.2_con bash -c "source /petalinux/2021.2/settings.sh; cd ws/software/zcu-102/; petalinux-build"
+      docker exec -t petalinux-v2021.2_con bash -c "source /petalinux/2021.2/settings.sh; cd ws/software/zcu-102/; petalinux-build --sdk"
+      docker exec -t petalinux-v2021.2_con bash -c " \
+        source /petalinux/2021.2/settings.sh; \
+        cd ws/software/zcu-102/; \
+        petalinux-package --boot --u-boot; \
+        petalinux-package --wic; \
+        petalinux-package --boot --fsbl ./images/linux/zynqmp_fsbl.elf --pmufw ./images/linux/pmufw.elf --fpga ./images/linux/system.bit --u-boot --force"
+    displayName: Petalinux base image build
+  
+  - bash: |
+      dd if=/dev/zero of=$(Pipeline.Workspace)/s/software/zcu-102/images/linux/boot.vfat bs=240000000 count=0 seek=1
+      /sbin/mkfs -t vfat $(Pipeline.Workspace)/s/software/zcu-102/images/linux/boot.vfat
+      sudo mkdir /mnt/boot_part_folder
+      sudo mount $(Pipeline.Workspace)/s/software/zcu-102/images/linux/boot.vfat /mnt/boot_part_folder/
+      sudo cp $(Pipeline.Workspace)/s/software/zcu-102/images/linux/BOOT.BIN /mnt/boot_part_folder/
+      sudo cp $(Pipeline.Workspace)/s/software/zcu-102/images/linux/boot.scr /mnt/boot_part_folder/
+      sudo cp $(Pipeline.Workspace)/s/software/zcu-102/images/linux/Image /mnt/boot_part_folder/
+      sudo cp $(Pipeline.Workspace)/s/software/zcu-102/images/linux/ramdisk.cpio.gz.u-boot /mnt/boot_part_folder/
+      sudo cp $(Pipeline.Workspace)/s/software/zcu-102/images/linux/rootfs.cpio.gz.u-boot /mnt/boot_part_folder/
+      sudo umount $(Pipeline.Workspace)/s/software/zcu-102/images/linux/boot.vfat
+      cd $(Pipeline.Workspace)/s/software/zcu-102; zip -r baseimage.zip ./images/
+    displayName: Generate boot.vfat and zip base image
+  
+  - bash: |
+      rsync -r -c -z --ignore-existing --info=skip0 --stats $(Pipeline.Workspace)/s/software/zcu-102/build/sstate-cache /mnt/sstate-cache-petalinux-2021dot2
+      rsync -r -c -z --ignore-existing --info=skip0 --stats $(Pipeline.Workspace)/s/software/zcu-102/downloads/ /mnt/downloads-petalinux-2021dot2
+    displayName: Sync sstate cache
+
+  - publish: $(Pipeline.Workspace)/s/software/zcu-102/build/build.log
+    artifact: sw-build-log-$(System.StageAttempt)-$(System.JobAttempt)
+    displayName: Publish build log to pipeline storage 
+
+  - task: ArtifactoryGenericUpload@1
+    inputs:
+      artifactoryService: 'sc-ado-artifactory'
+      specSource: 'taskConfiguration'
+      fileSpec: |
+        {
+          "files": [
+            {
+              "pattern": "$(Pipeline.Workspace)/s/software/zcu-102/baseimage.zip",
+              "target": "zugspitze-series-generic-local/$(BRANCH_NAME)/$(COMMIT_ID)/"
+            },
+            {
+              "pattern": "$(Pipeline.Workspace)/s/software/zcu-102/build/build.log",
+              "target": "zugspitze-series-generic-local/$(BRANCH_NAME)/$(COMMIT_ID)/"
+            }
+          ]
+        }
+      failNoOp: true
+    displayName: Upload base image and build log to Artifactory
+
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+    - task: ArtifactoryGenericUpload@1
+      inputs:
+        artifactoryService: 'sc-ado-artifactory'
+        specSource: 'taskConfiguration'
+        fileSpec: |
+          {
+            "files": [
+              {
+                "pattern": "$(Pipeline.Workspace)/s/software/zcu-102/baseimage.zip",
+                "target": "zugspitze-series-generic-local/master/latest/"
+              },
+              {
+                "pattern": "$(Pipeline.Workspace)/s/software/zcu-102/build/build.log",
+                "target": "zugspitze-series-generic-local/master/latest/"
+              }
+            ]
+          }
+        failNoOp: true
+      displayName: Master latest upload base image and build log to Artifactory
+ 

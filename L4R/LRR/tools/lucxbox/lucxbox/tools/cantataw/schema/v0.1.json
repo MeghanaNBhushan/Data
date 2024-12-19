@@ -1,0 +1,35 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "CANTATA wrapper configuration",
+    "type": "object",
+    "properties": {
+        "env_script": {
+            "type": "string"
+        },
+        "build": {
+            "type": "string"
+        },
+        "test": {
+            "type": "string"
+        },
+        "report": {
+            "type": "object",
+            "properties": {
+                "cov_file": {
+                    "type": "string"
+                },
+                "output": {
+                    "type": "string"
+                },
+                "report_types": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "required": ["env_script", "build", "test", "report"],
+    "additionalProperties": false
+}

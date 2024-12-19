@@ -1,0 +1,59 @@
+<ecusymbols creation_date="Wed Nov 20 16:19:01 2019" xml_writer_version="0.0.1" xmlversion="3.0.0">
+  <mapfile_data __memory="False" __sections="False" mapfilenname="Radar_C2_ASIL_B" mft="1" project="Example">
+    <symbollist nos="39993">
+      <symbol global="yes" name="rblinker_x_Lmu1NcDataDelta">
+        <allocation address="0x43c" gap_size="0x0" size="0x0" />
+        <section_data input_section="" library="" module="__linker__" output_section="rbLinker_lmu1_nc.data" sectionType="data" />
+        <memrange name="CPU0_DLMU_RAM_NC" type="RAM" />
+      </symbol>
+      <symbol global="yes" name="rblinker_x_Lmu1NcBssDelta">
+        <allocation address="0x45c" gap_size="0x0" size="0x0" />
+        <section_data input_section="" library="" module="__linker__" output_section="rbLinker_lmu1_nc.bss" sectionType="bss" />
+        <memrange name="LMU1_RAM_NC" type="RAM" />
+      </symbol>
+      <symbol global="yes" name="__vw_data_SIZE">
+        <allocation address="0x1480" gap_size="0x0" size="0x0" />
+        <section_data input_section="" library="" module="__linker__" output_section="rbLinker_dlmu0_nc.data" sectionType="data" />
+        <memrange name="CPU0_DLMU_RAM_NC" type="RAM" />
+      </symbol>
+      <symbol global="yes" name="__vw_bss_SIZE">
+        <allocation address="0x9ed0" gap_size="0x0" size="0x0" />
+        <section_data input_section="" library="" module="__linker__" output_section="rbLinker_dlmu0_nc.bss" sectionType="bss" />
+        <memrange name="CPU0_DLMU_RAM_NC" type="RAM" />
+      </symbol>
+      <symbol global="yes" name="rbLinker_dsram2_sbst_START">
+        <allocation address="0x50000000" gap_size="0x0" size="0x0" />
+        <section_data input_section="" library="" module="__linker__" output_section="rbLinker_dsram2.sbst" sectionType="bss" />
+        <memrange name="CPU2_DataSratchPad" type="RAM" />
+      </symbol>
+      <symbol global="yes" name="s_massRestrictionUnknown__Q5_2Dc3Sit5BcSee4Tral27ValidityTrafficParticipants">
+        <decodedname name="Dc::Sit::BcSee::Tral::ValidityTrafficParticipants::s_massRestrictionUnknown" />
+        <namespace name="Dc::Sit::BcSee::Tral::ValidityTrafficParticipants" />
+        <allocation address="0x60033822" gap_size="0x0" size="0x2" />
+        <section_data input_section=".bss" library="libdc_fw_sit_lib.a" module="sit_validityTrafficParticipants.o" output_section="rbLinker_dsram1.bss" sectionType="bss" />
+        <memrange name="CPU1_DataSratchPad" type="RAM" />
+      </symbol>
+      <symbol global="no" name="s_intersectionDxToleranceRelationObj2Polyline__Q3_2Dc3Sit6BsImba">
+        <decodedname name="Dc::Sit::BsImba::s_intersectionDxToleranceRelationObj2Polyline" />
+        <namespace name="Dc::Sit::BsImba" />
+        <allocation address="0x60033824" gap_size="0x0" size="0x4" />
+        <section_data input_section=".bss" library="libdc_fw_sit_lib.a" module="sit_RunnableBehaviorStrategyImba.o" output_section="rbLinker_dsram1.bss" sectionType="bss" />
+        <memrange name="CPU1_DataSratchPad" type="RAM" />
+      </symbol>
+      <symbol global="no" name="s_intersectionDxToleranceRelationObj2Polyline__Q3_2Dc3Sit6BsImba">
+        <decodedname name="Dc::Sit::BsImba::s_intersectionDxToleranceRelationObj2Polyline" />
+        <namespace name="Dc::Sit::BsImba" />
+        <allocation address="0x60033828" gap_size="0x0" size="0x4" />
+        <section_data input_section=".bss" library="libdc_fw_sit_lib.a" module="sit_behaviorStrategyImba.o" output_section="rbLinker_dsram1.bss" sectionType="bss" />
+        <memrange name="CPU1_DataSratchPad" type="RAM" />
+      </symbol>
+      <symbol global="no" name="s_intersectionDxToleranceRelationObj2Polyline__Q3_2Dc3Sit6BsImba">
+        <decodedname name="Dc::Sit::BsImba::s_intersectionDxToleranceRelationObj2Polyline" />
+        <namespace name="Dc::Sit::BsImba" />
+        <allocation address="0x6003382c" gap_size="0x0" size="0x4" />
+        <section_data input_section=".bss" library="libdc_fw_sit_lib.a" module="sit_worldModelImba.o" output_section="rbLinker_dsram1.bss" sectionType="bss" />
+        <memrange name="CPU1_DataSratchPad" type="RAM" />
+      </symbol>
+    </symbollist>
+  </mapfile_data>
+</ecusymbols>

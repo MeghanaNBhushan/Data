@@ -1,0 +1,451 @@
+#!groovy
+/*
+This job contains nested stages, where steps like 'withPython' and 'docker.inside'
+are used in parent stage to install python dependencies and nested stages simply run python code.
+This method was preferred over having 'withPython' and 'docker.inside' outside the stage,
+due to better visualization in case job fails on dependencies installation.
+Be aware that nested stages in some cases can result with incorrect visualization of stage view in Blue Ocean UI.
+*/
+
+@Library('doit@0.7.3') _
+
+linuxNodeLabels = 'osd6 && docker-host'
+windowsNodeLabels = 'windows'
+bitBucketUrl = 'https://sourcecode.socialcoding.bosch.com'
+scaRepoUrl = 'ssh://git@sourcecode.socialcoding.bosch.com:7999/cdf/sca_tools.git'
+minidemoRepoUrl = 'ssh://git@sourcecode.socialcoding.bosch.com:7999/CDF/sca_mini_demo.git'
+scaToolsDockerContainerParameters = '--net=host --security-opt seccomp:unconfined'
+scaRepoName = 'SCA_Tools'
+minidemoRepoName = 'SCA_Mini_Demo'
+qacVersion = '2021.3'
+coverityVersion = '2021.12'
+scaToolsRelPath = 'sca_tools'
+minidemoRelPath = 'minidemo'
+reportsRelPath = 'reports'
+reportsUnitRelPath = "${reportsRelPath}/unit"
+reportsIntegrationRelPath = "${reportsRelPath}/integration"
+technicalUser = ''
+pythonWinExe = ''
+pythonLinuxExe = 'python3'
+pythonVenvExe = 'python'
+scaToolScmVars = ''
+miniDemoScmVars = ''
+jqPath = ''
+
+def getOs() {
+    return isUnix() ? "Linux" : "Windows"
+}
+
+def checkoutRepo(repoName, repoUrl, repoBranch, destDir) {
+    dir(destDir) {
+        return checkout([$class: 'GitSCM',
+            branches: [[name: "*/${repoBranch}"]],
+            doGenerateSubmoduleConfigurations: false,
+            extensions: [[
+                $class: 'SubmoduleOption',
+                disableSubmodules: false,
+                parentCredentials: true,
+                recursiveSubmodules: true,
+                reference: '',
+                trackingSubmodules: false
+            ]],
+            gitTool: 'Linux Git',
+            submoduleCfg: [],
+            userRemoteConfigs: [[
+                credentialsId: env.AUTO_USER_SSH_ID,
+                url: "${repoUrl}"
+            ]]
+        ])
+    }
+}
+
+def prepareEnvironment(minidemoDir) {
+    def os = getOs()
+
+    if (os.equals("Windows")) {
+        def pythonPath = ''
+        def pythonPathEnvName = 'TCCPATH_python3'
+        def jqPathEnvName = 'TCCPATH_jq'
+
+        bat("""
+            call "${minidemoDir}\\tools\\sca\\ip_sca_tools_package\\scripts\\tcc\\set_sca_tools_environment_variables.bat"
+
+            echo %${pythonPathEnvName}% > ${env.WORKSPACE}\\${pythonPathEnvName}.txt
+            echo %${jqPathEnvName}% > ${env.WORKSPACE}\\${jqPathEnvName}.txt
+        """)
+
+        pythonPath = readFile("${env.WORKSPACE}\\${pythonPathEnvName}.txt").trim()
+        pythonWinExe = "${pythonPath}\\python.exe"
+
+        jqPath = readFile("${env.WORKSPACE}\\${jqPathEnvName}.txt").trim()
+    }
+    else {
+        def scriptsDirPath = "${minidemoDir}/scripts"
+        def dockerDirPath = "${scriptsDirPath}/docker"
+        def dockerFilePath = "${dockerDirPath}/Dockerfile_tu.in"
+
+        def userId = sh(script: 'id -u', returnStdout: true).trim()
+        def groupId = sh(script: 'id -g', returnStdout: true).trim()
+
+        def dockerBuildArgs = "--build-arg USER_ID=${userId} --build-arg USER_GID=${groupId} "
+        dockerBuildArgs += "--build-arg USER_NAME=${technicalUser} -f ${dockerFilePath} ${scriptsDirPath}"
+
+        sh("sed -i s#{{base_image}}#${params.SCA_TOOLS_DOCKER_IMAGE}#g ${dockerFilePath}")
+
+        docker.image(params.SCA_TOOLS_DOCKER_IMAGE).pull()
+        withUserImage = docker.build(
+            params.SCA_TOOLS_DOCKER_IMAGE + "_${technicalUser}",
+            dockerBuildArgs
+        )
+    }
+}
+
+def runUnitTests(scaToolsDir) {
+    def os = getOs()
+    def reportsUnitDir = "${env.WORKSPACE}/${reportsUnitRelPath}"
+    def pythonExe = isUnix() ? pythonLinuxExe : pythonVenvExe
+    def pythonUnitTestCommand = [
+        pythonExe,
+        '-m coverage',
+        'run',
+        '--branch',
+        '-m xmlrunner',
+        '-o',
+        reportsUnitDir
+    ].join(' ')
+
+    try {
+        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+            dir(scaToolsDir) {
+                if (os.equals("Windows")) {
+                    bat("""
+                        MD ${reportsUnitDir}
+                        ${pythonUnitTestCommand}
+                    """)
+                }
+                else {
+                    sh("""
+                        mkdir -p ${reportsUnitDir}
+                        ${pythonUnitTestCommand}
+                    """)
+                }
+            }
+        }
+    } finally {
+        junit(allowEmptyResults: true, testResults: "${reportsUnitRelPath}/**/TEST*.xml")
+    }
+}
+
+def getIntTestCommonCommand() {
+    def pythonExe = isUnix() ? pythonLinuxExe : pythonVenvExe
+
+    return [
+        pythonExe,
+        '-m coverage',
+        'run',
+        '--branch',
+        '-p test/integration/run_behave_tests.py'
+    ].join(' ')
+}
+
+def runQacIntegrationTests(scaToolsDir, minidemoDir) {
+    def reportsIntegrationDir = "${env.WORKSPACE}/${reportsIntegrationRelPath}"
+    def intTestCommonCommand = getIntTestCommonCommand()
+    def qacIntTestCommand = [
+        intTestCommonCommand,
+        'qac',
+        '--project_root',
+        minidemoDir,
+        '--features all',
+        '--version',
+        qacVersion,
+        '--reports_dir',
+        reportsIntegrationDir
+    ].join(' ')
+
+    try {
+        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+            dir(scaToolsDir) {
+                isUnix() ? sh("${qacIntTestCommand}") : bat("${qacIntTestCommand}")
+            }
+        }
+    } finally {
+        junit(allowEmptyResults: true, testResults: "${reportsIntegrationRelPath}\\**\\TEST*qac*.xml")
+    }
+}
+
+def runCoverityIntegrationTests(scaToolsDir, minidemoDir) {
+    def os = getOs()
+    def reportsIntegrationDir = "${env.WORKSPACE}/${reportsIntegrationRelPath}"
+    def intTestCommonCommand = getIntTestCommonCommand()
+    def coverityIntTestCommand = [
+        intTestCommonCommand,
+        'coverity',
+        '--project_root',
+        minidemoDir,
+        '--features all',
+        '--version',
+        coverityVersion,
+        '--reports_dir',
+        reportsIntegrationDir
+    ].join(' ')
+
+    try {
+        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+            dir(scaToolsDir) {
+                if (os.equals("Windows")) {
+                    bat("""
+                        SET MSVS_HOME="%VS140COMNTOOLS:~0,-15%"
+                        call %MSVS_HOME%\\VC\\vcvarsall.bat amd64
+
+                        ${coverityIntTestCommand}
+                    """)
+                }
+                else {
+                    sh("${coverityIntTestCommand}")
+                }
+            }
+        }
+    } finally {
+        junit(allowEmptyResults: true, testResults: "${reportsIntegrationRelPath}\\**\\TEST*cov*.xml")
+    }
+}
+
+def generateReports(scaToolsDir) {
+    def os = getOs()
+    def reportsDir = "${env.WORKSPACE}/${reportsRelPath}"
+    def coverageDir = "${reportsDir}/covhtml"
+    def pythonExe = isUnix() ? pythonLinuxExe : pythonVenvExe
+    def pythonCoverageCombineCommand = [
+        pythonExe,
+        '-m coverage',
+        'combine'
+    ].join(' ')
+    def pythonCoverageHtmlCommand = [
+        pythonExe,
+        '-m coverage',
+        'html',
+        '-d',
+        coverageDir
+    ].join(' ')
+
+    try {
+        dir(scaToolsDir) {
+            if (os.equals("Windows")) {
+                reportsDir = reportsDir.replaceAll('/', '\\\\')
+                bat("""
+                    MD ${reportsDir}
+
+                    ${pythonCoverageCombineCommand}
+                    ${pythonCoverageHtmlCommand}
+                """)
+            }
+            else {
+                sh("""
+                    ${pythonCoverageCombineCommand}
+                    ${pythonCoverageHtmlCommand}
+                """)
+            }
+        }
+    } finally {
+        publishHTML (target: [
+            allowMissing: false,
+            alwaysLinkToLastBuild: false,
+            keepAll: true,
+            reportDir: "${coverageDir}",
+            reportFiles: 'index.html',
+            reportName: "Coverage Report on ${os}"
+        ])
+    }
+}
+
+def archiveReportArtifacts() {
+    if (params.ARCHIVE_REPORTS) {
+        def os = getOs().toLowerCase()
+        def unitTestsFolderName = reportsUnitRelPath.split('/')[-1]
+        def integrationTestsFolderName = reportsIntegrationRelPath.split('/')[-1]
+
+        zip(
+            zipFile: "reports_${os}.zip",
+            archive: true,
+            dir: reportsRelPath,
+            glob: "${unitTestsFolderName}/*.xml,${integrationTestsFolderName}/*.xml",
+            overwrite: true
+        )
+    }
+}
+
+def saveAndArchiveBuildLog() {
+    if (params.ARCHIVE_REPORTS) {
+        dir(reportsRelPath) {
+            def buildLogFileName = "jenkins_${env.BUILD_ID}.log"
+            withCredentials([
+                usernameColonPassword(credentialsId: env.AUTO_USER_USERNAME_PASSWORD_ID, variable: 'USERPASS')
+            ]) {
+                def usernamePasswordString = isUnix() ? '$USERPASS' : '%USERPASS%'
+                def command = "curl -u ${usernamePasswordString} -o ${buildLogFileName} ${currentBuild.absoluteUrl}consoleText"
+                isUnix() ? sh(command) : bat(command)
+            }
+
+            archiveArtifacts(
+                artifacts: buildLogFileName,
+                allowEmptyArchive: true
+            )
+        }
+    }
+}
+
+withCredentials([
+    usernamePassword(
+        usernameVariable: 'TECHNICAL_USERNAME',
+        passwordVariable: 'TECHNICAL_PASSWORD',
+        credentialsId: env.AUTO_USER_USERNAME_PASSWORD_ID
+    )
+]) {
+    technicalUser = TECHNICAL_USERNAME
+}
+
+properties([
+    buildDiscarder(logRotator(daysToKeepStr: '30')),
+    parameters([
+        string(name: 'SCA_TOOLS_BRANCH_NAME', defaultValue: 'develop', description: 'The sca_tools branch name', ),
+        string(name: 'SCA_MINI_DEMO_BRANCH_NAME', defaultValue: 'develop', description: 'The sca_mini_demo branch name', ),
+        string(
+            name: 'SCA_TOOLS_DOCKER_IMAGE',
+            defaultValue: 'rb-dtr.de.bosch.com/swqa/sca_tools_package:1.8.1-2022.02-release',
+            description: 'The SCA Tools docker image'
+        ),
+        booleanParam(name: 'ARCHIVE_REPORTS', defaultValue: false, description: 'Archive report artifacts', )
+    ])
+])
+
+try {
+    parallel (
+        Windows: {
+            node(windowsNodeLabels) {
+                cleanWs()
+                def scaToolsDir = "${env.WORKSPACE}\\${scaToolsRelPath}"
+                def minidemoDir = "${env.WORKSPACE}\\${minidemoRelPath}"
+
+                stage('Checkout SCA Tools - Windows') {
+                    scaToolScmVars = checkoutRepo(scaRepoName, scaRepoUrl, "${params.SCA_TOOLS_BRANCH_NAME}", scaToolsDir)
+                    doit.notifyBitbucket(sha: scaToolScmVars.GIT_COMMIT, credentialsId: env.AUTO_USER_USERNAME_PASSWORD_ID, serverUrl: bitBucketUrl)
+                }
+
+                stage('Checkout Mini Demo - Windows') {
+                    miniDemoScmVars = checkoutRepo(minidemoRepoName, minidemoRepoUrl, "${params.SCA_MINI_DEMO_BRANCH_NAME}", minidemoDir)
+                }
+
+                stage('Prepare Environment - Windows') {
+                    prepareEnvironment(minidemoDir)
+                }
+
+                stage('Prepare and Run Tests - Windows') {
+                    // This stage contains nested stages to avoid python dependencies installation several times.
+                    // See details in file header
+                    doit.withPython(
+                        path: "${pythonWinExe}",
+                        requirementsFiles: ["${scaToolsDir}\\requirements-dev.txt"]
+                    ) {
+                        stage('Run Unit Tests - Windows') {
+                            runUnitTests(scaToolsDir)
+                        }
+
+                        stage('Run QAC Integration Tests - Windows') {
+                            withEnv(["PATH=${PATH};${jqPath}"]) {
+                                runQacIntegrationTests(scaToolsDir, minidemoDir)
+                            }
+                        }
+
+                        stage('Run Coverity Integration Tests - Windows') {
+                            runCoverityIntegrationTests(scaToolsDir, minidemoDir)
+                        }
+
+                        stage('Generate Reports - Windows') {
+                            generateReports(scaToolsDir)
+                        }
+                    }
+                }
+
+                stage('Archive Report Artifacts - Windows') {
+                    archiveReportArtifacts()
+                }
+            }
+        },
+        Linux: {
+            node(linuxNodeLabels) {
+                cleanWs()
+                def scaToolsDir = "${env.WORKSPACE}/${scaToolsRelPath}"
+                def minidemoDir = "${env.WORKSPACE}/${minidemoRelPath}"
+
+                stage('Checkout SCA Tools - Linux') {
+                    scaToolScmVars = checkoutRepo(scaRepoName, scaRepoUrl, "${params.SCA_TOOLS_BRANCH_NAME}", scaToolsDir)
+                }
+
+                stage('Checkout Mini Demo - Linux') {
+                    miniDemoScmVars = checkoutRepo(minidemoRepoName, minidemoRepoUrl, "${params.SCA_MINI_DEMO_BRANCH_NAME}", minidemoDir)
+                }
+
+                stage('Prepare Environment - Linux') {
+                    prepareEnvironment(minidemoDir)
+                }
+
+                stage('Prepare and Run Tests - Linux') {
+                    // This stage contains nested stages to avoid python dependencies installation several times.
+                    // See details in file header
+                    withUserImage.inside(scaToolsDockerContainerParameters) {
+                        dir(scaToolsDir) {
+                            withCredentials([
+                                usernameColonPassword(credentialsId: env.AUTO_USER_USERNAME_PASSWORD_ID, variable: 'USERPASS')
+                            ]) {
+                                withEnv(["pythonLinux=${pythonLinuxExe}"]) {
+                                    sh('''
+                                        export PIP_INDEX_URL=https://${USERPASS}@rb-artifactory.bosch.com/artifactory/api/pypi/python-remote/simple
+                                        ${pythonLinux} -m pip install -r requirements-dev.txt
+                                    ''')
+                                }
+                            }
+                        }
+
+                        stage('Run Unit Tests - Linux') {
+                            runUnitTests(scaToolsDir)
+                        }
+
+                        stage('Run QAC Integration Tests - Linux') {
+                            runQacIntegrationTests(scaToolsDir, minidemoDir)
+                        }
+
+                        stage('Run Coverity Integration Tests - Linux') {
+                            runCoverityIntegrationTests(scaToolsDir, minidemoDir)
+                        }
+
+                        stage('Generate Reports - Linux') {
+                            generateReports(scaToolsDir)
+                        }
+                    }
+                }
+
+                stage('Archive Report Artifacts - Linux') {
+                    archiveReportArtifacts()
+                }
+            }
+        }
+    )
+    currentBuild.result = 'SUCCESS'
+}
+catch (e) {
+    currentBuild.result = 'FAILED'
+
+    throw e
+}
+finally {
+    node('master') {
+        cleanWs()
+
+        doit.notifyBitbucket(sha: scaToolScmVars.GIT_COMMIT, credentialsId: env.AUTO_USER_USERNAME_PASSWORD_ID, serverUrl: bitBucketUrl)
+
+        stage('Archive Jenkins Build Log') {
+           saveAndArchiveBuildLog()
+        }
+    }
+}

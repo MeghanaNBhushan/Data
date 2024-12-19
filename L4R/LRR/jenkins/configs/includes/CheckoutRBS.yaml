@@ -1,0 +1,14 @@
+    - name: Checkout RBS
+      executionOrder: ^TPL:execOrder;
+      steps:
+      - cmd: python CheckoutRBS.py -bn ^ENV:BUILD_NUMBER; -hw ^TPL:hw;
+        fromPath: ./jenkins/scripts
+        name: CheckoutRBS
+      # archive:
+      # - backend: share
+        # sharePath: \\abtvdfs1.de.bosch.com\ismdfs\ida\abt\SW_Build\Radar\SystemC\Athena_Radar\CI\^ENV:LUCX_JOB_NAME_WINDOWS;\^ENV:BUILD_NUMBER;\
+        # fromPath: ./athena_mt/pf_rbs/
+        # includes: "canoe/**"
+        # afterFail: false
+        # zip: true
+        # zipName: pf_rbs_latest

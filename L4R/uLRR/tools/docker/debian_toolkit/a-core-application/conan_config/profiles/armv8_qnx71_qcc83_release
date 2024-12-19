@@ -1,0 +1,4 @@
+include(armv8_qnx71_qcc83_debug)
+
+[settings]
+build_type=Release

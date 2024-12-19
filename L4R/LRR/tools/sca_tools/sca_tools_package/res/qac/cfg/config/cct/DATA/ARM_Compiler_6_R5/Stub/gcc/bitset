@@ -1,0 +1,39 @@
+// bitset
+//
+
+#ifndef INCLUDED_PRLGCC_BITSET
+#define INCLUDED_PRLGCC_BITSET
+
+#include <bits/prlgcc_c++config.h>
+
+#if defined (__PRL_GLIBCXX__)
+
+#  if (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 6)
+
+#    include <4.6/bitset>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 7)
+
+#    include <4.7/bitset>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 8)
+
+#    include <4.8/bitset>
+
+#  elif (__PRL_GLIBCXX__ == 4) && (__PRL_GLIBCXX_MINOR__ == 9)
+
+#    include <4.9/bitset>
+
+#  else
+
+#    include_next <bitset>
+
+#  endif
+
+#else 
+
+#  include_next <bitset>
+
+#endif
+
+#endif

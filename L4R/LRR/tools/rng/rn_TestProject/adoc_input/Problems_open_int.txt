@@ -1,0 +1,99 @@
+[width="100%", cols="2a,3a,6a,3a,3a,2a", options="header"]
+|===
+| ID | Summary | Description	| Severity (_see note above_)| Safety Relevance (_yes/no_) | Status
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15661[ATR-15661]| Location Data Block Counter and Attributes block counter are not in sync| None| None| None| Open
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15655[ATR-15655]| CI/CT: CheckMem missing| None| None| None| Open
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15654[ATR-15654]| CI/CT: UC1 Coverage per Component file missing in release and nightly builds| None| None| None| Open
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15653[ATR-15653]| Over voltage dtc is not observed| None| None| None| Open
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15628[ATR-15628]| Sensor Feedback TX PDU TimeOffset Signal value is updating even though MCS Sync Type is equal to Zero| None| Medium| None| Open
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15624[ATR-15624]| After setting under voltage 6.2 Volts the diop is getting disconnected| None| None| None| Open
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15618[ATR-15618]| DOIP is automatically getting disconnected after 5-7 minutes| None| None| No| In Analysis
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15612[ATR-15612]| The CycleTime of SensorStateInfo PDU violates toleranzes| None| None| None| Open
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15606[ATR-15606]| Unexpected DTC for VBat OV Violation| None| Medium| No| Analyzed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15602[ATR-15602]| Issue with V9.0.0 Start up on the bench and in vehicle | None| None| None| More Info
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15596[ATR-15596]| After Hard reset DOIP taking 5000ms to re-connect| None| Medium| None| In Analysis
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15322[ATR-15322]| Sensor Feedback TX PDU TimeOffset Signal value is half of MCS RX Signal value| Description 
+
+After DID value/MCS RX Signal is written to configure a specifc Timeoffset to the Sensor (say Timeoffset = 22000000) , the value in SensorTimeOffset in SensorFeedback PDU must also be the same value (22000000) as configured via DID/RX PDU. But the observation is the TX signal value is half of the configured value (11000000)
+
+Impact 
+
+There will be a mismatch in the transmitted signal value and  the value configured via DID/PDU for the timeoffset | Minor| No| In Verification
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-15186[ATR-15186]| Range check fails for MAC address DID data| Description :
+ Range check for MAC address DID 0x601 is not matching with the requirement.
+
+
+ Impact:
+
+No Impact as the MAC address 0x000000000000 and 0xFFFFFFFFFFFF is not used by CUBAS| Minor| No| Analyzed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14961[ATR-14961]| Incorrect local port used for Sensor Broadcast message| Description :
+ Local port ID to be used by Sensor Broadcast PDU by the sensor is not macthing with the requirement.
+
+Root Cause:
+
+The Local (Sensor) port number metioned in the requirement is wrongs and needs to be rectified for Sensor Broadcast PDU
+
+Impact:
+
+No imapact in the software| Minor| No| Analyzed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14945[ATR-14945]| XCP is not working in SW V8.0.0| Description:
+
+XCP was not working in LRR SW V8.0.0
+
+Impact: 
+
+XPC related test could not be done by System test team
+
+Limitation:
+
+Foxtrot-13 PJ-IF delivery had XCP disabled, but shall be enabled in Foxtrot-15
+
+LRR SW V9.0.0 has Foxtrot-15 integrated.| Minor| No| In Implementation
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14925[ATR-14925]| Sensor Broadcast UDP header not modified/Ego Vehicle Multicast Reception not possible with changed destination port number| Multicast reception is not possible when destination port number is changes .
+UDP header is not updated with changed destination port number for Broadcast transmission | Minor| No| In Verification
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14892[ATR-14892]| Location Attributes Cycle time is going beyond the range| Description:
+
+Location Attributes cycle time is exceeding the limit specified in requirements.
+
+Impact:
+
+No Impact, test method needs to be changed as per the new requirement for V8.0.0| Minor| No| Analyzed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14836[ATR-14836]| Manipulated Ethernet/COM Buffer| Description:
+
+The data bytes are manipulated in Rx pdus of Ethernet message. Which leads to improper/incorrect data usage by the sensor.
+
+Impact:
+
+Last two bytes of Rx pdu gets manipulated as a result the data is interpreted wrongly by the sensor and this wrong data is used by the sensor.
+
+The stakeholders who are affected are Radar, DASy, NRCS and Video.| Minor| Yes| Analyzed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-14105[ATR-14105]| Cycle time of Sensorstateinfo and Sensorfeedback not correct in C1 sample| Description: 
+The cycle time of LGP PDU's is not matching with the requirements in RBS
+
+ Impact:
+CAN wakeup message is continuously triggered every 60ms, but there is no CAN entity/ECU to acknowledge the Wake up message -> which causes CAN Rx Error frames in trace
+Limitation: This is a CANoe constraint and ECU needs to acknowledge the CAN wakeup message.
+
+ | Minor| No| Analyzed
+| https://rb-tracker.bosch.com/tracker08/browse/ATR-13990[ATR-13990]| Interrupting Power while flashing FBL with Vflash and if Retry Flashing, flashing Fails| {color:#0747a6}Description:{color}
+ When the user performs power interruption during re-flashing via vflash tool the flashing fails in the next re-flashing cycle.
+
+During the test log , the DSP DEM event "RB_SLV_SPU_SBST" is triggered which has led to the reflashing failure.
+
+{color:#0747a6}Root Cause :{color}
+
+Currently we have a planned discussion with DSP team and also on the PJ IF Microcontroller team on the nature of this DEM event and the scenario when this is occurred the feedback is as below "Software cannot cause SBST failure, because SBST detects permanent random hardware failures in fetch and pipeline". So the DEM event under consideration on the occurrence of the hardware failure.
+
+{color:#0747a6}Fix Given:{color}
+
+Currently this does not have any software fix for the behavior and discussion with DSP and PJ IF is ongoing on this.
+
+However since V9.0.0 has some other bug fix related to FBL (related to the multiple response for ECU Reset) and also since we have PJ IF Foxtrot-15 and DSP update, we shall perform re-test for this problem ticket.
+
+Also one of the other solution is to check for the VX Box Firmware version which is used in the test environment.
+
+{color:#0747a6}Impact:{color}
+ No impact. Currently no BLU specific re-flashing requirement / use case for system/ iA team/customer
+
+This ticket is considered for testing for internal analysis of the BLU reflashing behavior.| Minor| No| Verified
+|===
